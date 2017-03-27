@@ -251,13 +251,19 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     }
 
     _getWordColor(group, groupCount) {
-        const colorJump = Math.floor(255 / (Math.floor(groupCount / 3) + 1));
-        const colorGroup = group % 3;
+        const colorJump = Math.floor(255 / (Math.floor(groupCount / 5) + 1));
+        const colorGroup = group % 5;
+
+        // const color_map = ['#ffff99','#beaed4','#ccebc5','#d629d1','#df6161'];
 
         const colors = ['FF', 'FF', 'FF'];
-        const colorAdjustment = colorJump * (Math.floor(group / 3) + 1);
+        const colorAdjustment = colorJump * (Math.floor(group / 5) + 1);
         colors[colorGroup] = ('00' + (255 - colorAdjustment)
             .toString(16)).substr(-2).toUpperCase();
+
+        // console.log('group: ' + group);
+        // console.log('group count: ' + groupCount);
+        // console.log('color group: ' + colorGroup);
 
         return '#' + colors[2] + colors[1] + colors[0];
     }
@@ -291,6 +297,9 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		const count_divs = [];
 		// for each word int he cloud
 
+		const margin = 5;
+		const count_font_size = 18
+		const count_color = '#ffffff'
      
 
 		cloud.forEach(word => {
@@ -321,12 +330,13 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 				<div class="word-count-popup
 				            word-count-label-${word.percent}" 
 				    style="
-				        font-size: ${(word.fontSize*0.8)}px;
+				        font-size: ${count_font_size}px;
 				        width: ${word.width}px;
 						height: ${word.height}px;
-						color: ${groupColor};
-						left: ${(halfSize + word.x) -(word.width/3)}px;
-						top: ${(halfSize + word.y) - (word.height )}px;"
+						color: ${count_color};
+						left: ${200}px;
+						top: ${margin}px;""
+						
 					data-word-popup="${word.text}" 
 					data-count="{word.count}">${word.count}</div>	
 				`);
@@ -334,11 +344,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 			
 		});
 
-
-
-
 		element.innerHTML = divs.join('');
-
 
     }
 
@@ -347,8 +353,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     	const word = $(event.target).attr('data-word');
         const value = $('[data-word=' + word + ']').text();
         $('[data-word-popup=' + word + ']').show();
-
-
 	}
 
 
