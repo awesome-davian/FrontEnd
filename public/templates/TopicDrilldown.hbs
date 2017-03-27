@@ -5,15 +5,13 @@
     </div>
     <div class="drilldown-item">
         {{#each tweets}}
-            <div class="drilldown-label">Name: </div>
-            <div class="drilldown-item">{{username}}</div>
-            <div class="drilldown-item">{{created_at}}</div>
+            <div class="topic-drilldown-alignleft">Name: {{username}}</div>
+            <div class="topic-drilldown-alignright">{{created_at}}</div>
             <br>
-            <div class="drilldown-label">Tweet: </div>
-            <div class="drilldown-item">{{texts}}</div>
+            <div class="topic-drilldown-text">Tweet: {{texts}}</div>
             
             <br>
-            <br>
+            <div style="clear: both;"></div>
         {{/each}}
     </div>
 </div>

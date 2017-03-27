@@ -95,18 +95,23 @@ body {
 
 	display: inline;
 	font-weight : bold;
-
 }
 .drilldown-item{
-
 	display: inline;
-
 }
 
-.drilldown-item-right{
+.topic-drilldown-text{
+	font: 12px sans-serif;
+}
 
-	position: absolute;
-	right: 10px;
+.topic-drilldown-alignleft{
+	float: left;
+	font: 12px sans-serif;
+}
+
+.topic-drilldown-alignright{
+	float: right;
+	font: 12px sans-serif;
 }
 
 

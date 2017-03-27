@@ -47,7 +47,7 @@ class TopicDrilldown extends AsynchDrilldown {
               for (var i =0; i<documents.length; i++){
 
                     
-                    var readable_time = getFriendlyDate(documents[i].created_at);
+                    var readable_time = getFriendlyDate(documents[i].created_at * 1000);
                     console.log('created_at: ' + documents[i].created_at);
                     console.log('readable_time: ' + readable_time);
 
