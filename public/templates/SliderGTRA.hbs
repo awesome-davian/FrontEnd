@@ -1,0 +1,18 @@
+<div class="layer-control">
+	{{#if isTicks}}
+		<span>{{lowerLabel}}</span>
+		<input class="slider"
+			data-slider-value={{initialValue}}>
+		<span class="right-label">{{upperLabel}}</span>
+	{{else}}
+		<input class="slider"
+			data-slider-min={{min}}
+			data-slider-max={{max}}
+			data-slider-step={{step}}
+			data-slider-value={{initialValue}}
+			name="timeSlider">
+		    <div>
+			       <label class="control-value-label">{{initialFormattedValue}}</label>
+		    </div>
+	{{/if}}
+</div>

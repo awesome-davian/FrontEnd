@@ -1,0 +1,43 @@
+.date-controls-gtra {
+	position: absolute;
+	bottom: 0;
+	left: calc(50% - 200px);
+	line-height: 20px;
+	text-align: center;
+	z-index: 2;
+}
+
+.date-slider-container-gtra {
+	bottom: 0;
+}
+
+.date-slider-container-gtra .slider.slider-horizontal-gtra {
+	width: 200px;
+}
+
+.date-slider-label-gtra {
+	display: inline-block;
+	padding: 0 4px;
+	font-size: 12px;
+}
+
+.date-label-gtra {
+	display: inline-block;
+	padding: 0 4px;
+	font-size: 12px;
+}
+
+.control-value-label {
+	padding: 0 4px;
+	font-size: 12px;
+}
+
+.slider.slider-horizontal {
+	width: 210px;
+	height: 20px;
+	margin-left: 10px
+}
+
+.right-label {
+	float: right;
+}

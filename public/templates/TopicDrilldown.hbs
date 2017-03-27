@@ -1,0 +1,20 @@
+<div class="topic-drilldown">
+    <div class="drilldown-label">
+        <span>'{{topic}}' Tweets</span>
+        <br>
+    </div>
+    <div class="drilldown-item">
+        {{#each tweets}}
+            <div class="drilldown-label">Username: </div>
+            <div class="drilldown-item">{{username}}</div>
+            <br>
+            <div class="drilldown-label">Tweet: </div>
+            <div class="drilldown-item">{{texts}}</div>
+            <br>
+            <div class="drilldown-label">Created At: </div>
+            <div class="drilldown-item">{{created_at}}</div>
+            <br>
+            <br>
+        {{/each}}
+    </div>
+</div>

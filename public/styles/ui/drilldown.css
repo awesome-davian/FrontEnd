@@ -1,0 +1,161 @@
+.drilldown-body {
+    max-height: 450px;
+}
+
+.drilldown-title {
+    font-size: 14px;
+    color: #ccc;
+}
+
+.drilldown-label {
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.drilldown-list {
+    padding-left:5px;
+}
+
+ul.drilldown-list {
+    list-style: none
+}
+
+li.drilldown-list::before {
+    content: "•";
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+.drilldown-item {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.drilldown-sub-item {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 10px;
+}
+
+.drilldown-actions-section {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-end;
+    margin-right: 5px;
+}
+
+.drilldown-action {
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    height: 20px;
+    width: 120px;
+}
+
+.drilldown-button {
+    color: #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 0px 2px 0px 2px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.drilldown-action-indicator {
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+}
+
+.drilldown-action-indicator .fa {
+    padding-top: 4px;
+    padding-left: 2px;
+}
+
+.drilldown-zoom-button {
+    position: absolute;
+    right: 5px;
+    display: inline;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.drilldown-zoom-button:hover {
+    color: #fff;
+
+}
+
+.drilldown-actionable-heading {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    height: 20px;
+}
+
+.drilldown-actionable-heading .settings-button {
+    border: none;
+    outline: none;
+    background: none;
+    width: 15px;
+    padding: 2px;
+    margin-left: 10px;
+    color: inherit;
+}
+.drilldown-actionable-heading .settings-button:hover {
+    color: white;
+}
+
+.depth-slider-container {
+    overflow: hidden;
+    border-radius: 3px;
+    height: 0px;
+    width: 260px;
+    padding-left: 12px;
+    padding-top: 4px;
+    margin-left: 30px;
+
+    transition: height 0.6s;
+}
+.depth-slider-container.open {
+    height: 30px;
+    box-shadow: 0px 2px 2px #555555;
+    transition: height 0.6s;
+}
+
+.depth-slider-container .slider.slider-horizontal {
+    margin: 0 10px;
+    width: 120px;
+}
+
+.drilldown-close-button {
+    position:absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    font-size: 14;
+}
+
+.drilldown-close-button:hover {
+color:   #fff;
+}
+
+.drilldown-text {
+    font-size: 11px;
+    word-wrap: break-word;
+}
+
+.drilldown-title {
+    color: #fff;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.drilldown-body {
+    max-height: 400px;
+    overflow: auto;
+}

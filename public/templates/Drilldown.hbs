@@ -1,0 +1,16 @@
+<div class="drilldown-head">
+	<div class="drilldown-title">{{title}}</div>
+	{{#if canClose}}
+		<div class="drilldown-close-button">
+			<i id="close-button" class="fa fa-close"></i>
+		</div>
+	{{/if}}
+</div>
+<div style="clear:both"></div>
+<div class="drilldown-body">
+	{{#if isLoading}}
+		{{>spinner}}
+	{{else}}
+		{{{body}}}
+	{{/if}}
+</div>
