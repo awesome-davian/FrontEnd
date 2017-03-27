@@ -80,11 +80,6 @@ class AsynchDrilldown extends Drilldown {
         }
     }
 
-    shoPopup(data){
-
-        super.showPopup(data);
-    }
-
      showTileDetail(data, query, showAsync = true) {
         if (showAsync) {
            this.showD3TileDetail(data, this.fetchDataAsynchTileDetail(query));

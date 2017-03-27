@@ -5,7 +5,6 @@ const template = require('../templates/TopicDrilldown');
 const $ = require('jquery');
 
 
-
 class TopicDrilldown extends AsynchDrilldown {
     constructor(name, plot, dataset, esEndpoint, esIndex) {
         super(name, dataset, esEndpoint, esIndex);
@@ -99,14 +98,26 @@ class TopicDrilldown extends AsynchDrilldown {
     show(data) {
         this.model.topic = data;
 
-        //console.log(this.model);
+        console.log(this.model);
+
+       $('.word-cloud-label').on('click', function(){
+
+         console.log('test')
+       });
+    
+       $('.word-cloud-label').on('click', event=>{
+
+        /* console.log(event.plotPx.x);
+         console.log(plot.viewport.x);*/
+
+       } );
+
 
         super.show(data, {}, false);
     }
 
     get_coord(plotX, plotY, data){
  
-        this.model.topic = data;
         var tileX = Math.floor( plotX/ this.plot.tileSize);
         var tileY = Math.floor(plotY/this.plot.tileSize); 
         var tileZoom = Math.floor(this.plot.zoom);
