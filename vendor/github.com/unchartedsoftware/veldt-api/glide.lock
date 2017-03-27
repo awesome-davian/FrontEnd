@@ -1,0 +1,29 @@
+hash: 885bda9ecb50156336f1de54b99451e463dcaca5a8dbe872a000acfec8c4c305
+updated: 2017-01-27T16:11:05.472136114-05:00
+imports:
+- name: github.com/davecgh/go-spew
+  version: 346938d642f2ec3594ed81d874461961cd0faa76
+  subpackages:
+  - spew
+- name: github.com/gorilla/websocket
+  version: 2d1e4548da234d9cb742cc3628556fef86aafbac
+- name: github.com/mattn/go-isatty
+  version: 30a891c33c7cde7b02a981314b4228ec99380cca
+- name: github.com/mgutz/ansi
+  version: c286dcecd19ff979eeb73ea444e479b903f2cfcb
+- name: github.com/unchartedsoftware/plog
+  version: bbb4bc4151f23ea489aff06d2a27f10e1a935993
+- name: github.com/unchartedsoftware/veldt
+  version: ba80f3bcca14bd57676ddc3bb5d9a6f2b5726173
+  subpackages:
+  - binning
+  - util/color
+  - util/json
+  - util/promise
+- name: github.com/vova616/xxhash
+  version: f0a9a8b74d487f9563a527daf3bd6b4fbd3f5d00
+- name: golang.org/x/sys
+  version: 30237cf4eefd639b184d1f2cb77a581ea0be8947
+  subpackages:
+  - unix
+testImports: []

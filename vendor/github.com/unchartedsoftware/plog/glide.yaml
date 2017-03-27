@@ -1,0 +1,4 @@
+package: github.com/unchartedsoftware/plog
+import:
+- package: github.com/mattn/go-isatty
+- package: github.com/mgutz/ansi

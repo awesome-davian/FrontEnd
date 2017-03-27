@@ -1,0 +1,11 @@
+package: github.com/unchartedsoftware/veldt-api
+import:
+- package: github.com/gorilla/websocket
+- package: github.com/mattn/go-isatty
+- package: github.com/mgutz/ansi
+- package: github.com/unchartedsoftware/plog
+- package: github.com/unchartedsoftware/veldt
+  subpackages:
+  - util/color
+  - util/json
+- package: github.com/vova616/xxhash

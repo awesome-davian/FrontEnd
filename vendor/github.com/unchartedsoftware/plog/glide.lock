@@ -1,0 +1,12 @@
+hash: c991a1e59291e15d58b8e65e82dccab2bbac06c33df287055d4f807c884bea2a
+updated: 2016-11-16T22:54:21.652644127-05:00
+imports:
+- name: github.com/mattn/go-isatty
+  version: 66b8e73f3f5cda9f96b69efd03dd3d7fc4a5cdb8
+- name: github.com/mgutz/ansi
+  version: c286dcecd19ff979eeb73ea444e479b903f2cfcb
+- name: golang.org/x/sys
+  version: 8f0908ab3b2457e2e15403d3697c9ef5cb4b57a9
+  subpackages:
+  - unix
+testImports: []
