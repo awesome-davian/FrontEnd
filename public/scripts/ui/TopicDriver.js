@@ -19,10 +19,24 @@ class TopicDriver extends Drilldown {
             exclusivenessFrom: 0,
             exclusivenessTo: 5,
             exclusiveness: 0,
-            timeFromLimit: 1383264000000, // January 1st 2013
-            timeToLimit: 1385769600000, // March 1st 2015
-            timeFrom: 1383264000000,
-            timeTo: 1385769600000,
+            // timeFromLimit: 1383264000000, // January 1st 2013
+            // timeToLimit: 1385769600000, // March 1st 2015
+            // timeFrom: 1383264000000,
+            // timeTo: 1385769600000,
+
+            // 131020-131110
+            // timeFromLimit: 1382227200000,
+            // timeToLimit: 1384041600000,
+            // timeFrom: 1382227200000,
+            // timeTo: 1384041600000,
+            
+            // 131103-131105
+            timeFromLimit: 1383436800000,
+            timeToLimit: 1383609600000,
+            timeFrom: 1383436800000,
+            timeTo: 1383609600000,
+            
+            
             clusterCount: 3,
             wordCount: 3,
             include: '',

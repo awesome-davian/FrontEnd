@@ -103,6 +103,12 @@ body {
 
 }
 
+.drilldown-item-right{
+
+	position: absolute;
+	right: 10px;
+}
+
 
 .topic-detail {
     position: absolute;

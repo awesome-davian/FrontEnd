@@ -1,10 +1,14 @@
 'use strict';
 
+const moment = require('moment');
 const AsynchDrilldown = require('./AsynchDrilldown');
 const template = require('../templates/TopicDrilldown');
 const $ = require('jquery');
 
 
+function getFriendlyDate(unix_time) {
+  return moment.utc(unix_time).format('MMM Do YYYY');
+}
 
 class TopicDrilldown extends AsynchDrilldown {
     constructor(name, plot, dataset, esEndpoint, esIndex) {
@@ -42,18 +46,22 @@ class TopicDrilldown extends AsynchDrilldown {
 
               for (var i =0; i<documents.length; i++){
 
+                    
+                    var readable_time = getFriendlyDate(documents[i].created_at);
+                    console.log('created_at: ' + documents[i].created_at);
+                    console.log('readable_time: ' + readable_time);
+
                     usernames[i] =  documents[i].username;
-                    createdAt[i] =  documents[i].created_at;
+                    createdAt[i] =  readable_time;
                     texts[i] =documents[i].text;
 
                     var tweetData ={};
                     tweetData.username = documents[i].username;
-                    tweetData.createdAt = documents[i].created_at;
+                    // tweetData.createdAt = documents[i].created_at;
+                    tweetData.created_at = readable_time;
                     tweetData.texts= documents[i].text;
 
                     tweet[i] =tweetData
-
-                    
                };
 
              //console.log(usernames);
@@ -99,14 +107,26 @@ class TopicDrilldown extends AsynchDrilldown {
     show(data) {
         this.model.topic = data;
 
-        //console.log(this.model);
+        console.log(this.model);
+
+       $('.word-cloud-label').on('click', function(){
+
+         console.log('test')
+       });
+    
+       $('.word-cloud-label').on('click', event=>{
+
+        /* console.log(event.plotPx.x);
+         console.log(plot.viewport.x);*/
+
+       } );
+
 
         super.show(data, {}, false);
     }
 
     get_coord(plotX, plotY, data){
  
-        this.model.topic = data;
         var tileX = Math.floor( plotX/ this.plot.tileSize);
         var tileY = Math.floor(plotY/this.plot.tileSize); 
         var tileZoom = Math.floor(this.plot.zoom);
