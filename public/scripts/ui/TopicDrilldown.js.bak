@@ -1,9 +1,14 @@
 'use strict';
 
+const moment = require('moment');
 const AsynchDrilldown = require('./AsynchDrilldown');
 const template = require('../templates/TopicDrilldown');
 const $ = require('jquery');
 
+
+function getFriendlyDate(unix_time) {
+  return moment.utc(unix_time).format('MMM Do YYYY');
+}
 
 class TopicDrilldown extends AsynchDrilldown {
     constructor(name, plot, dataset, esEndpoint, esIndex) {
@@ -41,18 +46,22 @@ class TopicDrilldown extends AsynchDrilldown {
 
               for (var i =0; i<documents.length; i++){
 
+                    
+                    var readable_time = getFriendlyDate(documents[i].created_at * 1000);
+                    console.log('created_at: ' + documents[i].created_at);
+                    console.log('readable_time: ' + readable_time);
+
                     usernames[i] =  documents[i].username;
-                    createdAt[i] =  documents[i].created_at;
+                    createdAt[i] =  readable_time;
                     texts[i] =documents[i].text;
 
                     var tweetData ={};
                     tweetData.username = documents[i].username;
-                    tweetData.createdAt = documents[i].created_at;
+                    // tweetData.createdAt = documents[i].created_at;
+                    tweetData.created_at = readable_time;
                     tweetData.texts= documents[i].text;
 
                     tweet[i] =tweetData
-
-                    
                };
 
              //console.log(usernames);

@@ -130,7 +130,7 @@ class TileDetailInfo extends AsynchDrilldown {
         c.tileY = tileY; 
         c.tileZoom = tileZoom;
         c.dateFrom = "1383264000000";
-        c.dateTo = "1385769600000"
+        c.dateTo = "1385769600000";
 
         return c; 
     }
@@ -201,31 +201,6 @@ class TileDetailInfo extends AsynchDrilldown {
         console.log(allTopics[3].topics[2].topic[0]);
 
 
-/*
-
-        for (var i =0 ; i<allTopics.length; i++){
-
-          var dayTopics = allTopics[i].topics;
-          
-          for(var i = 0; i<dayTopics.length; i++){
-
-            var exclusiveTopics = dayTopics[i].topic; 
-
-
-            for(var i =0; i<exclusiveTopics.length; i++){
-
-              console.log(exclusiveTopics[i]);
-            }
-
-
-        
-          }
-
-
-
-        }*/
-
-  
            
         var startwidth =300, startheight = 180;
         var svg = d3.select(".topic-drilldown").append("svg").style("width", 300).style("height",180),
@@ -273,6 +248,7 @@ class TileDetailInfo extends AsynchDrilldown {
               .attr("dy", "0.71em")
               .attr("text-anchor", "end")
               .text("Frequency");
+
 
         g.selectAll(".bar")
             .data(data)
@@ -347,7 +323,7 @@ class TileDetailInfo extends AsynchDrilldown {
 
            
 
-        labelEnter.append("input").attr("type","radio").attr("class","shape").attr("name","mode")
+      /*  labelEnter.append("input").attr("type","radio").attr("class","shape").attr("name","mode")
                   .attr("value", function(d, i) {return i;})
                    .property("checked", function(d, i) { 
                         return (i===j); 
@@ -391,13 +367,13 @@ class TileDetailInfo extends AsynchDrilldown {
 
 
 
-                    });
+                    });*/
 
-        labelEnter.append("label").text(function(d) {return d;});
+      /*  labelEnter.append("label").text(function(d) {return d;});
 
 
         console.log(checkedValue);
-
+*/
 
 
                

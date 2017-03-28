@@ -1,6 +1,7 @@
 'use strict';
 
 const AsynchDrilldown = require('./AsynchDrilldown');
+const SliderGTRA = require('./SliderGTRA');
 //const template = require('../templates/TileDrildown');
 const template = require('../templates/TileDrildownD3');
 const $ = require('jquery');
@@ -13,10 +14,28 @@ class TileDetailInfo extends AsynchDrilldown {
         this._dataset = dataset;
         this._currentNodeId = null;
         this.plot = plot;
-        this.model = {};
+        this.model = {
+
+           exclusivenessFrom: 0,
+            exclusivenessTo: 5,
+            exclusiveness: 0,
+        };
 
     
 
+    }
+
+    onElementInserted() {
+        const exclusivenessSlider = new SliderGTRA({
+            ticks: [0, 1, 2, 3, 4, 5],
+            initialValue: this.model.exclusiveness,
+            lowerLabel: 'low',
+            upperLabel: 'high',
+            slideStop: value => {
+                this.model.exclusiveness = value;
+            }
+        });
+        $('#slider-xcl').append(exclusivenessSlider.getElement());
     }
 
     getBodyTemplate() {
@@ -119,9 +138,11 @@ class TileDetailInfo extends AsynchDrilldown {
 
     show(data) {
         this.model.topic = data;
-
-        super.show(data, {}, false);
+        //super.show(data, {}, false);
+        super.showPopup(data);
     }
+
+
 
     get_coord(plotX, plotY, data){
  
@@ -204,14 +225,15 @@ class TileDetailInfo extends AsynchDrilldown {
 
         }*/
 
-   
-
-
+  
+           
         var startwidth =300, startheight = 180;
         var svg = d3.select(".topic-drilldown").append("svg").style("width", 300).style("height",180),
             margin = {top: 20, right: 20, bottom: 30, left: 40},
             width = +startwidth - margin.left - margin.right,
             height = +startheight - margin.top - margin.bottom;
+
+
 
         var x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
         var y = d3.scaleLinear().range([height, 0]);
@@ -223,15 +245,19 @@ class TileDetailInfo extends AsynchDrilldown {
            d.score = d.score;
            d.index = d.index;
 
+           //console.log(d.alltopic);
+           d.alltopic = d.alltopic;
+
 
         });
 
+       var textfield = d3.select(".topic-drilldown").append("div").attr("class","textfield")
+                   .style("width", 300).style("height", 150);
+
+       console.log(data.alltopic);
 
         x.domain(data.map(function(d){ return d.index;}));
         y.domain([0, d3.max(data, function(d) { return d.score; })]);
-
-
-
 
         g.append("g")
           .attr("class", "axis axis--x")
@@ -259,40 +285,128 @@ class TileDetailInfo extends AsynchDrilldown {
               .attr("height", function(d) { return height - y(d.score); })
               .on("click", function(d){
 
+
+                  var shapeData = ["0", "1", "2", "3", "4", "5"], 
+                      j = 0;  // Choose the star as default
+
+                  // Create the shape selectors
+                  var form = d3.select(".topic-description-topics").append("form");
+
+                  var labelEnter = form.selectAll("span")
+                      .data(shapeData)
+                      .enter().append("span");
+
+                  var checkedValue = 0;
+
+                d3.selectAll(".topicText").remove();
+
                 console.log(d.alltopic);
                 console.log(d.alltopic[0].topic);
+
+                var dayTopic = d.alltopic;
 
 
                 var a= d.alltopic[0].topic[0].words[1].word;
 
-                for(var i=0 ; i<6; i ++){
+                var topic_str= '';
+                for(var i=0 ; i<5; i ++){   
 
-                  var topic_str= '';
                   var word_str = '';
-
                   var wordsArr = d.alltopic[0].topic[i]
 
-                  console.log(wordsArr);
+                  //console.log(wordsArr);
 
 
 
                   for(var j=0; j<5; j++){
-
-                    console.log(d.alltopic[0].topic[i].words[j]);
-
-                    word_str = '';
+                    //console.log(d.alltopic[0].topic[i].words[j]);                  
                     //word_str+=wordsArr.words[j].word + ' ';
                     word_str+=d.alltopic[0].topic[i].words[j].word + ' ';
 
+                    //console.log(word_str);
+
                   }
                   topic_str+=word_str + '\n';
+
+                  var xPos = parseFloat(d3.select(this).attr("x"));
+                  var yPos = parseFloat(d3.select(this).attr("y"));
+                  var height = parseFloat(d3.select(this).attr("height"))
+
+                  d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
+
+
+                  textfield.append("text")
+                  .attr("class","topicText")
+                  .attr("x",xPos)
+                  .attr("y",yPos+i*10)
+                  .style("font", 5)
+                  .text(word_str); 
+
+                  console.log(topic_str);
                 };
 
+           
 
-                console.log(topic_str);
+        labelEnter.append("input").attr("type","radio").attr("class","shape").attr("name","mode")
+                  .attr("value", function(d, i) {return i;})
+                   .property("checked", function(d, i) { 
+                        return (i===j); 
+                    }).on("click", function(d){
+
+                      d3.selectAll(".topicText").remove();
+                       checkedValue =d;
+                       
+                       var textValues = d3.selectAll(".textfield").data(data);
+
+                       console.log(data);
+
+                       for(var i=0 ; i<5; i ++){ 
+
+                        var xPos = parseFloat(d3.select(this).attr("x"));
+                        var yPos = parseFloat(d3.select(this).attr("y"));
+                        var height = parseFloat(d3.select(this).attr("height"));
+
+                        var word_str = '';
+                        //var wordsArr = d.alltopic[0].topic[i]
+
+                        textValues.append("text")
+                                  .attr("class","topicText")
+                                  .attr("x",xPos)
+                                  .attr("y",yPos+i*10)
+                                  .style("font", 5)
+                                   .text(function(d){
+
+                                    //console.log(dayTopic);
+
+                                     for(var j=0; j<5; j++){     
+                                         //console.log(dayTopic[checkedValue].topic[i].words[j]);                  
+                                         word_str+=dayTopic[checkedValue].topic[i].words[j].word + ' ';
+                                       };
+
+                                    return word_str;       
+
+                                   }); 
+               
+                        };
+
+
+
+                    });
+
+        labelEnter.append("label").text(function(d) {return d;});
+
+
+        console.log(checkedValue);
+
+
+
+               
               });
+
     
     }
+
+
 
 
 }

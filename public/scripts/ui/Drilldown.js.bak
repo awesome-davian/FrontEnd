@@ -41,6 +41,12 @@ class Drilldown {
 		this._isVisible = true;
 		this.update(data);
 	}
+	showPopup(data){
+		this._isVisible = true;
+		this.getElement().empty();
+		this.getElement().append(template(this.recomputeContext(data)));
+		this.getElement().css('display', '');
+	}
 	showAsynch(startData, dataPromise) {
 
 		console.log(dataPromise);
@@ -128,6 +134,8 @@ class Drilldown {
 
 	showD3TileDetail(startData, dataPromise) {
 
+
+		console.log(startData);
 	    console.log(dataPromise);
 
 	    dataPromise.then(d =>{
@@ -135,6 +143,9 @@ class Drilldown {
 		    this.recomputeContextTD(d);
 
 	    });
+
+	    this.onElementInserted();
+
 
 	   
 
