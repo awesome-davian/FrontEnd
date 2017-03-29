@@ -23,7 +23,7 @@ function init(plot, callback) {
 	$('.tile-controls').append(driver.getElement());
 	driver.show();
 
-	const drilldown = new TopicDrilldown('Tweets', plot, {}, '', '');
+	const drilldown = new TopicDrilldown('Tweets by Time', plot, {}, '', '');
 	$('.tile-drilldown').append(drilldown.getElement());
 
 	const topicPopup = new TileDetailInfo('Tile Detail info', plot, {}, '', '');
@@ -52,7 +52,9 @@ window.startApp = function() {
 	// Map control
 	const map = new lumo.Plot('#map', {
 		continuousZoom: false,
-		zoom: 10
+		zoom: 10,
+		minZoom: 9,
+		maxZomm: 13
 	});
 	// Center on NYC.
 	map.viewport.centerOn(

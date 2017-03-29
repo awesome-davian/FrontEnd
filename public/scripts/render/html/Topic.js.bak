@@ -63,22 +63,22 @@ const tempPosition = function(pos, groupCount, topicCount) {
 
 const tempPosition2 = function(pos, groupCount, topicCount) {
 
-	const baseX = -128 + (128)/topicCount
-	const baseY = -128 + (128)/groupCount
+	const base_x = -128 + (128)/topicCount
+	const base_y = -128 + (128)/groupCount
 	
 	
-	pos.x = baseX + pos.a*(256/topicCount);
-	pos.y = baseY + pos.b*(256/groupCount);
+	pos.x = base_x + pos.a*(256/topicCount);
+	pos.y = base_y + pos.b*(256/groupCount);
 
 
-	console.log(pos.x);
-	console.log(pos.y);
+	//console.log(pos.x)
+	//console.log(pos.y)
    
     pos.a = pos.a + 1;
 
 	if(pos.x>128){
 
-		pos.x = baseX;
+		pos.x = base_x;
 		pos.a = 0; 
 		pos.b = pos.b+1;
 	}
@@ -254,9 +254,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         const colorJump = Math.floor(255 / (Math.floor(groupCount / 5) + 1));
         const colorGroup = group % 5;
 
-        //const color_map = ['#ffff99','#beaed4','#ccebc5','#d629d1','#df6161'];
-        //const color_map =['69DC37','5E009C','F839E9','FFF300','E85A08'];
-        const color_map = ['ff7f0e','2ca02c','d62728','9467bd','8c564b'];
+        // const color_map = ['#ffff99','#beaed4','#ccebc5','#d629d1','#df6161'];
 
         const colors = ['FF', 'FF', 'FF'];
         const colorAdjustment = colorJump * (Math.floor(group / 5) + 1);
@@ -267,8 +265,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         // console.log('group count: ' + groupCount);
         // console.log('color group: ' + colorGroup);
 
-        //return '#' + colors[2] + colors[1] + colors[0];
-        return '#' +color_map[colorGroup]
+        return '#' + colors[2] + colors[1] + colors[0];
     }
 
     

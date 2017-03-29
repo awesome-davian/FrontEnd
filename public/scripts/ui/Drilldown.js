@@ -52,27 +52,6 @@ class Drilldown {
 		console.log(dataPromise);
 
 
-	/*	var docs= dataPromise.then(function(data){
-
-			//console.log(data);
-			//console.log(data.documents);
-
-			var documents = data.documents;
-
-			for (var i =0; i < documents.length; i++){
-
-				var doc = documents[i];
-				var docCreated = doc.created_at;
-				var docText = doc.text;
-				var docUsername = doc.username;
-			}
-
-			return documents;
-
-		});*/
-
-		//console.log(docs);
-
 		const display = (data, isLoading) => {
 			if (!this._isVisible) {
 				return;
@@ -88,12 +67,14 @@ class Drilldown {
 			this.getElement().append(template(c));
 			this.getElement().css('display', '');
 			this.onElementInserted();
+			console.log('display');
+			this.makeGraph(data);
 		};
 		// display drilldown with spinner after a timeout occurs
 		const timeout = setTimeout(() => display(startData, true), TIMEOUT);
 		dataPromise.then(d => {
 			clearTimeout(timeout);
-			//console.log(d);
+			console.log(d);
 			display(d, false);
 		})
 		.catch( error => {
@@ -112,12 +93,14 @@ class Drilldown {
 				return;
 			}
 			
-			const c = this.recomputeContextTD(data);
-			c.isLoading = isLoading;
-			this.getElement().empty();
-			this.getElement().append(template(c));
-			this.getElement().css('display', '');
-			this.onElementInserted();
+			//const c = this.recomputeContextTD(data);
+			//c.isLoading = isLoading;
+			//this.getElement().empty();
+			//this.getElement().append(template(c));
+			//this.getElement().css('display', '');
+            this.makeGraphDetail(data);
+			//this.onElementInserted();
+			
 		};
 		// display drilldown with spinner after a timeout occurs
 		const timeout = setTimeout(() => display(startData, true), TIMEOUT);
@@ -144,9 +127,7 @@ class Drilldown {
 
 	    this.onElementInserted();
 
-
-	   
-
+	    this._isVisible = true;
 	}
 
 	hide() {

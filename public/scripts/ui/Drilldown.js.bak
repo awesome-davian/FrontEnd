@@ -134,8 +134,6 @@ class Drilldown {
 
 	showD3TileDetail(startData, dataPromise) {
 
-
-		console.log(startData);
 	    console.log(dataPromise);
 
 	    dataPromise.then(d =>{

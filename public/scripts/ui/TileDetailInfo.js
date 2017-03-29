@@ -7,6 +7,21 @@ const template = require('../templates/TileDrildownD3');
 const $ = require('jquery');
 
 
+function _getWordColor(group) {
+    const colorJump = Math.floor(255/5  + 1);
+    const colorGroup = group % 5;
+
+
+    const colors = ['FF', 'FF', 'FF'];
+    const colorAdjustment = colorJump * (Math.floor(group / 5) + 1);
+    colors[colorGroup] = ('00' + (255 - colorAdjustment)
+        .toString(16)).substr(-2).toUpperCase();
+
+    const colormap = ['ff7f0e','2ca02c','d62728','9467bd','8c564b'];
+
+    //return '#' + colors[2] + colors[1] + colors[0];
+    return '#' +colormap[colorGroup];
+  }
 
 class TileDetailInfo extends AsynchDrilldown {
     constructor(name, plot, dataset, esEndpoint, esIndex) {
@@ -104,12 +119,8 @@ class TileDetailInfo extends AsynchDrilldown {
        console.log(graphElement);
 
 
-        this.makeGraph(data);
-
-
-
-
-            
+        //this.makeGraphDetail(data);
+      
 
          this.model.timeGraph = graphElement;
 
@@ -130,7 +141,7 @@ class TileDetailInfo extends AsynchDrilldown {
         c.tileY = tileY; 
         c.tileZoom = tileZoom;
         c.dateFrom = "1383264000000";
-        c.dateTo = "1385769600000";
+        c.dateTo =   "1385769600000";
 
         return c; 
     }
@@ -162,7 +173,9 @@ class TileDetailInfo extends AsynchDrilldown {
 
     }
 
-    makeGraph(datas){
+  
+
+    makeGraphDetail(datas){
 
       //parse time 
        var timeGraph = datas.time_grath; 
@@ -186,8 +199,7 @@ class TileDetailInfo extends AsynchDrilldown {
         }         
         var data =graphElement;
 
-
-        var allTopics = datas.all_topics; 
+        /*var allTopics = datas.all_topics; 
         console.log(allTopics);
         var dayTopic = allTopics[3].topics;
         console.log(dayTopic);
@@ -198,7 +210,7 @@ class TileDetailInfo extends AsynchDrilldown {
         var sp_words= words[0];
         console.log(sp_words);
 
-        console.log(allTopics[3].topics[2].topic[0]);
+        console.log(allTopics[3].topics[2].topic[0]);*/
 
 
            
@@ -226,7 +238,7 @@ class TileDetailInfo extends AsynchDrilldown {
 
         });
 
-       var textfield = d3.select(".topic-drilldown").append("div").attr("class","textfield")
+       var textfield = d3.select(".topic-drilldown").append("svg").attr("class","textfield")
                    .style("width", 300).style("height", 150);
 
        console.log(data.alltopic);
@@ -234,21 +246,41 @@ class TileDetailInfo extends AsynchDrilldown {
         x.domain(data.map(function(d){ return d.index;}));
         y.domain([0, d3.max(data, function(d) { return d.score; })]);
 
-        g.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x));
+       var axis= 
+       g.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height + ")")
+        //.call(d3.axisBottom(x).ticks(6).tickValues([5,10,15,20,25,30]));
+        .call(d3.axisBottom(x));
 
         g.append("g")
               .attr("class", "axis axis--y")
+         /*     .style("stroke", "white")
+              .style("stroke-width",0.1)*/
               .call(d3.axisLeft(y).ticks(10))
             .append("text")
               .attr("transform", "rotate(-90)")
               .attr("y", 6)
               .attr("dy", "0.71em")
-              .attr("text-anchor", "end")
-              .text("Frequency");
+              .attr("text-anchor", "end");
 
+   /*    g.append("text")
+         .attr("text-anchor", "middle")
+         .attr("transform", "translate(" +(width/2)+","+(height+margin.top+20)+")")
+         .text("score");*/
+
+         g.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 0 -(margin.left/3*2))
+          .attr("x", 0 -(height/2))
+          .style("text-anchor", "middle")
+          .text("Score")
+          .attr("fill","white");
+
+       g.selectAll(".domain").attr("stroke","white");
+       g.selectAll("line").attr("stroke","white");
+
+          
 
         g.selectAll(".bar")
             .data(data)
@@ -262,7 +294,7 @@ class TileDetailInfo extends AsynchDrilldown {
               .on("click", function(d){
 
 
-                  var shapeData = ["0", "1", "2", "3", "4", "5"], 
+            /*      var shapeData = ["0", "1", "2", "3", "4", "5"], 
                       j = 0;  // Choose the star as default
 
                   // Create the shape selectors
@@ -272,7 +304,7 @@ class TileDetailInfo extends AsynchDrilldown {
                       .data(shapeData)
                       .enter().append("span");
 
-                  var checkedValue = 0;
+                  var checkedValue = 0;*/
 
                 d3.selectAll(".topicText").remove();
 
@@ -310,13 +342,25 @@ class TileDetailInfo extends AsynchDrilldown {
 
                   d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
 
+                  const groupcolor =_getWordColor(i);
+                  var mycolor =d3.rgb(groupcolor);
+                  console.log(mycolor);
+
 
                   textfield.append("text")
                   .attr("class","topicText")
-                  .attr("x",xPos)
-                  .attr("y",yPos+i*10)
+                  .attr("x",10)
+                  .attr("y",15+15*i)
                   .style("font", 5)
-                  .text(word_str); 
+                  .text(word_str)
+                  .attr("fill",function(d,i){
+                      return mycolor;
+                  }); 
+
+                  textfield.append("span")
+                   .text(' ');
+
+                 // d3.select(".topicText").style("color",mycolor);
 
                   console.log(topic_str);
                 };
