@@ -8,7 +8,7 @@ const lumo = require('lumo');
 
 
 const VERTICAL_OFFSET = 24;
-const HORIZONTAL_OFFSET = 10;
+const HORIZONTAL_OFFSET = 0;
 const NUM_ATTEMPTS = 1;
 
 /**
@@ -148,6 +148,53 @@ const getMouseButton = function(event) {
 	}
 };
 
+const sortWords = function(words) {
+
+	var sorted = splitWordsbyGroup(words);
+
+	sorted.forEach( group => {
+		group = group.sort( function(a, b) {
+			return b.count - a.count;
+		});
+	});
+
+	sorted.sort( function(a, b){
+		var cnt_a = 0;
+		a.forEach(word=>{
+			cnt_a += word.count;
+		});
+
+		var cnt_b = 0;
+		b.forEach(word=>{
+			cnt_b += word.count;
+		});
+
+		// if (cnt_b < cnt_a) {
+		// 	var temp_group = a.group;
+		// 	a.group = b.group;
+		// 	b.group = temp_group;
+		// }
+
+		return cnt_b - cnt_a;
+	});
+
+	sorted.forEach(function(group, idx){
+		group.forEach(word=>{
+			word.group = idx;
+			word.text = idx + ':' + word.text;
+		});
+	});
+
+	var new_words = [];
+	sorted.forEach( group => {
+		group = group.forEach(word => {
+			new_words.push(word);
+		});
+	});
+
+	return new_words;
+}
+
 const measureWords = function(renderer, wordCounts, extrema) {
 	// sort words by frequency
 	/*wordCounts = wordCounts.sort((a, b) => {
@@ -159,7 +206,7 @@ const measureWords = function(renderer, wordCounts, extrema) {
 	// build measurement html
 	const $html = $('<div style="height:256px; width:256px;"></div>');
 	const minFontSize = renderer.minFontSize;
-	const maxFontSize = renderer.maxFontSize;
+	const maxFontSize = renderer.maxFontSize - 1;
 	const transform = renderer.transform;
 	wordCounts.forEach(word => {
 		word.percent = Transform.transform(word.count, transform, extrema);
@@ -183,7 +230,181 @@ const measureWords = function(renderer, wordCounts, extrema) {
 	return wordCounts;
 };
 
+const splitWordsbyGroup = function(words) {
+
+	const groups = {};
+	words.map(value=> {
+		groups[value.group] = [];
+	});
+
+	words.forEach(word => {
+		groups[word.group].push(word);
+	});
+
+	var groupArray = [];
+	for (var each in groups){
+		groupArray.push(groups[each]);
+	}
+
+	return groupArray;
+};
+
+const spiralPosition2 = function(pos, groupIndex, groupCount) {
+	const pi2 = 2 * Math.PI;
+	const circ = pi2 * pos.radius;
+	
+	let start = (pi2 / (groupCount-1))*(groupIndex-1) + ((circ/360)*(120+10))/pos.radius;
+	let end = (pi2 / (groupCount-1))*(groupIndex) + ((circ/360)*(120-10))/pos.radius;
+	
+	if (groupIndex == 3) {
+		start -= ((circ/360)*(30))/pos.radius
+		end -= ((circ/360)*(30))/pos.radius
+	}
+	let center = (start + end)/2;
+
+	const inc = (pos.arcLength > circ / 30) ? circ / 30 : pos.arcLength;
+	let da = inc / pos.radius;
+	let nt = 0;
+
+	// console.log(da);
+
+	if (pos.is_first == 1){
+		nt = center;
+		pos.is_first = 0;
+		// console.log('a');
+	} else {
+
+		if (groupIndex == 0)
+			nt = pos.t + da;
+		else {
+			if (pos.index % 2 == 0) {
+				// just change the direction
+				nt = center + -1*(pos.t - center);
+				// console.log('['+pos.index+']b, nt: ' + nt + ', center: ' + center + ', pos.t: ' + pos.t);
+			} else {
+				// keep the direction and increase the angle
+				if ((pos.t - center) > 0){
+					nt = (pos.t + da);
+					// console.log('['+pos.index+']c, nt: ' + nt + 'r: ' + pos.radius);
+				} else {
+					nt = (pos.t - da);
+					// console.log('['+pos.index+']d, nt: ' + nt + 'r: ' + pos.radius);
+				}
+			}	
+		}
+		
+	}
+
+	if (start > pi2 && end > pi2) {
+		start = start % pi2;
+		end = end % pi2;
+	}
+
+	// var log = 'start: ' + start + ', end: ' + end;
+	// console.log(log);
+
+	if (groupIndex == 0) {
+		if (nt > pi2) {	
+			nt = nt % pi2;
+			pos.radius = pos.radius + pos.radiusInc;	
+		}
+	} else {
+		if (nt < start || nt > end || nt > pi2) {
+			pos.radius = pos.radius + pos.radiusInc;	
+		}
+		if (nt < start || nt > end) {
+			nt = center;
+		}
+	}
+
+	pos.t = nt;
+	pos.x = pos.radius * Math.cos(nt);
+	pos.y = pos.radius * Math.sin(nt);
+	pos.index += 1;
+
+	// console.log(pos.t);
+	return pos;
+};
+
+const spiralPosition3 = function(pos, groupIndex, groupCount) {
+	const pi2 = 2 * Math.PI;
+	const circ = pi2 * pos.radius;
+	
+	let start = (pi2 / (groupCount-1))*(groupIndex-1) + ((circ/360)*(120+10))/pos.radius;
+	let end = (pi2 / (groupCount-1))*(groupIndex) + ((circ/360)*(120-10))/pos.radius;
+	
+	if (groupIndex == 3) {
+		start -= ((circ/360)*(30))/pos.radius
+		end -= ((circ/360)*(30))/pos.radius
+	}
+	let center = (start + end)/2;
+
+	const inc = (pos.arcLength > circ / 30) ? circ / 30 : pos.arcLength;
+	let da = inc / pos.radius;
+	let nt = 0;
+
+	// console.log(da);
+
+	if (pos.is_first == 1){
+		nt = center;
+		pos.is_first = 0;
+		// console.log('a');
+	} else {
+
+		if (groupIndex == 0)
+			nt = pos.t + da;
+		else {
+			if (pos.index % 2 == 0) {
+				// just change the direction
+				nt = center + -1*(pos.t - center);
+				// console.log('['+pos.index+']b, nt: ' + nt + ', center: ' + center + ', pos.t: ' + pos.t);
+			} else {
+				// keep the direction and increase the angle
+				if ((pos.t - center) > 0){
+					nt = (pos.t + da);
+					// console.log('['+pos.index+']c, nt: ' + nt + 'r: ' + pos.radius);
+				} else {
+					nt = (pos.t - da);
+					// console.log('['+pos.index+']d, nt: ' + nt + 'r: ' + pos.radius);
+				}
+			}	
+		}
+		
+	}
+
+	if (start > pi2 && end > pi2) {
+		start = start % pi2;
+		end = end % pi2;
+	}
+
+	// var log = 'start: ' + start + ', end: ' + end;
+	// console.log(log);
+
+	if (groupIndex == 0) {
+		if (nt > pi2) {	
+			nt = nt % pi2;
+			pos.radius = pos.radius + pos.radiusInc;	
+		}
+	} else {
+		if (nt < start || nt > end || nt > pi2) {
+			pos.radius = pos.radius + pos.radiusInc;	
+		}
+		if (nt < start || nt > end) {
+			nt = center;
+		}
+	}
+
+	pos.t = nt;
+	pos.x = pos.radius * Math.cos(nt);
+	pos.y = pos.radius * Math.sin(nt);
+	pos.index += 1;
+
+	// console.log(pos.t);
+	return pos;
+};
+
 const createWordCloud = function(renderer, wordCounts, extrema) {
+
 	const tileSize = renderer.layer.plot.tileSize;
 	const boundingBox = {
 		width: tileSize - HORIZONTAL_OFFSET * 2,
@@ -191,23 +412,33 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
 		x: 0,
 		y: 0
 	};
+
 	const cloud = [];
-	// sort words by frequency
+
+	wordCounts = sortWords(wordCounts);
+
+	console.log(wordCounts);
+
+	// measure the words size
 	wordCounts = measureWords(renderer, wordCounts, extrema);
+
+	var idx = 1;
 	// assemble word cloud
 	wordCounts.forEach(wordCount => {
 		// starting spiral position
 		let pos = {
 			radius: 1,
-			radiusInc: 5,
-			arcLength: 10,
+			radiusInc: 2,
+			arcLength: 5,
 			x: 0,
 			y: 0,
 			t: 0,
 			collisions: 0,
 			a: 0, 
 			b:0,
-			index :0
+			index :0,
+			is_first: 1,
+			
 		};
 		//console.log(wordCounts);
 
@@ -219,14 +450,15 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
         const groupCount = Math.max(...groups) + 1;
         const topicCount = length/groupCount
 
-
 		// spiral outwards to find position
 		while (pos.collisions < NUM_ATTEMPTS) {
+			
 			// increment position in a spiral
-			//pos = tempPosition2(pos, groupCount, topicCount);
-			pos = spiralPosition(pos);
+			pos = spiralPosition3(pos, wordCount.group, groupCount);
 			// test for intersection
 			if (!intersectWord(pos, wordCount, cloud, boundingBox)) {
+				// wordCount.text = wordCount.text + ':' + idx;
+				// idx++;
 				cloud.push({
 					text: wordCount.text,
 					fontSize: wordCount.fontSize,
@@ -242,6 +474,64 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
 			}
 		}
 	});
+
+	// var wordGroup = splitWordsbyGroup(wordCounts);
+
+	// wordGroup.forEach(group=>{
+		
+	// 	// assemble word cloud
+	// 	group.forEach(wordCount => {
+
+	// 		// starting spiral position
+	// 		let pos = {
+	// 			radius: 1,
+	// 			radiusInc: 5,
+	// 			arcLength: 10,
+	// 			x: 0,
+	// 			y: 0,
+	// 			t: 0,
+	// 			collisions: 0,
+	// 			a: 0, 
+	// 			b:0,
+	// 			index :0
+	// 		};
+	// 		//console.log(wordCounts);
+
+	// 		const length= wordCounts.length;
+			
+	// 		const groups = wordCounts.map(value => {
+	// 			return parseInt(value.group, 10);
+	// 		});
+	// 		const groupCount = Math.max(...groups) + 1;
+	// 		const topicCount = length/groupCount
+
+
+	// 		// spiral outwards to find position
+	// 		while (pos.collisions < NUM_ATTEMPTS) {
+	// 			// increment position in a spiral
+	// 			//pos = tempPosition2(pos, groupCount, topicCount);
+	// 			pos = spiralPosition(pos);
+	// 			// test for intersection
+	// 			if (!intersectWord(pos, wordCount, cloud, boundingBox)) {
+	// 				cloud.push({
+	// 					text: wordCount.text,
+	// 					fontSize: wordCount.fontSize,
+	// 					percent: Math.round((wordCount.percent * 100) / 10) * 10, // round to nearest 10
+	// 					x: pos.x,
+	// 					y: pos.y,
+	// 					width: wordCount.width,
+	// 					height: wordCount.height,
+	// 					count : wordCount.count
+
+	// 				});
+	// 				break;
+	// 			}
+	// 		}
+	// 	});
+	// });
+
+	
+
 	return cloud;
 };
 
@@ -256,7 +546,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
         //const color_map = ['#ffff99','#beaed4','#ccebc5','#d629d1','#df6161'];
         //const color_map =['69DC37','5E009C','F839E9','FFF300','E85A08'];
-        const color_map = ['ff7f0e','2ca02c','d62728','9467bd','8c564b'];
+	//const color_map = ['ff7f0e','2ca02c','d62728','9467bd','8c564b'];
+        const color_map = ['ffffff','ff3c82','89c541','fee801','b93cff'];
 
         const colors = ['FF', 'FF', 'FF'];
         const colorAdjustment = colorJump * (Math.floor(group / 5) + 1);
@@ -274,19 +565,22 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     
 
     drawTile(element, tile) {
-
-    	//console.log(tile);
+		
+    	// console.log(tile);
 
     	//console.log(tile.data);
         const wordCounts = _.flatMap(tile.data, (value, key) => {
             return _.map(value.words, (weight, word) => {
     			return {
-    				text: key + ':' + word,
+    				// text: key + ':' + word,
+					text: word,
     				count: weight,
                     group: key
     			};
     		});
         });
+		// console.log(wordCounts);
+
         const groupCount = this.getGroupCount(wordCounts);
 		const layer = this.layer;
 		const extrema = layer.getExtrema(tile.coord.z);
@@ -303,7 +597,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		const margin = 5;
 		const count_font_size = 18
 		const count_color = '#ffffff'
-     
 
 		cloud.forEach(word => {
             const combinedText = word.text;

@@ -93,13 +93,14 @@ class Drilldown {
 				return;
 			}
 			
-			//const c = this.recomputeContextTD(data);
-			//c.isLoading = isLoading;
-			//this.getElement().empty();
-			//this.getElement().append(template(c));
-			//this.getElement().css('display', '');
+			const c = this.recomputeContextTD(data);
+			c.isLoading = isLoading;
+			this.getElement().empty();
+			this.getElement().append(template(c));
+			this.getElement().css('display', '');
             this.makeGraphDetail(data);
 			//this.onElementInserted();
+			//console.log('showAsynchTileDetail');
 			
 		};
 		// display drilldown with spinner after a timeout occurs

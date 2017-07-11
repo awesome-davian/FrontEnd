@@ -11,7 +11,7 @@ class AsynchDrilldown extends Drilldown {
         this._dataset = dataset;
         this._currentNodeId = null;
         //this.esURL = `${esEndpoint}/${esIndex}/_search?`;
-        this.esURL = 'http://163.152.20.64:5002/GET_RELATED_DOCS/test'
+        this.esURL = 'http://163.152.20.64:5001/GET_RELATED_DOCS/test'
     }
 
     // creates a promise responsible for asynchronously fetching data from the
@@ -52,7 +52,7 @@ class AsynchDrilldown extends Drilldown {
 
 
         return Ajax.customAjaxPromise({
-                url: 'http://163.152.20.64:5002/GET_TILE_DETAIL_INFO/test',
+                url: 'http://163.152.20.64:5001/GET_TILE_DETAIL_INFO/test',
                 method: 'POST',
                 dataType: 'json',
                 data: { 

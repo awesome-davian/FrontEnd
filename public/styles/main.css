@@ -63,22 +63,26 @@ body {
 .topic-term {
 	float: right;
 	width: 70%;
+	background: none;
+	color: #FFFFFF;
 }
 
 .topic-count {
 	position: absolute;
 	left: 120px;
 	width: 20px;
+	background: none;
+	color: #FFFFFF;
 }
 
 .drilldown-container {
-	width: 300px;
+	width: 310px;
 	background-color: rgba(0,0,0,0.5);
 	border-radius: 4px;
 	border: 1px solid #000;
 	padding: 4px;
 	z-index: 2;
-	height: 410px;
+	height: 430px;
 }
 
 .layer-toggle {
@@ -111,16 +115,31 @@ body {
 
 .topic-drilldown-alignright{
 	float: right;
-	font: 12px sans-serif;
+	font: 9px sans-serif;
 }
 
 
 .topic-detail {
     position: absolute;
-    right: 10px;
     top: 20px;
     z-index: 1;
-	height: 410px;
+    right: 10px;
+	height: 390px;
+	width: 290;
+}
+
+.timeGraph{
+
+	position: absolute;
+	left:5px;
+	font-size: 16px;
+}
+
+.topic-drilldown{
+
+	padding-top: 8px;
+
+	
 }
 
 
@@ -148,3 +167,49 @@ body {
     vertical-align: bottom;
     z-index: 1;
 }
+
+.axis--y{
+
+	stroke: white;
+}
+
+.axis--x{
+
+	stroke: white;
+	font:8px;
+}
+
+.axis{
+
+	stroke: white;
+}
+
+
+.drilldown-title{
+
+	font:18px;
+
+}
+
+.topic-drilldown-item{
+
+	border-bottom: 0.5px solid #333333;
+	padding: 0.5em;
+}
+
+#topic-tiler{
+	margin:0px;
+    padding:0px;
+    width:30px;
+    height: 30px; 
+    background:url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_R01AOzBZOY5cOOPfsYlYGzHPqLgpQs6oOEGccp8sEMTM4S2I") ; 
+    background-size: 100% 100%;
+    float:right;
+    padding-right: 8px;
+    padding-bottom: 5px;
+    margin-bottom: 8px;
+    position: relative;
+    top: -10px;
+
+}
+

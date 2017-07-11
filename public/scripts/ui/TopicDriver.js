@@ -19,12 +19,21 @@ class TopicDriver extends Drilldown {
             exclusivenessFrom: 0,
             exclusivenessTo: 5,
             exclusiveness: 0,
-            // timeFromLimit: 1383264000000, // January 1st 2013
-            // timeToLimit: 1385769600000, // March 1st 2015
-            // timeFrom: 1383264000000,
-            // timeTo: 1385769600000,
 
-            // 131020-131110
+       /*     //131101-131130
+            timeFromLimit: 1383264000000, 
+            timeToLimit: 1385769600000,
+            timeFrom: 1383264000000,
+            timeTo: 1385769600000,*/
+
+      /*      //130701-130731
+            timeFromLimit: 1372636800000, 
+            timeToLimit: 1375142400000, // March 1st 2015
+            timeFrom: 1372636800000,
+            timeTo: 1375142400000,*/
+
+
+           //131020-131110
             // timeFromLimit: 1382227200000,
             // timeToLimit: 1384041600000,
             // timeFrom: 1382227200000,
@@ -37,8 +46,8 @@ class TopicDriver extends Drilldown {
             timeTo: 1383609600000,
             
             
-            clusterCount: 3,
-            wordCount: 3,
+            clusterCount: 4,
+            wordCount: 4,
             include: '',
             exclude: ''
         };
@@ -122,13 +131,14 @@ class TopicDriver extends Drilldown {
         topicLayer.setTimeFrom(this.model.timeFrom);
         topicLayer.setTimeTo(this.model.timeTo);
 
-        topicLayer.unmute();
+      //  topicLayer.unmute();
         if (topicLayer.hasUpdatedParameters()) {
+            topicLayer.unmute();
             // All previously loaded tiles are no longer relevant.
             topicLayer.refresh();
             topicLayer.resetParameters();
         }
-        topicLayer.mute();
+        //topicLayer.mute();
 
         // Update the exclusiveness heatmap tile.
         const exLayer = this.plot.layers.find(l => {
@@ -137,13 +147,14 @@ class TopicDriver extends Drilldown {
         exLayer.setTimeFrom(this.model.timeFrom);
         exLayer.setTimeTo(this.model.timeTo);
 
-        exLayer.unmute();
+       // exLayer.unmute();
         if (exLayer.hasUpdatedParameters()) {
+            exLayer.unmute();
             // All previously loaded tiles are no longer relevant.
             exLayer.refresh();
             exLayer.resetParameters();
         }
-        exLayer.mute();
+        //exLayer.mute();
     }
 
 	toggleEnabled() {

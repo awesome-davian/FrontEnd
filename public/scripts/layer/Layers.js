@@ -79,7 +79,7 @@ module.exports = {
 	},
 
 	/**
-	 * Heatmap Layer
+	 * Heatmap Layer --> The name of this "Heatmap" is not that we use in this project. Go to the "exclusiveness".
 	 */
 	heatmap: function(meta, index, ramp, requestor) {
 		const layer = new veldt.Layer.Heatmap(meta, {
@@ -278,7 +278,7 @@ module.exports = {
 		layer.setXField('pixel.x');
 		layer.setYField('pixel.y');
 		layer.setResolution(1);
-		layer.opacity = 0.2;
+		layer.opacity = 0.35;
 		layer.requestTile = liveRequestBuffer('remote', requestor, index, false, 'exclusiveness');
 		return layer;
 	},

@@ -1,17 +1,20 @@
-<div class="topic-drilldown">
+<div class="topic-drilldown">    
+    <div class="drilldown-graph"></div>
     <div class="drilldown-label">
         <span>'{{topic}}' Tweets</span>
         <br>
+        <br>   
     </div>
     <div class="drilldown-item">
         {{#each tweets}}
-            <div class="topic-drilldown-alignleft">Name: {{username}}</div>
+        <div class ="topic-drilldown-item">
+            <div class="topic-drilldown-alignleft"><strong>Name: </strong>{{username}}</div>
             <div class="topic-drilldown-alignright">{{created_at}}</div>
             <br>
-            <div class="topic-drilldown-text">Tweet: {{texts}}</div>
-            
+            <div class="topic-drilldown-text"><strong>Tweet: </strong> {{texts}}</div>         
             <br>
             <div style="clear: both;"></div>
+        </div>
         {{/each}}
     </div>
 </div>

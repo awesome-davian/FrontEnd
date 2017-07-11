@@ -17,7 +17,7 @@ function _getWordColor(group) {
     colors[colorGroup] = ('00' + (255 - colorAdjustment)
         .toString(16)).substr(-2).toUpperCase();
 
-    const colormap = ['ff7f0e','2ca02c','d62728','9467bd','8c564b'];
+    const colormap = ['ffffff','ff3c82','89c541','fee801','b93cff'];
 
     //return '#' + colors[2] + colors[1] + colors[0];
     return '#' +colormap[colorGroup];
@@ -75,7 +75,7 @@ class TileDetailInfo extends AsynchDrilldown {
         for (var i =0; i<timeGraph.length; i++){
 
             var element ={};
-            element.score = Math.round(timeGraph[i].score *30*10)/10 ;   
+            element.score = Math.round(timeGraph[i].score *20*10)/10 ;   
             element.date = timeGraph[i].date;
 
            
@@ -113,10 +113,10 @@ class TileDetailInfo extends AsynchDrilldown {
 
         }         
 
-      console.log(JSON.stringify(graphElement));
+      //console.log(JSON.stringify(graphElement));
 
 
-       console.log(graphElement);
+      // console.log(graphElement);
 
 
         //this.makeGraphDetail(data);
@@ -140,8 +140,14 @@ class TileDetailInfo extends AsynchDrilldown {
         c.tileX = tileX; 
         c.tileY = tileY; 
         c.tileZoom = tileZoom;
-        c.dateFrom = "1383264000000";
-        c.dateTo =   "1385769600000";
+
+      /*  //7 
+        c.dateFrom = "1372636800000";
+        c.dateTo =   "1375142400000";*/
+
+         //10.20~11.10
+         c.dateFrom = 1382227200000;
+         c.dateTo = 1384041600000;
 
         return c; 
     }
@@ -166,7 +172,15 @@ class TileDetailInfo extends AsynchDrilldown {
         var query = this.makeQuery(tileX, tileY, tileZoom,  dateFrom);
 
         console.log(query);
-       
+
+    /*    d3.select(this).on("click", function(d){
+
+          console.log('cliked');
+
+           d3.select(this).append("svg")
+                        .style('stroke', 'black')
+                    .style('stroke-width', '1.8');
+         });*/
 
         super.showTileDetail(data, query, true); 
      
@@ -187,8 +201,10 @@ class TileDetailInfo extends AsynchDrilldown {
        for (var i =0; i<timeGraph.length; i++){
 
             var element ={};
-            element.score = Math.round(timeGraph[i].score *30*10)/10 ;   
-            element.date = timeGraph[i].date;
+            element.score = Math.round(timeGraph[i].score *20*10)/10 ; 
+            var timearr= timeGraph[i].date.split('-');
+
+            element.date = timearr[1]+'/'+timearr[0];
             element.alltopic =  allTopics[i].topics;
 
          
@@ -215,7 +231,7 @@ class TileDetailInfo extends AsynchDrilldown {
 
            
         var startwidth =300, startheight = 180;
-        var svg = d3.select(".topic-drilldown").append("svg").style("width", 300).style("height",180),
+        var svg = d3.select(".topic-drilldown-detail").append("svg").style("width", 300).style("height",180),
             margin = {top: 20, right: 20, bottom: 30, left: 40},
             width = +startwidth - margin.left - margin.right,
             height = +startheight - margin.top - margin.bottom;
@@ -231,6 +247,7 @@ class TileDetailInfo extends AsynchDrilldown {
 
            d.score = d.score;
            d.index = d.index;
+           d.date = d.date;
 
            //console.log(d.alltopic);
            d.alltopic = d.alltopic;
@@ -238,20 +255,22 @@ class TileDetailInfo extends AsynchDrilldown {
 
         });
 
-       var textfield = d3.select(".topic-drilldown").append("svg").attr("class","textfield")
+       var textfield = d3.select(".topic-drilldown-detail").append("svg").attr("class","textfield")
                    .style("width", 300).style("height", 150);
 
-       console.log(data.alltopic);
+       console.log(data);
 
-        x.domain(data.map(function(d){ return d.index;}));
+        x.domain(data.map(function(d){ return d.date;}));
         y.domain([0, d3.max(data, function(d) { return d.score; })]);
 
        var axis= 
        g.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height + ")")
-        //.call(d3.axisBottom(x).ticks(6).tickValues([5,10,15,20,25,30]));
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x).ticks(6).tickValues(["10/20","10/25","10/30","11/05","11/10"]));
+        //.call(d3.axisBottom(x).ticks(7).tickValues(["07/01","07/05","07/10","07/15","07/20","07/25","07/30"]));
+       // .call(d3.axisBottom(x).ticks(3));
+        //.call(d3.axisBottom(x));
 
         g.append("g")
               .attr("class", "axis axis--y")
@@ -274,7 +293,7 @@ class TileDetailInfo extends AsynchDrilldown {
           .attr("y", 0 -(margin.left/3*2))
           .attr("x", 0 -(height/2))
           .style("text-anchor", "middle")
-          .text("Score")
+          .text("Novelty Score")
           .attr("fill","white");
 
        g.selectAll(".domain").attr("stroke","white");
@@ -285,13 +304,15 @@ class TileDetailInfo extends AsynchDrilldown {
         g.selectAll(".bar")
             .data(data)
             .enter().append("rect")
-             .style("fill", "steelblue")
+             .style("fill", "#f8f9e9")
               .attr("class", "bar")
-              .attr("x", function(d, i) { return x(d.index); })
+              .attr("x", function(d, i) { return x(d.date); })
               .attr("y", function(d,i) { return y(d.score);})
               .attr("width", x.bandwidth())
               .attr("height", function(d) { return height - y(d.score); })
               .on("click", function(d){
+
+                   d3.selectAll(".bar").style("fill","#f8f9e9");
 
 
             /*      var shapeData = ["0", "1", "2", "3", "4", "5"], 
@@ -320,7 +341,7 @@ class TileDetailInfo extends AsynchDrilldown {
                 for(var i=0 ; i<5; i ++){   
 
                   var word_str = '';
-                  var wordsArr = d.alltopic[0].topic[i]
+                  var wordsArr = d.alltopic[5].topic[i]
 
                   //console.log(wordsArr);
 
@@ -329,7 +350,7 @@ class TileDetailInfo extends AsynchDrilldown {
                   for(var j=0; j<5; j++){
                     //console.log(d.alltopic[0].topic[i].words[j]);                  
                     //word_str+=wordsArr.words[j].word + ' ';
-                    word_str+=d.alltopic[0].topic[i].words[j].word + ' ';
+                    word_str+=d.alltopic[5].topic[i].words[j].word + ' ';
 
                     //console.log(word_str);
 
@@ -340,18 +361,18 @@ class TileDetailInfo extends AsynchDrilldown {
                   var yPos = parseFloat(d3.select(this).attr("y"));
                   var height = parseFloat(d3.select(this).attr("height"))
 
-                  d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
+                  d3.select(this).style("fill","#00a7f6");
 
                   const groupcolor =_getWordColor(i);
                   var mycolor =d3.rgb(groupcolor);
-                  console.log(mycolor);
+                 // console.log(mycolor);
 
 
                   textfield.append("text")
                   .attr("class","topicText")
                   .attr("x",10)
-                  .attr("y",15+15*i)
-                  .style("font", 5)
+                  .attr("y",15+20*i)
+                  .style("font-size", 15)
                   .text(word_str)
                   .attr("fill",function(d,i){
                       return mycolor;
@@ -362,7 +383,7 @@ class TileDetailInfo extends AsynchDrilldown {
 
                  // d3.select(".topicText").style("color",mycolor);
 
-                  console.log(topic_str);
+                  //console.log(topic_str);
                 };
 
            

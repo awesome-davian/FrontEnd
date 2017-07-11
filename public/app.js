@@ -54,7 +54,7 @@ window.startApp = function() {
 		continuousZoom: false,
 		zoom: 10,
 		minZoom: 9,
-		maxZomm: 13
+		maxZoom: 13
 	});
 	// Center on NYC.
 	map.viewport.centerOn(
@@ -76,8 +76,9 @@ window.startApp = function() {
 
 		/**
 		 * CartoDB layer
+		 * Styles for basemaps: light_all, dark_all, light_nolabels, light_only_labels, dark_nolabels, and dark_only_labels
 		 */
-		const carto = Layers.cartodb('dark_nolabels', requestor);
+		const carto = Layers.cartodb('light_all', requestor); 
 		map.addLayer(carto);
 
 		/**
