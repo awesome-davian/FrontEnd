@@ -158,6 +158,8 @@ func (c *ServiceClient) HandleRequests() {
 		return
 	}
 
+	// log.Print(parsedResponse);
+
 	// Write the topics back to the tile handlers.
 	// May be a bit abusive of the mutex.
 	mutex.Lock()

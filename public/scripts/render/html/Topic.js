@@ -4,7 +4,7 @@ const _ = require('lodash');
 const veldt = require('veldt');
 const $ = require('jquery');
 const Transform = require('../transform/Transform');
-const lumo = require('lumo');
+// const lumo = require('lumo');
 
 
 const VERTICAL_OFFSET = 24;
@@ -15,83 +15,83 @@ const NUM_ATTEMPTS = 1;
  * Given an initial position, return a new position, incrementally spiralled
  * outwards.
  */
-const spiralPosition = function(pos) {
-	const pi2 = 2 * Math.PI;
-	const circ = pi2 * pos.radius;
-	const inc = (pos.arcLength > circ / 10) ? circ / 10 : pos.arcLength;
-	const da = inc / pos.radius;
-	let nt = (pos.t + da);
-	if (nt > pi2) {
-		nt = nt % pi2;
-		pos.radius = pos.radius + pos.radiusInc;
-	}
-	pos.t = nt;
-	pos.x = pos.radius * Math.cos(nt);
-	pos.y = pos.radius * Math.sin(nt);
-	return pos;
-};
+// const spiralPosition = function(pos) {
+// 	const pi2 = 2 * Math.PI;
+// 	const circ = pi2 * pos.radius;
+// 	const inc = (pos.arcLength > circ / 10) ? circ / 10 : pos.arcLength;
+// 	const da = inc / pos.radius;
+// 	let nt = (pos.t + da);
+// 	if (nt > pi2) {
+// 		nt = nt % pi2;
+// 		pos.radius = pos.radius + pos.radiusInc;
+// 	}
+// 	pos.t = nt;
+// 	pos.x = pos.radius * Math.cos(nt);
+// 	pos.y = pos.radius * Math.sin(nt);
+// 	return pos;
+// };
 
-const tempPosition = function(pos, groupCount, topicCount) {
+// const tempPosition = function(pos, groupCount, topicCount) {
 	
 	
-	pos.x = -85 + pos.a*85;
-	pos.y = -85 + pos.b*85;
+// 	pos.x = -85 + pos.a*85;
+// 	pos.y = -85 + pos.b*85;
 
 
-	//console.log(pos.x)
-	//console.log(pos.y)
+// 	//console.log(pos.x)
+// 	//console.log(pos.y)
    
-    pos.a = pos.a + 1;
+//     pos.a = pos.a + 1;
 
-	if(pos.x>128){
+// 	if(pos.x>128){
 
-		pos.x = -85;
-		pos.a = 0; 
-		pos.b = pos.b+1;
-	}
+// 		pos.x = -85;
+// 		pos.a = 0; 
+// 		pos.b = pos.b+1;
+// 	}
 
-    pos.index = pos.index + 1;
+//     pos.index = pos.index + 1;
 	
-	//console.log(pos.a)
-	//console.log(pos.b)
+// 	//console.log(pos.a)
+// 	//console.log(pos.b)
 
 
-	return pos;
+// 	return pos;
 	
-};
+// };
 
 
-const tempPosition2 = function(pos, groupCount, topicCount) {
+// const tempPosition2 = function(pos, groupCount, topicCount) {
 
-	const baseX = -128 + (128)/topicCount
-	const baseY = -128 + (128)/groupCount
+// 	const baseX = -128 + (128)/topicCount
+// 	const baseY = -128 + (128)/groupCount
 	
 	
-	pos.x = baseX + pos.a*(256/topicCount);
-	pos.y = baseY + pos.b*(256/groupCount);
+// 	pos.x = baseX + pos.a*(256/topicCount);
+// 	pos.y = baseY + pos.b*(256/groupCount);
 
 
-	console.log(pos.x);
-	console.log(pos.y);
+// 	console.log(pos.x);
+// 	console.log(pos.y);
    
-    pos.a = pos.a + 1;
+//     pos.a = pos.a + 1;
 
-	if(pos.x>128){
+// 	if(pos.x>128){
 
-		pos.x = baseX;
-		pos.a = 0; 
-		pos.b = pos.b+1;
-	}
+// 		pos.x = baseX;
+// 		pos.a = 0; 
+// 		pos.b = pos.b+1;
+// 	}
 
-    pos.index = pos.index + 1;
+//     pos.index = pos.index + 1;
 	
-	//console.log(pos.a)
-	//console.log(pos.b)
+// 	//console.log(pos.a)
+// 	//console.log(pos.b)
 
 
-	return pos;
+// 	return pos;
 	
-};
+// };
 
 /**
  *  Returns true if bounding box a intersects bounding box b
@@ -138,15 +138,15 @@ const intersectWord = function(position, word, cloud, bb) {
 	return false;
 };
 
-const getMouseButton = function(event) {
-	if (event.which === 1) {
-		return 'left';
-	} else if (event.which === 2) {
-		return 'middle';
-	} else if (event.which === 3) {
-		return 'right';
-	}
-};
+// const getMouseButton = function(event) {
+// 	if (event.which === 1) {
+// 		return 'left';
+// 	} else if (event.which === 2) {
+// 		return 'middle';
+// 	} else if (event.which === 3) {
+// 		return 'right';
+// 	}
+// };
 
 const sortWords = function(words) {
 
@@ -193,7 +193,7 @@ const sortWords = function(words) {
 	});
 
 	return new_words;
-}
+};
 
 const measureWords = function(renderer, wordCounts, extrema) {
 	// sort words by frequency
@@ -211,7 +211,7 @@ const measureWords = function(renderer, wordCounts, extrema) {
 	wordCounts.forEach(word => {
 		word.percent = Transform.transform(word.count, transform, extrema);
 		word.fontSize = minFontSize + word.percent * (maxFontSize - minFontSize);
-		word.count = word.count
+		word.count = word.count;
 		$html.append(
 			`
 			<div class="word-cloud-label" style="
@@ -256,9 +256,9 @@ const spiralPosition2 = function(pos, groupIndex, groupCount) {
 	let start = (pi2 / (groupCount-1))*(groupIndex-1) + ((circ/360)*(120+10))/pos.radius;
 	let end = (pi2 / (groupCount-1))*(groupIndex) + ((circ/360)*(120-10))/pos.radius;
 	
-	if (groupIndex == 3) {
-		start -= ((circ/360)*(30))/pos.radius
-		end -= ((circ/360)*(30))/pos.radius
+	if (groupIndex === 3) {
+		start -= ((circ/360)*(30))/pos.radius;
+		end -= ((circ/360)*(30))/pos.radius;
 	}
 	let center = (start + end)/2;
 
@@ -268,16 +268,16 @@ const spiralPosition2 = function(pos, groupIndex, groupCount) {
 
 	// console.log(da);
 
-	if (pos.is_first == 1){
+	if (pos.is_first === 1){
 		nt = center;
 		pos.is_first = 0;
 		// console.log('a');
 	} else {
 
-		if (groupIndex == 0)
+		if (groupIndex === 0)
 			nt = pos.t + da;
 		else {
-			if (pos.index % 2 == 0) {
+			if (pos.index % 2 === 0) {
 				// just change the direction
 				nt = center + -1*(pos.t - center);
 				// console.log('['+pos.index+']b, nt: ' + nt + ', center: ' + center + ', pos.t: ' + pos.t);
@@ -334,8 +334,8 @@ const spiralPosition3 = function(pos, groupIndex, groupCount) {
 	let end = (pi2 / (groupCount-1))*(groupIndex) + ((circ/360)*(120-10))/pos.radius;
 	
 	if (groupIndex == 3) {
-		start -= ((circ/360)*(30))/pos.radius
-		end -= ((circ/360)*(30))/pos.radius
+		start -= ((circ/360)*(30))/pos.radius;
+		end -= ((circ/360)*(30))/pos.radius;
 	}
 	let center = (start + end)/2;
 
@@ -345,16 +345,16 @@ const spiralPosition3 = function(pos, groupIndex, groupCount) {
 
 	// console.log(da);
 
-	if (pos.is_first == 1){
+	if (pos.is_first === 1){
 		nt = center;
 		pos.is_first = 0;
 		// console.log('a');
 	} else {
 
-		if (groupIndex == 0)
+		if (groupIndex === 0)
 			nt = pos.t + da;
 		else {
-			if (pos.index % 2 == 0) {
+			if (pos.index % 2 === 0) {
 				// just change the direction
 				nt = center + -1*(pos.t - center);
 				// console.log('['+pos.index+']b, nt: ' + nt + ', center: ' + center + ', pos.t: ' + pos.t);
@@ -380,7 +380,7 @@ const spiralPosition3 = function(pos, groupIndex, groupCount) {
 	// var log = 'start: ' + start + ', end: ' + end;
 	// console.log(log);
 
-	if (groupIndex == 0) {
+	if (groupIndex === 0) {
 		if (nt > pi2) {	
 			nt = nt % pi2;
 			pos.radius = pos.radius + pos.radiusInc;	
@@ -417,12 +417,11 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
 
 	wordCounts = sortWords(wordCounts);
 
-	console.log(wordCounts);
+	// console.log(wordCounts);
 
 	// measure the words size
 	wordCounts = measureWords(renderer, wordCounts, extrema);
 
-	var idx = 1;
 	// assemble word cloud
 	wordCounts.forEach(wordCount => {
 		// starting spiral position
@@ -448,7 +447,7 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
             return parseInt(value.group, 10);
         });
         const groupCount = Math.max(...groups) + 1;
-        const topicCount = length/groupCount
+        const topicCount = length/groupCount;
 
 		// spiral outwards to find position
 		while (pos.collisions < NUM_ATTEMPTS) {
@@ -457,8 +456,7 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
 			pos = spiralPosition3(pos, wordCount.group, groupCount);
 			// test for intersection
 			if (!intersectWord(pos, wordCount, cloud, boundingBox)) {
-				// wordCount.text = wordCount.text + ':' + idx;
-				// idx++;
+				
 				cloud.push({
 					text: wordCount.text,
 					fontSize: wordCount.fontSize,
@@ -559,14 +557,15 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         // console.log('color group: ' + colorGroup);
 
         //return '#' + colors[2] + colors[1] + colors[0];
-        return '#' +color_map[colorGroup]
-    }
+        return '#' +color_map[colorGroup];
+    };
 
     
 
     drawTile(element, tile) {
 		
-    	// console.log(tile);
+		// console.trace();
+  //   	console.log(tile);
 
     	//console.log(tile.data);
         const wordCounts = _.flatMap(tile.data, (value, key) => {
@@ -595,8 +594,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		// for each word int he cloud
 
 		const margin = 5;
-		const count_font_size = 18
-		const count_color = '#ffffff'
+		const count_font_size = 18;
+		const count_color = '#ffffff';
 
 		cloud.forEach(word => {
             const combinedText = word.text;

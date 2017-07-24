@@ -53,6 +53,9 @@ func (t *HitmapTile) GetApiUrl() string {
 }
 
 func (t *HitmapTile) Create(uri string, coord *binning.TileCoord, query veldt.Query) ([]byte, error) {
+
+	// panic("Want stack trace");
+
 	// Setup the tile coordinate information.
 	t.x = coord.X
 	t.y = coord.Y
