@@ -157,6 +157,24 @@ class TopicDriver extends Drilldown {
         //exLayer.mute();
     }
 
+    onShowGeoPoint(model, word) {
+
+        const geopointLayer = this.plot.layers.find(l => {
+            return l.constructor === veldt.Layer.GeoPoint;
+        });
+        geopointLayer.setTimeFrom(this.model.timeFrom);
+        geopointLayer.setTimeTo(this.model.timeTo);
+        geopointLayer.setQueryWord(word);
+
+        if (geopointLayer.hasUpdatedParameters()) {
+            console.log("onShowGeoPoint(), hasUpdatedParameters == true")
+            geopointLayer.unmute();
+            // All previously loaded tiles are no longer relevant.
+            geopointLayer.refresh();
+            // geopointLayer.resetParameters();
+        }
+    }
+
 	toggleEnabled() {
         const exLayer = this.plot.layers.find(l => {
             return l.constructor === veldt.Layer.Exclusiveness;

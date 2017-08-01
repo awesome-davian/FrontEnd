@@ -89,7 +89,8 @@ window.startApp = function() {
 			'',
 			requestor);
 		//topic.renderer.on('click', event => res.drilldown.show(event.data));
-		topic.renderer.on('click', event => res.drilldown.get_coord(event.plotPx.x, event.plotPx.y, event.data));
+		// topic.renderer.on('click', event => res.drilldown.get_coord(event.plotPx.x, event.plotPx.y, event.data));
+		topic.renderer.on('click', event => res.driver.onShowGeoPoint(event.target, event.data));
 
 		map.on('dblclick', event => res.topicPopup.show(event.data));
         map.on('dblclick', event => res.topicPopup.get_coord(event.plotPx.x, event.plotPx.y, event.data));
@@ -110,6 +111,16 @@ window.startApp = function() {
 			requestor);
 		hitmap.mute();
 		map.addLayer(hitmap);
+
+		/**
+		 * Macro layer
+		 */
+		const geopoint = Layers.geopoint(
+			{},
+			'',
+			requestor);
+		geopoint.mute();
+		map.addLayer(geopoint);
 
 		res.driver.onShowTopics();
 	});

@@ -144,6 +144,30 @@ module.exports = {
 		return layer;
 	},
 
+	geopoint: function(meta, index, requestor) {
+		console.trace();
+		const resolution = 256;
+		const layer = new veldt.Layer.GeoPoint(meta, {
+			renderer: new veldt.Renderer.WebGL.Macro({
+				maxVertices: resolution * resolution,
+				radius: 6,
+				// color: [ 0.4, 1.0, 0.1, 0.8 ]
+
+				color: [ 1.0, 0.4, 0.1, 0.8 ]
+			})
+		});
+		// layer.setXField('pixel.x', 0, Math.pow(2, 32));
+		// layer.setYField('pixel.y', 0, Math.pow(2, 32));
+		layer.setXField('pixel.x');
+		layer.setYField('pixel.y');
+		layer.setBounds(0, Math.pow(2, 32), 0, Math.pow(2, 32));
+		layer.setResolution(resolution);
+		layer.setLOD(4);
+		// layer.requestTile = liveRequestBuffer('elastic', requestor, index);
+		layer.requestTile = liveRequestBuffer('remote', requestor, index);
+		return layer;
+	},
+
 	/**
 	 * Micro Layer
 	 */

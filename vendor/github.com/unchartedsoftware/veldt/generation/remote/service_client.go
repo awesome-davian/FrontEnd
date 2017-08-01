@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/parnurzeal/gorequest"
+	"github.com/unchartedsoftware/plog"
 )
 
 const (
@@ -193,32 +194,71 @@ func (c *ServiceClient) fakeResponse(requestData map[string]interface{}) (string
 	result := ""
 	for _, tile := range requestData["tiles"].([]interface{}) {
 		tileData := tile.(map[string]uint32)
+
+		log.Debug(c.requests[0].GetTileType())
+
 		if c.requests[0].GetTileType() == "topic" {
 			result = fmt.Sprintf(`%v, {
 				"tile": {"x": %v, "y": %v, "level": %v},
 				"topic": [{
-					"score": 4.32,
+					"score": 0.16331,
+					"exclusiveness": 0,
 					"words": [
-						{"score": 13.23, "word": "fries", "count": 10},
-						{"score": 9.13, "word": "drinks", "count": 7},
-						{"score": 2.99, "word": "burger", "count": 3}
+						{"word": "nyc", "count": 330, "score": 0.19698},
+						{"word": "marathon", "count": 442, "score": 0.023675}, 
+						{"word": "edbanger", "count": 0, "score": 0.01824}, 
+						{"word": "park", "count": 134, "score": 0.013334}
+					]
+				}, {
+					"score": 0.15949, 
+					"exclusiveness": 0, 
+					"words": [
+						{"word": "marathon", "count": 442, "score": 0.1367},
+						{"word": "ing", "count": 144, "score": 0.056605}, 
+						{"word": "finish", "count": 33, "score": 0.054968}, 
+						{"word": "city", "count": 195, "score": 0.040207}
+					]
+				}, {
+					"score": 0.10825, 
+					"exclusiveness": 0, 
+					"words": [
+						{"word": "love", "count": 642, "score": 0.24868}, 
+						{"word": "live", "count": 141, "score": 0.011044},
+						{"word": "matter", "count": 22, "score": 0.0094907}, 
+						{"word": "hdsc", "count": 0, "score": 0.0090076}
+					]
+				}, {
+					"score": 0.087243, 
+					"exclusiveness": 0, 
+					"words": [
+						{"word": "night", "count": 313, "score": 0.19153}, 
+						{"word": "saturday", "count": 34, "score": 0.017975}, 
+						{"word": "party", "count": 109, "score": 0.012218}, 
+						{"word": "live", "count": 141, "score": 0.010251}
 					]
 				}]
-				}`, result, tileData["x"], tileData["y"], tileData["level"])
-		} else {
-			result = fmt.Sprintf(`%v,
-				{
-					"tile": {"x": %v, "y": %v, "level": %v},
-					"exclusiveness": [
-						{"value": %v, "date": "22-01-2015"}
-					]
+				}
+				`, result, tileData["x"], tileData["y"], tileData["level"])
+		} else if c.requests[0].GetTileType() == "hitmap" {
+			result = fmt.Sprintf(`%v, {
+				"tile": {"x": %v, "y": %v, "level": %v},
+				"exclusiveness_score": [
+					{"value": %v, "date": "03-11-2013"}
+				]
 				}`, result, tileData["x"], tileData["y"], tileData["level"],
 				float64((tileData["x"]+tileData["y"]))/float64(tileData["level"]))
+		} else if c.requests[0].GetTileType() == "macro" {
+			result = fmt.Sprintf(`%v, {
+				"tile": {"x": %v, "y": %v, "level": %v}}`, result, tileData["x"], tileData["y"], tileData["level"])
+		} else {
+			result = fmt.Sprintf(`%v, {
+				"tile": {"x": %v, "y": %v, "level": %v}}`, result, tileData["x"], tileData["y"], tileData["level"])
 		}
 	}
 
 	result = fmt.Sprintf("[%s]", result[1:])
-	fmt.Printf("Result: %s", result)
+	// fmt.Printf("Result: %s", result)
+	log.Debug(result)
 
 	return result, nil
 }
