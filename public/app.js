@@ -91,6 +91,7 @@ window.startApp = function() {
 		//topic.renderer.on('click', event => res.drilldown.show(event.data));
 		// topic.renderer.on('click', event => res.drilldown.get_coord(event.plotPx.x, event.plotPx.y, event.data));
 		topic.renderer.on('click', event => res.driver.onShowGeoPoint(event.target, event.data));
+		topic.renderer.on('click', event => res.driver.onShowGlyph(event.target, event.data));
 
 		map.on('dblclick', event => res.topicPopup.show(event.data));
         map.on('dblclick', event => res.topicPopup.get_coord(event.plotPx.x, event.plotPx.y, event.data));
@@ -121,6 +122,16 @@ window.startApp = function() {
 			requestor);
 		geopoint.mute();
 		map.addLayer(geopoint);
+
+		/**
+		* Glyph layer
+		*/
+		const glyph = Layers.glyph(
+			{},
+			'',
+			requestor);
+		glyph.mute();
+		map.addLayer(glyph);
 
 		res.driver.onShowTopics();
 	});

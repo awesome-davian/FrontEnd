@@ -5,6 +5,7 @@ const $ = require('../util/jQueryAjaxArrayBuffer');
 const lumo = require('lumo');
 const veldt = require('veldt');
 const TopicRenderer = require('../render/html/Topic');
+const GlyphRenderer = require('../render/html/Glyph');
 
 function liveRequest(pipeline, requestor, index, type, xyz, name) {
 	return function(coord, done) {
@@ -145,7 +146,7 @@ module.exports = {
 	},
 
 	geopoint: function(meta, index, requestor) {
-		console.trace();
+		
 		const resolution = 256;
 		const layer = new veldt.Layer.GeoPoint(meta, {
 			renderer: new veldt.Renderer.WebGL.Macro({
@@ -165,6 +166,17 @@ module.exports = {
 		layer.setLOD(4);
 		// layer.requestTile = liveRequestBuffer('elastic', requestor, index);
 		layer.requestTile = liveRequestBuffer('remote', requestor, index);
+		return layer;
+	},
+
+	glyph: function(meta, index, requestor) {
+
+		const layer = new veldt.Layer.Glyph(meta, {
+			renderer: new GlyphRenderer()
+		});
+		layer.setXField('pixel.x');
+		layer.setYField('pixel.y');
+		layer.requestTile = liveRequestJSON('remote', requestor, index);
 		return layer;
 	},
 

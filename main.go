@@ -85,6 +85,7 @@ func NewRemotePipeline() *veldt.Pipeline {
 	pipeline.Tile("topic", remote.NewTopicTile())
 	pipeline.Tile("exclusiveness", remote.NewHitmapTile())
 	pipeline.Tile("geopoint", remote.NewGeoPointTile())
+	pipeline.Tile("glyph", remote.NewGlyphTile())
 
 	// log.Debug(pipeline);
 

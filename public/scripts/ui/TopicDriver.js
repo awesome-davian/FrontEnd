@@ -175,6 +175,23 @@ class TopicDriver extends Drilldown {
         }
     }
 
+    onShowGlyph(model, word) {
+        const glyphLayer = this.plot.layers.find(l => {
+            return l.constructor === veldt.Layer.Glyph;
+        });
+        glyphLayer.setTimeFrom(this.model.timeFrom);
+        glyphLayer.setTimeTo(this.model.timeTo);
+        glyphLayer.setQueryWord(word);
+
+        if (glyphLayer.hasUpdatedParameters()) {
+            console.log("onShowGlyph(), hasUpdatedParameters == true")
+            glyphLayer.unmute();
+            // All previously loaded tiles are no longer relevant.
+            glyphLayer.refresh();
+            // glyphLayer.resetParameters();
+        }   
+    }
+
 	toggleEnabled() {
         const exLayer = this.plot.layers.find(l => {
             return l.constructor === veldt.Layer.Exclusiveness;
