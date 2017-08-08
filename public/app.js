@@ -88,17 +88,7 @@ window.startApp = function() {
 			{},
 			'',
 			requestor);
-		//topic.renderer.on('click', event => res.drilldown.show(event.data));
-		// topic.renderer.on('click', event => res.drilldown.get_coord(event.plotPx.x, event.plotPx.y, event.data));
-		topic.renderer.on('click', event => res.driver.onShowGeoPoint(event.target, event.data));
-		topic.renderer.on('click', event => res.driver.onShowGlyph(event.target, event.data));
-
-		map.on('dblclick', event => res.topicPopup.show(event.data));
-        map.on('dblclick', event => res.topicPopup.get_coord(event.plotPx.x, event.plotPx.y, event.data));
-
 		
-
-
 		topic.mute();
 		map.addLayer(topic);
 
@@ -124,15 +114,28 @@ window.startApp = function() {
 		map.addLayer(geopoint);
 
 		/**
-		* Glyph layer
+		* WordGlyph layer
 		*/
-		const glyph = Layers.glyph(
+		const wordglyph = Layers.wordglyph(
 			{},
 			'',
 			requestor);
-		glyph.mute();
-		map.addLayer(glyph);
+		wordglyph.mute();
+		map.addLayer(wordglyph);
 
-		res.driver.onShowTopics();
+		//topic.renderer.on('click', event => res.drilldown.show(event.data));
+		// topic.renderer.on('click', event => res.drilldown.get_coord(event.plotPx.x, event.plotPx.y, event.data));
+		topic.renderer.on('click', event => res.driver.onShowWordGlyph(event.target, event.data));
+		topic.renderer.on('click', event => res.driver.onShowGeoPoint(event.target, event.data));
+		// topic.renderer.on('click', event => res.driver.onHideTileGlyph());
+
+		map.on('click', event => res.driver.onHideWordGlyph());
+		map.on('click', event => res.driver.onHideGeoPoint());
+		// map.on('click', event => res.driver.onShowTileGlyph(event.target));
+
+		map.on('dblclick', event => res.topicPopup.show(event.data));
+        map.on('dblclick', event => res.topicPopup.get_coord(event.plotPx.x, event.plotPx.y, event.data));
+
+        res.driver.onShowTopics();
 	});
 };

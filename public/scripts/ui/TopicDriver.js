@@ -169,27 +169,73 @@ class TopicDriver extends Drilldown {
         if (geopointLayer.hasUpdatedParameters()) {
             console.log("onShowGeoPoint(), hasUpdatedParameters == true")
             geopointLayer.unmute();
+            geopointLayer.show();
             // All previously loaded tiles are no longer relevant.
             geopointLayer.refresh();
             // geopointLayer.resetParameters();
         }
+
+        // geopointLayer.enable();
     }
 
-    onShowGlyph(model, word) {
+    onHideGeoPoint() {
+        console.log("onHideGeoPoint()")
+
+        const geopointLayer = this.plot.layers.find(l => {
+            return l.constructor === veldt.Layer.GeoPoint;
+        });
+
+        if (!geopointLayer.isDisabled())
+            console.log("onHideGeoPoint(), layer is already in disable");
+            this.disable(geopointLayer);
+
+        return this;
+    }
+
+    onShowWordGlyph(model, word) {
+        console.log("onShowWordGlyph()");
         const glyphLayer = this.plot.layers.find(l => {
-            return l.constructor === veldt.Layer.Glyph;
+            return l.constructor === veldt.Layer.WordGlyph;
         });
         glyphLayer.setTimeFrom(this.model.timeFrom);
         glyphLayer.setTimeTo(this.model.timeTo);
         glyphLayer.setQueryWord(word);
 
+
+
         if (glyphLayer.hasUpdatedParameters()) {
-            console.log("onShowGlyph(), hasUpdatedParameters == true")
+            console.log("onShowWordGlyph(), hasUpdatedParameters == true")
+
             glyphLayer.unmute();
+            glyphLayer.show();
+
+            
             // All previously loaded tiles are no longer relevant.
             glyphLayer.refresh();
             // glyphLayer.resetParameters();
+
+            console.log(glyphLayer);
         }   
+
+        // glyphLayer.enable();
+    }
+
+    onHideWordGlyph() {
+
+        console.log("onHideWordGlyph()");
+
+        const glyphLayer = this.plot.layers.find(l => {
+            return l.constructor === veldt.Layer.WordGlyph;
+        });
+
+        console.log(glyphLayer);
+
+        if (!glyphLayer.isDisabled()) {
+            console.log("onHideWordGlyph(), layer disabled");
+            this.disable(glyphLayer);
+        }
+
+        return this;
     }
 
 	toggleEnabled() {
@@ -202,6 +248,7 @@ class TopicDriver extends Drilldown {
 		} else {
 			this.disable(exLayer);
 		}
+
 		return this;
 	}
 

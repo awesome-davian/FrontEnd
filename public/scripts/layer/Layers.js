@@ -5,7 +5,7 @@ const $ = require('../util/jQueryAjaxArrayBuffer');
 const lumo = require('lumo');
 const veldt = require('veldt');
 const TopicRenderer = require('../render/html/Topic');
-const GlyphRenderer = require('../render/html/Glyph');
+const WordGlyphRenderer = require('../render/html/WordGlyph');
 
 function liveRequest(pipeline, requestor, index, type, xyz, name) {
 	return function(coord, done) {
@@ -169,17 +169,17 @@ module.exports = {
 		return layer;
 	},
 
-	glyph: function(meta, index, requestor) {
+	wordglyph: function(meta, index, requestor) {
 
-		const layer = new veldt.Layer.Glyph(meta, {
-			renderer: new GlyphRenderer()
+		const layer = new veldt.Layer.WordGlyph(meta, {
+			renderer: new WordGlyphRenderer()
 		});
 		layer.setXField('pixel.x');
 		layer.setYField('pixel.y');
 		layer.requestTile = liveRequestJSON('remote', requestor, index);
 		return layer;
 	},
-
+	
 	/**
 	 * Micro Layer
 	 */

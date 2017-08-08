@@ -4,94 +4,24 @@ const _ = require('lodash');
 const veldt = require('veldt');
 const $ = require('jquery');
 const Transform = require('../transform/Transform');
-// const lumo = require('lumo');
+const lumo = require('lumo'); 
 
 
 const VERTICAL_OFFSET = 24;
 const HORIZONTAL_OFFSET = 0;
 const NUM_ATTEMPTS = 1;
 
-/**
- * Given an initial position, return a new position, incrementally spiralled
- * outwards.
- */
-// const spiralPosition = function(pos) {
-// 	const pi2 = 2 * Math.PI;
-// 	const circ = pi2 * pos.radius;
-// 	const inc = (pos.arcLength > circ / 10) ? circ / 10 : pos.arcLength;
-// 	const da = inc / pos.radius;
-// 	let nt = (pos.t + da);
-// 	if (nt > pi2) {
-// 		nt = nt % pi2;
-// 		pos.radius = pos.radius + pos.radiusInc;
-// 	}
-// 	pos.t = nt;
-// 	pos.x = pos.radius * Math.cos(nt);
-// 	pos.y = pos.radius * Math.sin(nt);
-// 	return pos;
-// };
+let wordSelected = false;
 
-// const tempPosition = function(pos, groupCount, topicCount) {
-	
-	
-// 	pos.x = -85 + pos.a*85;
-// 	pos.y = -85 + pos.b*85;
-
-
-// 	//console.log(pos.x)
-// 	//console.log(pos.y)
-   
-//     pos.a = pos.a + 1;
-
-// 	if(pos.x>128){
-
-// 		pos.x = -85;
-// 		pos.a = 0; 
-// 		pos.b = pos.b+1;
-// 	}
-
-//     pos.index = pos.index + 1;
-	
-// 	//console.log(pos.a)
-// 	//console.log(pos.b)
-
-
-// 	return pos;
-	
-// };
-
-
-// const tempPosition2 = function(pos, groupCount, topicCount) {
-
-// 	const baseX = -128 + (128)/topicCount
-// 	const baseY = -128 + (128)/groupCount
-	
-	
-// 	pos.x = baseX + pos.a*(256/topicCount);
-// 	pos.y = baseY + pos.b*(256/groupCount);
-
-
-// 	console.log(pos.x);
-// 	console.log(pos.y);
-   
-//     pos.a = pos.a + 1;
-
-// 	if(pos.x>128){
-
-// 		pos.x = baseX;
-// 		pos.a = 0; 
-// 		pos.b = pos.b+1;
-// 	}
-
-//     pos.index = pos.index + 1;
-	
-// 	//console.log(pos.a)
-// 	//console.log(pos.b)
-
-
-// 	return pos;
-	
-// };
+const getMouseButton = function(event) {
+	if (event.which === 1) {
+		return 'left';
+	} else if (event.which === 2) {
+		return 'middle';
+	} else if (event.which === 3) {
+		return 'right';
+	}
+};
 
 /**
  *  Returns true if bounding box a intersects bounding box b
@@ -473,63 +403,6 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
 		}
 	});
 
-	// var wordGroup = splitWordsbyGroup(wordCounts);
-
-	// wordGroup.forEach(group=>{
-		
-	// 	// assemble word cloud
-	// 	group.forEach(wordCount => {
-
-	// 		// starting spiral position
-	// 		let pos = {
-	// 			radius: 1,
-	// 			radiusInc: 5,
-	// 			arcLength: 10,
-	// 			x: 0,
-	// 			y: 0,
-	// 			t: 0,
-	// 			collisions: 0,
-	// 			a: 0, 
-	// 			b:0,
-	// 			index :0
-	// 		};
-	// 		//console.log(wordCounts);
-
-	// 		const length= wordCounts.length;
-			
-	// 		const groups = wordCounts.map(value => {
-	// 			return parseInt(value.group, 10);
-	// 		});
-	// 		const groupCount = Math.max(...groups) + 1;
-	// 		const topicCount = length/groupCount
-
-
-	// 		// spiral outwards to find position
-	// 		while (pos.collisions < NUM_ATTEMPTS) {
-	// 			// increment position in a spiral
-	// 			//pos = tempPosition2(pos, groupCount, topicCount);
-	// 			pos = spiralPosition(pos);
-	// 			// test for intersection
-	// 			if (!intersectWord(pos, wordCount, cloud, boundingBox)) {
-	// 				cloud.push({
-	// 					text: wordCount.text,
-	// 					fontSize: wordCount.fontSize,
-	// 					percent: Math.round((wordCount.percent * 100) / 10) * 10, // round to nearest 10
-	// 					x: pos.x,
-	// 					y: pos.y,
-	// 					width: wordCount.width,
-	// 					height: wordCount.height,
-	// 					count : wordCount.count
-
-	// 				});
-	// 				break;
-	// 			}
-	// 		}
-	// 	});
-	// });
-
-	
-
 	return cloud;
 };
 
@@ -641,6 +514,24 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 		element.innerHTML = divs.join('');
 
+		////////////////////////////////////////////////////////////////////////
+    	if (wordSelected == false) {
+    		console.log("drawTile(wordSelected == false");
+    		const radius = 10;
+
+    		divs.push(`
+				
+				<svg height="100" width="100">
+					<circle cx="20" cy="20" r="${radius}" stroke="black" stroke-width="0.3" fill="red" />
+				</svg>
+				`);
+
+			element.innerHTML = divs.join('');	
+    	} else {
+    		console.log("drawTile(wordSelected == true");
+    	}
+    	
+
     }
 
     onMouseOver(event){
@@ -658,16 +549,39 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         $('[data-word-popup=' + word + ']').hide();
 	}
 
-
     onDblClick(event) {
-		
 		console.log('hihi');
-
-   
     }
 
+    onClick(event) {
+		// un-select any prev selected words
+		$('.word-cloud-label').removeClass('highlight');
+		$(this.container).removeClass('highlight');
+		const word = $(event.target).attr('data-word');
+		if (word) {
+			wordSelected = true;
+			// set highlight
+			this.setHighlight(word);
+			// emit click event
+			const plot = this.layer.plot;
+			this.emit(lumo.CLICK, new lumo.ClickEvent(
+				this.layer,
+				getMouseButton(event),
+				plot.mouseToViewPx(event),
+				plot.mouseToPlotPx(event),
+				word));
+		} else {
+			wordSelected = false;
+			this.clearSelection();
+		}
+	}
 
- 
+	clearSelection() {
+		console.log("clearSelection()");
+		$(this.container).removeClass('highlight');
+		this.highlight = null;
+	}
+
     parseTextValue(combinedText) {
         return combinedText.split(':')[1];
     }

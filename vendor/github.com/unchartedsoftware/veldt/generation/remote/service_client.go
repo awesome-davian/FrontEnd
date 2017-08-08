@@ -247,9 +247,21 @@ func (c *ServiceClient) fakeResponse(requestData map[string]interface{}) (string
 				]
 				}`, result, tileData["x"], tileData["y"], tileData["level"],
 				float64((tileData["x"]+tileData["y"]))/float64(tileData["level"]))
-		} else if c.requests[0].GetTileType() == "macro" {
+		} else if c.requests[0].GetTileType() == "geopoint" {
 			result = fmt.Sprintf(`%v, {
 				"tile": {"x": %v, "y": %v, "level": %v}}`, result, tileData["x"], tileData["y"], tileData["level"])
+		} else if c.requests[0].GetTileType() == "wordglyph" {
+			result = fmt.Sprintf(`%v, {
+				"tile": {"x": %v, "y": %v, "level": %v}, 
+				"wordglyph": [
+					{"word": "marathon", "count": 442}
+				]}`, result, tileData["x"], tileData["y"], tileData["level"])
+		} else if c.requests[0].GetTileType() == "tileglyph" {
+			result = fmt.Sprintf(`%v, {
+				"tile": {"x": %v, "y": %v, "level": %v}, 
+				"tileglyph": [
+					{"count": 442}
+				]}`, result, tileData["x"], tileData["y"], tileData["level"])
 		} else {
 			result = fmt.Sprintf(`%v, {
 				"tile": {"x": %v, "y": %v, "level": %v}}`, result, tileData["x"], tileData["y"], tileData["level"])

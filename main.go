@@ -85,9 +85,9 @@ func NewRemotePipeline() *veldt.Pipeline {
 	pipeline.Tile("topic", remote.NewTopicTile())
 	pipeline.Tile("exclusiveness", remote.NewHitmapTile())
 	pipeline.Tile("geopoint", remote.NewGeoPointTile())
-	pipeline.Tile("glyph", remote.NewGlyphTile())
+	pipeline.Tile("wordglyph", remote.NewWordGlyphTile())
 
-	// log.Debug(pipeline);
+	log.Debug(pipeline);
 
 	// Set the maximum concurrent tile requests
 	pipeline.SetMaxConcurrent(256)

@@ -8,7 +8,7 @@
 }
 
 .drilldown-label {
-    font-size: 15px;
+    font-size: 12px;
     font-weight: bold;
     color: white;
 }
@@ -32,7 +32,6 @@ li.drilldown-list::before {
     margin-top: 4px;
     margin-bottom: 4px;
 }
-
 
 .drilldown-sub-item {
     margin-top: 4px;

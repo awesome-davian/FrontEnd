@@ -60,7 +60,7 @@ func (t *GeoPointTile) Parse(params map[string]interface{}) error {
 		// timeFrom, timeTo)
 
 	t.requestId = requestId
-	t.tileType = "macro"
+	t.tileType = "geopoint"
 
 	return t.Macro.Parse(params)
 }
