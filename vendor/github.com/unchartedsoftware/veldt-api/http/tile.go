@@ -48,6 +48,7 @@ func TileHandler(w http.ResponseWriter, r *http.Request) {
 		handleErr(w, err)
 		return
 	}
+
 	// send response
 	w.WriteHeader(200)
 	w.Write(tile)

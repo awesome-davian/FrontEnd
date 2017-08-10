@@ -2,10 +2,10 @@ package remote
 
 import (
 	// "encoding/binary"
-	// "encoding/json"
+	"encoding/json"
 	"fmt"
 
-	"math/rand"
+	// "math/rand"
 	// "time"
 
 	"github.com/unchartedsoftware/plog"
@@ -17,8 +17,7 @@ import (
 
 type GeoPointTile struct {
 	APITile
-	timeFrom int64
-	timeTo   int64
+	date int64
 	wordTerm string
 	lod int
 	tile.Macro
@@ -40,23 +39,22 @@ func (t *GeoPointTile) Parse(params map[string]interface{}) error {
 	}
 
 	// get time from
-	timeFrom, ok := jsonUtil.GetNumber(params, "timeFrom")
+	date, ok := jsonUtil.GetNumber(params, "timeFrom")
 	if !ok {
 		return fmt.Errorf("`timeFrom` parameter missing from geopoint tile")
 	}
-	// get time time
-	timeTo, ok := jsonUtil.GetNumber(params, "timeTo")
-	if !ok {
-		return fmt.Errorf("`timeTo` parameter missing from geopoint tile")
-	}
+	// // get time time
+	// timeTo, ok := jsonUtil.GetNumber(params, "timeTo")
+	// if !ok {
+	// 	return fmt.Errorf("`timeTo` parameter missing from geopoint tile")
+	// }
 
-	t.timeFrom = int64(timeFrom)
-	t.timeTo = int64(timeTo)
+	t.date = int64(date)
+	// t.timeTo = int64(timeTo)
 	t.wordTerm = word
 
 	// Use hash of all parameters to identify request.
-	requestId := fmt.Sprintf("%v::%v::%v",
-		timeFrom, timeTo, word)
+	requestId := fmt.Sprintf("%v::%v", date, word)
 		// timeFrom, timeTo)
 
 	t.requestId = requestId
@@ -67,7 +65,7 @@ func (t *GeoPointTile) Parse(params map[string]interface{}) error {
 
 func (t *GeoPointTile) GetApiUrl() string {
 	// TODO: Have the URL configurable!
-	return "http://163.152.20.64:5001/GET_GEOPOINT/test"
+	return "http://163.152.20.64:5002/GET_GEOPOINT/test"
 }
 
 func (t *GeoPointTile) Create(uri string, coord *binning.TileCoord, query veldt.Query) ([]byte, error) {
@@ -105,26 +103,76 @@ func (t *GeoPointTile) Create(uri string, coord *binning.TileCoord, query veldt.
 		return nil, err
 	}
 
+
+
 	resolution := uint32(256)
 	binSize := binning.MaxTileResolution / float64(resolution)
 	// halfSize := float64(binSize / 2)
 
-	bins := int(100)
+	// log.Debug(binSize)
+
+	var tmpGeoPointParsed interface{}
+	err = json.Unmarshal([]byte(res.(string)), &tmpGeoPointParsed)
+	if err != nil {
+		return nil, err
+	}
+
+	geoPointParsed, ok := tmpGeoPointParsed.(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service for geopoint tile: incorrect structure in %v", res)
+	}
+
+	res_geopoints, ok := jsonUtil.GetArray(geoPointParsed, "points")
+
+	if !ok {
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: could not parse geopoints from %v", res)
+	}
+
+	bins := len(res_geopoints)
 	points := make([]float32, bins*2)
 	numPoints := 0
-	for i := 0; i < bins; i++ {
 
-		xbin := rand.Intn(255)
-		ybin := rand.Intn(255)
+	for _, point := range res_geopoints {
 
-		x := float32(float64(xbin)*binSize )
-		y := float32(float64(ybin)*binSize )
+		pointMap, ok := point.(map[string]interface{})
+		if !ok {
+			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect point structure in %v", res)
+		}
+
+		res_xbin, ok := jsonUtil.GetNumber(pointMap, "xbin")
+		if !ok {
+			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect xbin structure in %v", res)
+		}
+
+		res_ybin, ok := jsonUtil.GetNumber(pointMap, "ybin")
+		if !ok {
+			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect ybin structure in %v", res)
+		}
+
+		x := float32(float64(res_xbin)*binSize )
+		y := float32(float64(res_ybin)*binSize )
+
 		points[numPoints*2] = x
 		points[numPoints*2+1] = y
 		numPoints++
-	}
+	}	
 
 	log.Debug(points)
+
+	// bins := int(100)
+	// points := make([]float32, bins*2)
+	// numPoints := 0
+	// for i := 0; i < bins; i++ {
+
+	// 	xbin := rand.Intn(255)
+	// 	ybin := rand.Intn(255)
+
+	// 	x := float32(float64(xbin)*binSize )
+	// 	y := float32(float64(ybin)*binSize )
+	// 	points[numPoints*2] = x
+	// 	points[numPoints*2+1] = y
+	// 	numPoints++
+	// }
 
 	return t.Macro.Encode(points[0 : numPoints*2])
 	// return nil, nil
@@ -189,10 +237,10 @@ func (t *GeoPointTile) GetRequestParameters() map[string]interface{} {
 	log.Debug(t.lod)
 
 	// Add time range parameters.
-	time := make(map[string]int64)
-	time["from"] = t.timeFrom
-	time["to"] = t.timeTo
-	parameters["date"] = time
+	// time := make(map[string]int64)
+	// time["from"] = t.timeFrom
+	// time["to"] = t.timeTo
+	parameters["date"] = t.date
 	parameters["word"] = t.wordTerm
 	parameters["lod"] = t.lod
 

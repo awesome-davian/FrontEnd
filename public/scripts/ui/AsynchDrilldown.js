@@ -24,6 +24,7 @@ class AsynchDrilldown extends Drilldown {
         var word = query.word;
         var date = query.date;
 
+        // Request 메시지 생성 및 송/수신
         return Ajax.customAjaxPromise({
                 url: this.esURL,
                 method: 'POST',

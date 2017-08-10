@@ -151,7 +151,7 @@ module.exports = {
 		const layer = new veldt.Layer.GeoPoint(meta, {
 			renderer: new veldt.Renderer.WebGL.Macro({
 				maxVertices: resolution * resolution,
-				radius: 6,
+				radius: 3,
 				// color: [ 0.4, 1.0, 0.1, 0.8 ]
 
 				color: [ 1.0, 0.4, 0.1, 0.8 ]

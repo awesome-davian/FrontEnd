@@ -29,7 +29,7 @@ class TopicDrilldown extends AsynchDrilldown {
     recomputeBodyContext(data) {
 
         if(typeof data ==='string'){
-                console.log('string');
+                // console.log('string');
             }
         else{
                var documents = data.documents; 
@@ -74,12 +74,12 @@ class TopicDrilldown extends AsynchDrilldown {
 
 
 
-        console.log(data);
+        // console.log(data);
         const c = {};
         // local model
         Object.assign(c, this.model);
 
-        console.log(c);
+        // console.log(c);
 
         return c;
     }

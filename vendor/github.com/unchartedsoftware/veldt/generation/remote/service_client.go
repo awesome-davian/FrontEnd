@@ -176,6 +176,8 @@ func (c *ServiceClient) HandleRequests() {
 }
 
 func (c *ServiceClient) sendRequest(requestData map[string]interface{}) (string, error) {
+
+	log.Debug("sendRequest")
 	// TODO: Have the URL configurable!
 	request := gorequest.New()
 	_, result, errs := request.Post(c.apiURL).Send(requestData).End()

@@ -144,7 +144,7 @@ class Drilldown {
 	}
 	recomputeContext(data) {
 
-		console.log(data);	
+		// console.log(data);	
 		const c = {};
 		c.title = this.title;
 		c.canClose = this.canClose;
