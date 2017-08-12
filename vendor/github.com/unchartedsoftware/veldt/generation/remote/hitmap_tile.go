@@ -95,32 +95,102 @@ func (t *HitmapTile) Create(uri string, coord *binning.TileCoord, query veldt.Qu
 		return nil, fmt.Errorf("Unexpected response format from topic modelling service: could not parse exclusiveness score from %v", res)
 	}
 
-	exclusivenessValue := 0.0
+	
+	
+
 	for _, ex := range exclusivenessValues {
 		exMap, ok := ex.(map[string]interface{})
 		if !ok {
 			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect exclusiveness structure in %v", res)
 		}
 
-		date, ok := jsonUtil.GetString(exMap, "date")
+		// date, ok := jsonUtil.GetString(exMap, "date")
+		// if !ok {
+		// 	return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect date structure in %v", res)
+		// }
+
+		east, ok := jsonUtil.GetNumber(exMap, "east")
 		if !ok {
-			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect date structure in %v", res)
+			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect east structure in %v", res)
 		}
 
-		value, ok := jsonUtil.GetNumber(exMap, "value")
+		west, ok := jsonUtil.GetNumber(exMap, "west")
 		if !ok {
-			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect value structure in %v", res)
+			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect west structure in %v", res)
 		}
 
-		exclusiveness[date] = value
-		exclusivenessValue = value
+		south, ok := jsonUtil.GetNumber(exMap, "south")
+		if !ok {
+			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect south structure in %v", res)
+		}
+
+		north, ok := jsonUtil.GetNumber(exMap, "north")
+		if !ok {
+			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect north structure in %v", res)
+		}
+
+		// value, ok := jsonUtil.GetNumber(exMap, "east")
+		// if !ok {
+		// 	return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect value structure in %v", res)
+		// }
+
+		// exclusiveness['date'] = value
+		// exclusivenessValue = value
+
+		exclusiveness["east"] = east
+		exclusiveness["west"] = west
+		exclusiveness["south"] = south
+		exclusiveness["north"] = north
+
 	}
 
 	// convert single value to byte array
+	// bits := make([]byte, 4)
+	// binary.LittleEndian.PutUint32(
+	// 	bits[0:4],
+	// 	uint32(exclusivenessValue*10))
+
+	east := uint32(exclusiveness["east"]*10)
+	west := uint32(exclusiveness["west"]*10)
+	south := uint32(exclusiveness["south"]*10)
+	north := uint32(exclusiveness["north"]*10)
+
+	if east == 10 {
+		east = east - 1
+	}
+	if west == 10 {
+		west = west - 1
+	}
+	if south == 10 {
+		south = south - 1
+	}
+	if north == 10 {
+		north = north - 1
+	}
+
+	// log.Debug(east)
+	// log.Debug(west)
+	// log.Debug(south)
+	// log.Debug(north)
+
+	exclusivenessValue := uint32(east*1 + west*10 + south*100 + north*1000)
+	log.Debug(exclusivenessValue)
+	
 	bits := make([]byte, 4)
+
 	binary.LittleEndian.PutUint32(
 		bits[0:4],
-		uint32(exclusivenessValue*10))
+		exclusivenessValue)
+	// binary.LittleEndian.PutUint32(
+	// 	bits[1],
+	// 	west)
+	// binary.LittleEndian.PutUint32(
+	// 	bits[2],
+	// 	south)
+	// binary.LittleEndian.PutUint32(
+	// 	bits[3],
+	// 	north)
+
 	return bits, nil
 }
 
