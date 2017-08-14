@@ -440,8 +440,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		// console.trace();
   //   	console.log(tile);
 
-    	//console.log(tile.data);
-        const wordCounts = _.flatMap(tile.data, (value, key) => {
+        const wordCounts = _.flatMap(tile.data.topic, (value, key) => {
+        	
             return _.map(value.words, (weight, word) => {
     			return {
     				// text: key + ':' + word,
@@ -516,19 +516,28 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 		////////////////////////////////////////////////////////////////////////
     	if (wordSelected == false) {
-    		console.log("drawTile(wordSelected == false");
-    		const radius = 10;
 
-    		divs.push(`
+    		console.log(tile.data.glyph);
+    		
+    		// tile.data.glyph.spatial_score
+    		// tile.data.glyph.temporal_score
+    		
+    		// const radius = 10;
+    		const radius = Math.floor(tile.data.glyph.spatial_score * 10);
+
+    		if (radius > 0) {
+    			divs.push(`
 				
 				<svg height="100" width="100">
 					<circle cx="20" cy="20" r="${radius}" stroke="black" stroke-width="0.3" fill="red" />
 				</svg>
 				`);
 
-			element.innerHTML = divs.join('');	
+				element.innerHTML = divs.join('');		
+    		}
+
     	} else {
-    		console.log("drawTile(wordSelected == true");
+    		// console.log("drawTile(wordSelected == true");
     	}
     	
 

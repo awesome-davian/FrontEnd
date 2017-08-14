@@ -122,7 +122,26 @@ func (t *TopicTile) Create(uri string, coord *binning.TileCoord, query veldt.Que
 		return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect structure in %v", res)
 	}
 
+	tiledata := make(map[string]interface{})
 	counts := make(map[uint32]map[string]interface{})
+	glyph := make(map[string]float64)
+
+	// tileGlyph := make(map[string]float64)
+	glyphData, ok := jsonUtil.GetChild(topicsParsed, "tile_glyph")
+	if !ok {
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'tile_glyph' in %v", res)
+	}
+	spatialScore, ok := jsonUtil.GetNumber(glyphData, "spatial_score")
+	if !ok {
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'spatial_score' in %v", res)
+	}
+	temporalScore, ok := jsonUtil.GetNumber(glyphData, "temporal_score")
+	if !ok {
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'temporal_score' in %v", res)
+	}
+	glyph["spatial_score"] = spatialScore
+	glyph["temporal_score"] = temporalScore
+
 	topics, ok := jsonUtil.GetArray(topicsParsed, "topic")
 	if !ok {
 		return nil, fmt.Errorf("Unexpected response format from topic modelling service: could not parse topics from %v", res)
@@ -130,12 +149,14 @@ func (t *TopicTile) Create(uri string, coord *binning.TileCoord, query veldt.Que
 
 	topicGroup := uint32(0)
 	for _, topic := range topics {
+		
 		counts[topicGroup] = make(map[string]interface{})
 		topicWords := make(map[string]uint32)
 		topicMap, ok := topic.(map[string]interface{})
 		if !ok {
 			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect topic structure in %v", res)
 		}
+
 		words, ok := jsonUtil.GetArray(topicMap, "words")
 		if !ok {
 			return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'words' in %v", res)
@@ -162,8 +183,12 @@ func (t *TopicTile) Create(uri string, coord *binning.TileCoord, query veldt.Que
 		topicGroup = topicGroup + 1
 	}
 
+	tiledata["topic"] = counts
+	tiledata["glyph"] = glyph
+
 	// marshal results
-	return json.Marshal(counts)
+	// return json.Marshal(counts)
+	return json.Marshal(tiledata)
 }
 
 // Create the request to the remote service.
