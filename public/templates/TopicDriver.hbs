@@ -1,11 +1,31 @@
-<div class="layer-control">
-	<span>Show Heatmap</span>
-	<div class="layer-toggle">
-			<i class="fa fa-check-square-o"></i>
-	</div>
-</div>
 <div class="topic-parameters">
+
     <div class="topic-parameter-group">
+        <div class="topic-description">
+            <span>Map color mode</span>
+        </div>
+        <div class="topic-parameter">
+            <span>Light </span>
+            <div class="map-mode-select-light">
+                <i class="fa fa-check-square-o"></i>
+            </div>
+        </div>
+        <div class="topic-parameter">
+            <!-- <div class="slider-container" id="slider-exclusiveness"></div> -->
+            <span>Dark </span>
+            <div class="map-mode-select-dark">
+                <i class="fa fa-check-square-o"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="layer-control">
+        <span>Show Heatmap: </span>
+        <div class="heatmap-toggle">
+            <i class="fa fa-check-square-o"></i>
+        </div>
+    </div>
+    <!-- <div class="topic-parameter-group">
         <div class="topic-description">
             <span>Terms</span>
         </div>
@@ -17,7 +37,7 @@
             <span>Exclude: </span>
             <input class="topic-term" type="text" name="terms-exclude" value="{{exclude}}"/>
         </div>
-    </div>
+    </div> -->
     <div class="topic-parameter-group">
         <div class="topic-description">
             <span>Topic Counts</span>
@@ -36,9 +56,25 @@
             <span>Algorithm</span>
         </div>
         <div class="topic-parameter">
-            <span>Exclusiveness: </span>
-            <div class="slider-container" id="slider-exclusiveness"></div>
+            <span>StanNMF </span>
+            <div class="algo-select-stan">
+                <i class="fa fa-check-square-o"></i>
+            </div>
         </div>
+        <div class="topic-parameter">
+            <!-- <div class="slider-container" id="slider-exclusiveness"></div> -->
+            <span>STExNMF(low) </span>
+            <div class="algo-select-stex-low">
+                <i class="fa fa-check-square-o"></i>
+            </div>
+        </div>
+        <div class="topic-parameter">
+            <span>STExNMF(high) </span>
+            <div class="algo-select-stex-high">
+                <i class="fa fa-check-square-o"></i>
+            </div>
+        </div>
+                <!-- <div class="slider-container" id="slider-exclusiveness"></div> </div>-->
     </div>
     <div class="topic-parameter-group">
         <div class="topic-description">

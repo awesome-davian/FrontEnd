@@ -85,6 +85,16 @@ body {
 	height: 430px;
 }
 
+.heatmap-toggle, .algo-select-stan, .algo-select-stex-low, .algo-select-stex-high, .map-mode-select-light, .map-mode-select-dark{
+	cursor: pointer;
+	line-height: 20px;
+	width: 24px;
+	font-size: 18px;
+	padding-right: 8px;
+	float: right;
+	color: #ffffff;
+}
+
 .layer-toggle {
 	cursor: pointer;
 	line-height: 20px;

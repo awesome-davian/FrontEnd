@@ -78,8 +78,12 @@ window.startApp = function() {
 		 * CartoDB layer
 		 * Styles for basemaps: light_all, dark_all, light_nolabels, light_only_labels, dark_nolabels, and dark_only_labels
 		 */
-		const carto = Layers.cartodb('light_all', requestor); 
-		map.addLayer(carto);
+		const carto_light = Layers.cartodb_light('light_all', requestor); 
+		map.addLayer(carto_light);
+
+		const carto_black = Layers.cartodb_dark('dark_all', requestor);
+		map.addLayer(carto_black);
+		carto_black.hide();
 
 		/**
 		 * Topic layer

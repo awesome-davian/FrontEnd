@@ -57,8 +57,17 @@ module.exports = {
 	/**
 	 * Base CartoDB Image Layer
 	 */
-	cartodb: function(tileset, requestor) {
-		const layer = new veldt.Layer.Rest();
+	cartodb_light: function(tileset, requestor) {
+		const layer = new veldt.Layer.Map_Light();
+		layer.setScheme('http');
+		layer.setEndpoint('a.basemaps.cartocdn.com');
+		layer.setExt('png');
+		layer.requestTile = liveRequestBuffer('rest', requestor, tileset, true);
+		return layer;
+	},
+
+	cartodb_dark: function(tileset, requestor) {
+		const layer = new veldt.Layer.Map_Dark();
 		layer.setScheme('http');
 		layer.setEndpoint('a.basemaps.cartocdn.com');
 		layer.setExt('png');

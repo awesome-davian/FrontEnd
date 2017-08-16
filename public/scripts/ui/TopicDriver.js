@@ -65,7 +65,7 @@ class TopicDriver extends Drilldown {
         $('#slider-time').append(timeSlider.getElement());
 
         const exclusivenessSlider = new SliderGTRA({
-            ticks: [0, 1, 2, 3, 4, 5],
+            ticks: [0, 1],
             initialValue: this.model.exclusiveness,
             lowerLabel: 'low',
             upperLabel: 'high',
@@ -75,11 +75,48 @@ class TopicDriver extends Drilldown {
         });
         $('#slider-exclusiveness').append(exclusivenessSlider.getElement());
 
-		this._$toggleIcon = $('.layer-toggle i');
-		this._$toggle = $('.layer-toggle');
+		this._$toggleIcon = $('.heatmap-toggle i');
+		this._$toggle = $('.heatmap-toggle');
 		this._$toggle.click(() => {
-			this.toggleEnabled();
+			this.heatmapToggleEnabled();
 		});
+
+        this._$selectionIconMapColorModeLight = $('.map-mode-select-light i');
+        this._$selectionMapColorModeLight = $('.map-mode-select-light');
+        this._$selectionMapColorModeLight.click(() => {
+            this.selectionMapColorModeClicked(1);
+        });
+
+        this._$selectionIconMapColorModeDark = $('.map-mode-select-dark i');
+        this._$selectionMapColorModeDark = $('.map-mode-select-dark');
+        this._$selectionMapColorModeDark.click(() => {
+            this.selectionMapColorModeClicked(2);
+        });
+
+        this._$selectionIconMapColorModeLight.removeClass('fa-square-o');
+        this._$selectionIconMapColorModeDark.removeClass('fa-check-square-o');
+        this._$selectionIconMapColorModeLight.addClass('fa-check-square-o');
+        this._$selectionIconMapColorModeDark.addClass('fa-square-o');
+
+        this._$selectionIconStan = $('.algo-select-stan i');
+        this._$selectionStan = $('.algo-select-stan');
+        this._$selectionStan.click(() => {
+            this.selectionClicked(1);
+        });
+
+        this._$selectionIconStexLow = $('.algo-select-stex-low i');
+        this._$selectionStexLow = $('.algo-select-stex-low');
+        this._$selectionStexLow.click(() => {
+            this.selectionClicked(2);
+        });
+
+        this._$selectionIconStexHigh = $('.algo-select-stex-high i');
+        this._$selectionStexHigh = $('.algo-select-stex-high');
+        this._$selectionStexHigh.click(() => {
+            this.selectionClicked(3);
+        });
+
+        this.selectionClicked(2);
     }
 
     _createSlider(onSlideStop) {
@@ -113,8 +150,8 @@ class TopicDriver extends Drilldown {
 
     // Actions
     onShowTopics() {
-        const include = $('[name=terms-include]').val();
-        const exclude = $('[name=terms-exclude]').val();
+        // const include = $('[name=terms-include]').val();
+        // const exclude = $('[name=terms-exclude]').val();
         const clusterCount = this.getIntParameter('count-cluster') || this.model.clusterCount;
         const wordCount = this.getIntParameter('count-word') || this.model.wordCount;
 
@@ -123,8 +160,8 @@ class TopicDriver extends Drilldown {
             return l.constructor === veldt.Layer.Topic;
         });
 
-		topicLayer.setInclude(include.split(',') || this.model.include.split(','));
-		topicLayer.setExclude(exclude.split(',') || this.model.exclude.split(','));
+		// topicLayer.setInclude(include.split(',') || this.model.include.split(','));
+		// topicLayer.setExclude(exclude.split(',') || this.model.exclude.split(','));
         topicLayer.setExclusiveness(this.model.exclusiveness);
         topicLayer.setTopicWordCount(wordCount);
         topicLayer.setTopicClusterCount(clusterCount);
@@ -238,7 +275,85 @@ class TopicDriver extends Drilldown {
         return this;
     }
 
-	toggleEnabled() {
+    selectionClicked(algo) {
+
+        if (algo == 1) {
+
+            this._$selectionIconStexLow.removeClass('fa-check-square-o');
+            this._$selectionIconStexHigh.removeClass('fa-check-square-o');
+            this._$selectionIconStan.removeClass('fa-square-o');
+
+            this._$selectionIconStan.addClass('fa-check-square-o');
+            this._$selectionIconStexLow.addClass('fa-square-o');
+            this._$selectionIconStexHigh.addClass('fa-square-o');
+
+        } else if (algo == 2) {
+
+            this._$selectionIconStan.removeClass('fa-check-square-o');
+            this._$selectionIconStexLow.removeClass('fa-square-o');
+            this._$selectionIconStexHigh.removeClass('fa-check-square-o');
+
+            this._$selectionIconStan.addClass('fa-square-o');
+            this._$selectionIconStexLow.addClass('fa-check-square-o');
+            this._$selectionIconStexHigh.addClass('fa-square-o');
+
+        } else if (algo == 3) {
+        
+            this._$selectionIconStan.removeClass('fa-check-square-o');
+            this._$selectionIconStexLow.removeClass('fa-check-square-o');
+            this._$selectionIconStexHigh.removeClass('fa-square-o');
+
+            this._$selectionIconStan.addClass('fa-square-o');
+            this._$selectionIconStexLow.addClass('fa-square-o');
+            this._$selectionIconStexHigh.addClass('fa-check-square-o');
+        
+        } else {
+            
+            this._$selectionIconStexLow.removeClass('fa-check-square-o');
+            this._$selectionIconStexHigh.removeClass('fa-check-square-o');
+            this._$selectionIconStan.removeClass('fa-square-o');
+
+            this._$selectionIconStan.addClass('fa-check-square-o');
+            this._$selectionIconStexLow.addClass('fa-square-o');
+            this._$selectionIconStexHigh.addClass('fa-square-o');            
+        }   
+    }
+
+    selectionMapColorModeClicked(mode) {
+
+        const lightMap = this.plot.layers.find(l => {
+            return l.constructor === veldt.Layer.Map_Light;
+        });
+
+        const darkMap = this.plot.layers.find(l => {
+            return l.constructor === veldt.Layer.Map_Dark;
+        });
+
+        if (mode == 1) {
+            this._$selectionIconMapColorModeLight.removeClass('fa-square-o');
+            this._$selectionIconMapColorModeDark.removeClass('fa-check-square-o');
+
+            this._$selectionIconMapColorModeLight.addClass('fa-check-square-o');
+            this._$selectionIconMapColorModeDark.addClass('fa-square-o');
+
+            
+            lightMap.show();
+            darkMap.hide();
+
+        } else  {
+
+            this._$selectionIconMapColorModeLight.removeClass('fa-check-square-o');
+            this._$selectionIconMapColorModeDark.removeClass('fa-square-o');
+
+            this._$selectionIconMapColorModeLight.addClass('fa-square-o');
+            this._$selectionIconMapColorModeDark.addClass('fa-check-square-o');
+
+            lightMap.hide();
+            darkMap.show();
+        }   
+    }
+
+	heatmapToggleEnabled() {
         const exLayer = this.plot.layers.find(l => {
             return l.constructor === veldt.Layer.Exclusiveness;
         });
