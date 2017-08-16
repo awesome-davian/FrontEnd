@@ -8,7 +8,7 @@ import (
 	// "math/rand"
 	// "time"
 
-	"github.com/unchartedsoftware/plog"
+	// "github.com/unchartedsoftware/plog"
 	"github.com/unchartedsoftware/veldt"
 	"github.com/unchartedsoftware/veldt/binning"
 	jsonUtil "github.com/unchartedsoftware/veldt/util/json"
@@ -70,15 +70,7 @@ func (t *GeoPointTile) GetApiUrl() string {
 
 func (t *GeoPointTile) Create(uri string, coord *binning.TileCoord, query veldt.Query) ([]byte, error) {
 
-	// panic("GeoPointTile.Create()")
-	// log.Debug("GeoPointTile.Create");
-
-	// log.Debug(uri);
-	// log.Debug(coord);
-	// log.Debug(query);
-
 	// Setup the tile coordinate information.
-	// log.Debug(t)
 	
 	t.x = coord.X
 	t.y = coord.Y
@@ -157,7 +149,7 @@ func (t *GeoPointTile) Create(uri string, coord *binning.TileCoord, query veldt.
 		numPoints++
 	}	
 
-	log.Debug(points)
+	// log.Debug(points)
 
 	// bins := int(100)
 	// points := make([]float32, bins*2)
@@ -234,12 +226,6 @@ func (t *GeoPointTile) Create(uri string, coord *binning.TileCoord, query veldt.
 func (t *GeoPointTile) GetRequestParameters() map[string]interface{} {
 	parameters := make(map[string]interface{})
 
-	log.Debug(t.lod)
-
-	// Add time range parameters.
-	// time := make(map[string]int64)
-	// time["from"] = t.timeFrom
-	// time["to"] = t.timeTo
 	parameters["date"] = t.date
 	parameters["word"] = t.wordTerm
 	parameters["lod"] = t.lod

@@ -8,7 +8,7 @@ import (
 	// "math/rand"
 	// "time"
 
-	"github.com/unchartedsoftware/plog"
+	// "github.com/unchartedsoftware/plog"
 	"github.com/unchartedsoftware/veldt"
 	"github.com/unchartedsoftware/veldt/binning"
 	jsonUtil "github.com/unchartedsoftware/veldt/util/json"
@@ -17,10 +17,8 @@ import (
 
 type WordGlyphTile struct {
 	APITile
-	timeFrom int64
-	timeTo   int64
+	date int64
 	wordTerm string
-	lod int
 	tile.Macro
 }
 
@@ -40,23 +38,18 @@ func (t *WordGlyphTile) Parse(params map[string]interface{}) error {
 	}
 
 	// get time from
-	timeFrom, ok := jsonUtil.GetNumber(params, "timeFrom")
+	date, ok := jsonUtil.GetNumber(params, "timeFrom")
 	if !ok {
 		return fmt.Errorf("`timeFrom` parameter missing from glyph tile")
 	}
-	// get time time
-	timeTo, ok := jsonUtil.GetNumber(params, "timeTo")
-	if !ok {
-		return fmt.Errorf("`timeTo` parameter missing from glyph tile")
-	}
+	
 
-	t.timeFrom = int64(timeFrom)
-	t.timeTo = int64(timeTo)
+	t.date = int64(date)
 	t.wordTerm = word
 
 	// Use hash of all parameters to identify request.
-	requestId := fmt.Sprintf("%v::%v::%v",
-		timeFrom, timeTo, word)
+	requestId := fmt.Sprintf("%v::%v",
+		date, word)
 		// timeFrom, timeTo)
 
 	t.requestId = requestId
@@ -67,14 +60,10 @@ func (t *WordGlyphTile) Parse(params map[string]interface{}) error {
 
 func (t *WordGlyphTile) GetApiUrl() string {
 	// TODO: Have the URL configurable!
-	return "http://163.152.20.64:5001/GET_WORD_GLYPH/test"
+	return "http://163.152.20.64:5002/GET_WORDGLYPH/test"
 }
 
 func (t *WordGlyphTile) Create(uri string, coord *binning.TileCoord, query veldt.Query) ([]byte, error) {
-
-	// log.Debug("WordGlyphTile.Create");
-
-	// panic("WordGlyphTile.Create");
 
 	// Setup the tile coordinate information.
 	t.x = coord.X
@@ -109,35 +98,30 @@ func (t *WordGlyphTile) Create(uri string, coord *binning.TileCoord, query veldt
 		return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect structure in %v", res)
 	}
 
-	result := make(map[uint32]map[string]interface{})
-	glyphs, ok := jsonUtil.GetArray(glyphParsed, "wordglyph")
+	glyphData, ok := jsonUtil.GetChild(glyphParsed, "word_glyph")
 	if !ok {
-		return nil, fmt.Errorf("Unexpected response format from topic modelling service: could not parse topics from %v", res)
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'word_glyph' in %v", res)
 	}
 
-	glyphGroup := uint32(0)
-	for _, glyph := range glyphs {
-
-		item, ok := glyph.(map[string]interface{})
-		if !ok {
-			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect glyph structure in %v", res)
-		}
-
-		word, ok := jsonUtil.GetString(item, "word")
-		if !ok {
-			return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'word' in %v", res)
-		}
-
-		count, ok := jsonUtil.GetNumber(item, "count")
-		if !ok {
-			return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'count' in %v", res)
-		}
-
-		result[glyphGroup] = make(map[string]interface{})
-		result[glyphGroup]["word"] = word;
-		result[glyphGroup]["count"] = count;
-		glyphGroup = glyphGroup + 1
+	frequency, ok := jsonUtil.GetNumber(glyphData, "frequency")
+	if !ok {
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'frequency' in %v", res)
 	}
+
+	tfidf, ok := jsonUtil.GetNumber(glyphData, "tfidf")
+	if !ok {
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'tfidf' in %v", res)
+	}
+
+	temporal, ok := jsonUtil.GetArray(glyphData, "temporal")
+	if !ok {
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'temporal' in %v", res)
+	}
+
+	result := make(map[string]interface{})
+	result["frequency"] = frequency
+	result["tfidf"] = tfidf
+	result["temporal"] = temporal
 
 	return json.Marshal(result)
 }
@@ -146,15 +130,9 @@ func (t *WordGlyphTile) Create(uri string, coord *binning.TileCoord, query veldt
 func (t *WordGlyphTile) GetRequestParameters() map[string]interface{} {
 	parameters := make(map[string]interface{})
 
-	log.Debug(t.lod)
-
-	// Add time range parameters.
-	time := make(map[string]int64)
-	time["from"] = t.timeFrom
-	time["to"] = t.timeTo
-	parameters["date"] = time
+	parameters["date"] = t.date
 	parameters["word"] = t.wordTerm
-	parameters["lod"] = t.lod
+	// parameters["lod"] = t.lod
 
 	return parameters
 }

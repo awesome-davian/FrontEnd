@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	// "github.com/unchartedsoftware/plog"
 	"github.com/unchartedsoftware/veldt"
 	"github.com/unchartedsoftware/veldt/binning"
 	jsonUtil "github.com/unchartedsoftware/veldt/util/json"
@@ -174,7 +175,7 @@ func (t *HitmapTile) Create(uri string, coord *binning.TileCoord, query veldt.Qu
 	// log.Debug(north)
 
 	exclusivenessValue := uint32(east*1 + west*10 + south*100 + north*1000)
-	log.Debug(exclusivenessValue)
+	// lolog.Debug(exclusivenessValue)
 	
 	bits := make([]byte, 4)
 

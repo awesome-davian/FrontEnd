@@ -18,10 +18,14 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
     drawTile(element, tile) {
 
-    	// console.log(tile);
+    	console.log(tile);
+
+        const frequency = tile.data.frequency;
+        const tfidf = tile.data.tfidf;
+        const temporal = tile.data.temporal;
 
     	const margin = 100;
-    	const radius = 10;
+    	const radius = Math.floor(frequency/100);
 
     	const divs = [];
 
