@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	port      = "8080"
+	port      = "8081"
 	esHost    = "http://10.64.16.120"
 	esPort    = "9200"
 	redisHost = "localhost"

@@ -85,7 +85,7 @@ func (t *TopicTile) Parse(params map[string]interface{}) error {
 
 func (t *TopicTile) GetApiUrl() string {
 	// TODO: Have the URL configurable!
-	return "http://163.152.20.64:5002/GET_TOPICS/test"
+	return "http://163.152.20.64:5001/GET_TOPICS/test"
 }
 
 func (t *TopicTile) Create(uri string, coord *binning.TileCoord, query veldt.Query) ([]byte, error) {

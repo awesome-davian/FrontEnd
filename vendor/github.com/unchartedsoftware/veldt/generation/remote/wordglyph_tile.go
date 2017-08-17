@@ -60,7 +60,7 @@ func (t *WordGlyphTile) Parse(params map[string]interface{}) error {
 
 func (t *WordGlyphTile) GetApiUrl() string {
 	// TODO: Have the URL configurable!
-	return "http://163.152.20.64:5002/GET_WORDGLYPH/test"
+	return "http://163.152.20.64:5001/GET_WORDGLYPH/test"
 }
 
 func (t *WordGlyphTile) Create(uri string, coord *binning.TileCoord, query veldt.Query) ([]byte, error) {

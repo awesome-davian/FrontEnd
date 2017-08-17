@@ -50,7 +50,7 @@ func (t *HitmapTile) Parse(params map[string]interface{}) error {
 
 func (t *HitmapTile) GetApiUrl() string {
 	// TODO: Have the URL configurable!
-	return "http://163.152.20.64:5002/GET_HEATMAP/test"
+	return "http://163.152.20.64:5001/GET_HEATMAP/test"
 }
 
 func (t *HitmapTile) Create(uri string, coord *binning.TileCoord, query veldt.Query) ([]byte, error) {

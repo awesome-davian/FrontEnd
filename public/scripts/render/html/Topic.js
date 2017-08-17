@@ -10,17 +10,12 @@ const lumo = require('lumo');
 const VERTICAL_OFFSET = 24;
 const HORIZONTAL_OFFSET = 0;
 const NUM_ATTEMPTS = 1;
-
 let wordSelected = false;
 
-const getMouseButton = function(event) {
-	if (event.which === 1) {
-		return 'left';
-	} else if (event.which === 2) {
-		return 'middle';
-	} else if (event.which === 3) {
-		return 'right';
-	}
+var tileIdx = 0;
+
+const sigmoid = function(x){
+    	return 1/(1+ Math.pow(Math.E, -(x)));
 };
 
 /**
@@ -68,15 +63,15 @@ const intersectWord = function(position, word, cloud, bb) {
 	return false;
 };
 
-// const getMouseButton = function(event) {
-// 	if (event.which === 1) {
-// 		return 'left';
-// 	} else if (event.which === 2) {
-// 		return 'middle';
-// 	} else if (event.which === 3) {
-// 		return 'right';
-// 	}
-// };
+const getMouseButton = function(event) {
+	if (event.which === 1) {
+		return 'left';
+	} else if (event.which === 2) {
+		return 'middle';
+	} else if (event.which === 3) {
+		return 'right';
+	}
+};
 
 const sortWords = function(words) {
 
@@ -334,7 +329,6 @@ const spiralPosition3 = function(pos, groupIndex, groupCount) {
 };
 
 const createWordCloud = function(renderer, wordCounts, extrema) {
-
 	const tileSize = renderer.layer.plot.tileSize;
 	const boundingBox = {
 		width: tileSize - HORIZONTAL_OFFSET * 2,
@@ -342,13 +336,8 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
 		x: 0,
 		y: 0
 	};
-
 	const cloud = [];
-
 	wordCounts = sortWords(wordCounts);
-
-	// console.log(wordCounts);
-
 	// measure the words size
 	wordCounts = measureWords(renderer, wordCounts, extrema);
 
@@ -437,9 +426,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
     drawTile(element, tile) {
 		
-		// console.trace();
-  //   	console.log(tile);
-
         const wordCounts = _.flatMap(tile.data.topic, (value, key) => {
         	
             return _.map(value.words, (weight, word) => {
@@ -470,6 +456,13 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		const count_font_size = 18;
 		const count_color = '#ffffff';
 
+		var totWordCount = 0;
+
+		const glyphCircleRadius = Math.atan(totWordCount/100)*10
+    	const spatialScore  = tile.data.glyph.spatial_score;
+    	const temportalScore = tile.data.glyph.temporal_score;
+     
+
 		cloud.forEach(word => {
             const combinedText = word.text;
             //console.log(word);
@@ -480,6 +473,9 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 			const highlight = (word.text === this.highlight) ? 'highlight' : '';
 			// create element for word
+
+			const wordRadius = sigmoid(word.count)*15;
+			//console.log(wordRadius);
 			divs.push(`
 				<div class="
 					word-cloud-label
@@ -492,7 +488,14 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 						width: ${word.width}px;
 						height: ${word.height}px;
                         color: ${groupColor};"
+
+                    data-spatialScore = ${spatialScore}
+					data-temporalScore = ${temportalScore}
+					data-totWordCount = ${totWordCount}
+					data-tileIdx = ${tileIdx}
+
 					data-word="${word.text}" 
+					data-group="${word.group}"
 					data-count="${word.count}">${word.text}
 					</div>
 				<div class="word-count-popup
@@ -506,48 +509,174 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 						top: ${margin}px;""
 						
 					data-word-popup="${word.text}" 
-					data-count="{word.count}">${word.count}</div>	
+					data-count="{word.count}">${word.count}</div>
+				<div class="word-glyph-popup
+				            word-glyph-popup-${word.text}-${word.group}" 
+				           style = "
+				                top : ${20}px;
+				                right : ${20}px;
+				                width : ${100}px;
+				                height : ${100}px;
+				                float: right;
+				                display : none;
+				                ">						            		
+				</div>	
+				`);	
+		    totWordCount += word.count;	
+
+				
+			});
+
+		var radius = 0;
+
+		if(totWordCount == 0){
+
+			radius = 0 
+		}
+		else{
+			radius = totWordCount/200
+		};
+
+
+		console.log(totWordCount);
+
+
+		const glyphRadius = Math.atan(totWordCount/100)*10
+    	//const spatialScore  = tile.data.glyph.spatial_score;
+    	//const temportalScore = tile.data.glyph.temporal_score;
+
+    	divs.push(`
+				<div class="tile-glyph-${tileIdx}"
+				    style = "
+				        right: ${200}px;
+				        top : ${margin}px;
+				        width: ${100}px;
+				        height: ${100}px;
+				        float : left;
+				        "
+				        data-spatialScore = ${spatialScore}
+					    data-temporalScore = ${temportalScore}
+					    data-totWordCount = ${totWordCount}>
+				    <svg height="100" width="100"
+					    >
+						<circle cx="40" cy="40" r="${glyphRadius}" fill="#efcec5" />
+					</svg>
+				</div>	
 				`);
 
-			
-		});
 
 		element.innerHTML = divs.join('');
 
+        tileIdx++; 
+
+
+
 		////////////////////////////////////////////////////////////////////////
     	if (wordSelected == false) {
-
+	
     		console.log(tile.data.glyph);
-    		
-    		// tile.data.glyph.spatial_score
-    		// tile.data.glyph.temporal_score
-    		
-    		// const radius = 10;
-    		const radius = Math.floor(tile.data.glyph.spatial_score * 10);
+    		//const radius = 10;
+    		//const radius = Math.floor(tile.data.glyph.spatial_score * 10);
+    		const glyphCircleRadius = Math.atan(totWordCount/100)*12
 
-    		if (radius > 0) {
-    			divs.push(`
+/*    		divs.push(`
 				
 				<svg height="100" width="100">
-					<circle cx="20" cy="20" r="${radius}" stroke="black" stroke-width="0.3" fill="red" />
+					<circle cx="40" cy="40" r="${glyphCircleRadius}" stroke="black" stroke-width="0.3" fill="red" />
 				</svg>
 				`);
 
-				element.innerHTML = divs.join('');		
-    		}
-
+			element.innerHTML = divs.join('');*/	
     	} else {
-    		// console.log("drawTile(wordSelected == true");
+    		//console.log("drawTile(wordSelected == true");
     	}
-    	
-
     }
 
     onMouseOver(event){
 
+    	// const word = $(event.target).attr('data-word');
+     //    const value = $('[data-word=' + word + ']').text();
+     //    $('[data-word-popup=' + word + ']').show();
+
+    	const temportalScore = $(event.target).attr('data-temporalScore');
+        const spatialScore = $(event.target).attr('data-spatialScore');
+        const totWordCount = $(event.target).attr('data-totWordCount');
+        const tileIdx = $(event.target).attr('data-tileIdx');
+        
     	const word = $(event.target).attr('data-word');
         const value = $('[data-word=' + word + ']').text();
-        $('[data-word-popup=' + word + ']').show();
+        const wordCount = $(event.target).attr('data-count');
+
+
+       /* console.log(temportalScore);
+        console.log(spatialScore);
+        console.log(totWordCount);
+        console.log(tileIdx);
+        console.log(value);*/
+
+        var data = [
+          { score: temportalScore , color: '#19b296'},
+          { score: spatialScore, color: '#ef562d'}
+        ];
+
+
+        var width = 100,
+            height = 100,
+            radius = Math.min(width, height) / 2;
+
+        var arcMin = 17, 
+            arcWidth = 5,
+            arcPad =0.5;     
+
+
+        var drawArc = d3.arc()
+                        .innerRadius(function(d,i){
+                         return arcMin + i*(arcWidth) +arcPad;
+                        })
+                        .outerRadius(function(d,i){
+                         return arcMin + (i+1)*(arcWidth);
+                        })
+                        //.startAngle(0);
+                       .startAngle(function(d,i){
+                       	    return i*0.5;
+                       }); 
+                        // .endAngle(function(d,i){
+                        //   return d.score*360*0.0175
+                        // });
+
+        var pie = d3.pie()
+                 .sort(null)
+                 .value(function(d) {
+                        return d.score;
+                    });
+
+
+       var svg2 = d3.select(".tile-glyph-"+ tileIdx).select("svg")
+                 .attr("width", width)
+                 .attr("height", height)
+                 .append("g")
+                 .attr("transform", "translate(" + 40+ "," + 40 + ")");
+
+        var g = svg2.selectAll(".arc")
+               .data((data))
+               .enter().append("g")
+               .attr("class", "arc");
+
+        g.append("path")
+         .style("fill", function(d,i) {
+             return d.color;
+          })
+         .transition().delay(function(d, i) { return i * 400; }).duration(400)
+         .attrTween('d',function(d,i){
+             console.log(d)
+             console.log(i)
+	         var interp = d3.interpolate(0 + i*0.2, d.score*360*0.0175 + i*0.2)
+	         return function(t){
+	             d.endAngle = interp(t);
+	             return drawArc(d,i);
+	            };
+
+         });
 	}
 
 

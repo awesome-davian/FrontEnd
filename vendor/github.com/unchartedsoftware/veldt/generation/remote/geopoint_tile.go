@@ -65,7 +65,7 @@ func (t *GeoPointTile) Parse(params map[string]interface{}) error {
 
 func (t *GeoPointTile) GetApiUrl() string {
 	// TODO: Have the URL configurable!
-	return "http://163.152.20.64:5002/GET_GEOPOINT/test"
+	return "http://163.152.20.64:5001/GET_GEOPOINT/test"
 }
 
 func (t *GeoPointTile) Create(uri string, coord *binning.TileCoord, query veldt.Query) ([]byte, error) {
