@@ -127,8 +127,9 @@ window.startApp = function() {
 		wordglyph.mute();
 		map.addLayer(wordglyph);
 
-		//topic.renderer.on('click', event => res.drilldown.show(event.data));
-		// topic.renderer.on('click', event => res.drilldown.get_coord(event.plotPx.x, event.plotPx.y, event.data));
+        // show topic drilldown if click word         
+		topic.renderer.on('click', event => res.drilldown.get_coord(event.plotPx.x, event.plotPx.y, event.data));
+
 		topic.renderer.on('click', event => res.driver.onShowWordGlyph(event.target, event.data));
 		topic.renderer.on('click', event => res.driver.onShowGeoPoint(event.target, event.data));
 		// topic.renderer.on('click', event => res.driver.onHideTileGlyph());

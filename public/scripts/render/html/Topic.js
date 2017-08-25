@@ -13,6 +13,7 @@ const NUM_ATTEMPTS = 1;
 let wordSelected = false;
 
 var tileIdx = 0;
+var dictionary = [];
 
 const sigmoid = function(x){
     	return 1/(1+ Math.pow(Math.E, -(x)));
@@ -546,7 +547,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     	//const temportalScore = tile.data.glyph.temporal_score;
 
     	divs.push(`
-				<div class="tile-glyph-${tileIdx}"
+				<div class="tile-glyph-${tileIdx} tile-glyph"
 				    style = "
 				        right: ${200}px;
 				        top : ${margin}px;
@@ -578,18 +579,18 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     		//const radius = 10;
     		//const radius = Math.floor(tile.data.glyph.spatial_score * 10);
     		const glyphCircleRadius = Math.atan(totWordCount/100)*12
-
-/*    		divs.push(`
-				
-				<svg height="100" width="100">
-					<circle cx="40" cy="40" r="${glyphCircleRadius}" stroke="black" stroke-width="0.3" fill="red" />
-				</svg>
-				`);
-
-			element.innerHTML = divs.join('');*/	
+	
     	} else {
     		//console.log("drawTile(wordSelected == true");
     	}
+
+    	var temp = new Object();
+    	temp.tileIdx = tileIdx;
+    	temp.spatialScore = spatialScore;
+    	temp.temportalScore = temportalScore;
+
+    	dictionary.push(temp);
+
     }
 
     onMouseOver(event){
@@ -607,17 +608,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         const value = $('[data-word=' + word + ']').text();
         const wordCount = $(event.target).attr('data-count');
 
-
-       /* console.log(temportalScore);
-        console.log(spatialScore);
-        console.log(totWordCount);
-        console.log(tileIdx);
-        console.log(value);*/
-
-        var data = [
-          { score: temportalScore , color: '#19b296'},
-          { score: spatialScore, color: '#ef562d'}
-        ];
 
 
         var width = 100,
@@ -650,33 +640,42 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
                         return d.score;
                     });
 
+        if(d3.select(svg2).empty()){
+        	for(var i = 0; i < dictionary.length; i++){
+	        	
+	        	var data = [
+					          { score: dictionary[i].temportalScore , color: '#19b296'},
+					          { score: dictionary[i].spatialScore, color: '#ef562d'}
+					        ];
 
-       var svg2 = d3.select(".tile-glyph-"+ tileIdx).select("svg")
-                 .attr("width", width)
-                 .attr("height", height)
-                 .append("g")
-                 .attr("transform", "translate(" + 40+ "," + 40 + ")");
+	        	var svg2 = d3.select(".tile-glyph-"+i).select("svg")
+	                 .attr("width", width)
+	                 .attr("height", height)
+	                 .append("g")
+	                 .attr("transform", "translate(" + 40+ "," + 40 + ")");
 
-        var g = svg2.selectAll(".arc")
-               .data((data))
-               .enter().append("g")
-               .attr("class", "arc");
+		        var g = svg2.selectAll(".arc")
+		               .data((data))
+		               .enter().append("g")
+		               .attr("class", "arc");
 
-        g.append("path")
-         .style("fill", function(d,i) {
-             return d.color;
-          })
-         .transition().delay(function(d, i) { return i * 400; }).duration(400)
-         .attrTween('d',function(d,i){
-             console.log(d)
-             console.log(i)
-	         var interp = d3.interpolate(0 + i*0.2, d.score*360*0.0175 + i*0.2)
-	         return function(t){
-	             d.endAngle = interp(t);
-	             return drawArc(d,i);
-	            };
+		        g.append("path")
+		         .style("fill", function(d,i) {
+		             return d.color;
+		          })
+		         .transition().delay(function(d, i) { return i * 400; }).duration(400)
+		         .attrTween('d',function(d,i){
+			         var interp = d3.interpolate(0 + i*1, d.score*360*0.0175 + i*1)
+			         return function(t){
+			             d.endAngle = interp(t);
+			             return drawArc(d,i);
+			            };
 
-         });
+	         });
+
+	        }
+        }
+
 	}
 
 

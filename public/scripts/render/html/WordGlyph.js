@@ -56,6 +56,8 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
         const divs = [];
 
+        if(frequency > 10){
+
         divs.push(`
             <div class="word-glyph word-glyph-${frequency}"
                  style = "
@@ -76,6 +78,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                 </svg>
             </div>
                 `);
+        };
 
 
         element.innerHTML = divs.join('');
@@ -90,13 +93,10 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
         const wordRadius = $(event.target).attr('data-radius');
         const temporal = $(event.target).attr('data-temporal');
 
-        console.log(frequency);
+       /* console.log(frequency);
         console.log(tfif);
-        console.log(temporal);
+        console.log(temporal);*/
 
-        //var svg = d3.select(".word-glyph-"+frequency).append("svg").attr("width",100).attr("height",100);
-        // svg.append("circle").attr("cx",50).attr("cy",40).attr("r",wordRadius)
-        //    .style("fill","#4DB6AC");
     
         var data = [
           { score: 0.1 , color: '#56FG23'},
@@ -176,21 +176,22 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
         var shape = svgTemporal.selectAll(".shapes")
                         .data(temportalData).enter();
 
-        shape.append("rect")
-             .attr("x", 85)
-             .style("fill", function(d,i) {
-                 return colors[i];
-              })
-             .transition()
-         .duration(200)
-         .delay(function (d, i) {
-                 return i * 200;
-             })
-             .attr("y", function(d,i){ return 7+(i)*10; })
-             .attr("width",8)
-             .attr("height",8);          
+        if(shape.select("rect").empty()){
 
-
+            shape.append("rect")
+                 .attr("x", 85)
+                 .style("fill", function(d,i) {
+                     return colors[i];
+                  })
+                 .transition()
+             .duration(200)
+             .delay(function (d, i) {
+                     return i * 200;
+                 })
+                 .attr("y", function(d,i){ return 7+(i)*10; })
+                 .attr("width",8)
+                 .attr("height",8);       
+        }   
 
     }
 
