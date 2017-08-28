@@ -545,7 +545,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		const glyphRadius = Math.atan(totWordCount/100)*10
     	//const spatialScore  = tile.data.glyph.spatial_score;
     	//const temportalScore = tile.data.glyph.temporal_score;
-    	
+
     	if(totWordCount > 0){
 
 	    	divs.push(`
@@ -645,7 +645,16 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
                         return d.score;
                     });
 
-        if(d3.select(svg2).empty()){
+        d3.selection.prototype.moveToBack = function() { 
+			return this.each(function() { 
+		        var firstChild = this.parentNode.firstChild; 
+		        if (firstChild) { 
+		            this.parentNode.insertBefore(this, firstChild); 
+		        } 
+		    }); 
+		};
+
+        if(d3.select("path").empty()){
         	for(var i = 0; i < dictionary.length; i++){
 	        	
 	        	var data = [
@@ -676,7 +685,10 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 			             return drawArc(d,i);
 			            };
 
-	         });
+	        });
+
+		    g.moveToBack();
+
 
 	        }
         }
@@ -712,6 +724,12 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 				plot.mouseToViewPx(event),
 				plot.mouseToPlotPx(event),
 				word));
+
+		    d3.selectAll("circle").attr("opacity", 0.5);
+	    	d3.selectAll("path")
+		      .transition()
+		      .attr("opacity", 0.5);
+
 		} else {
 			wordSelected = false;
 			this.clearSelection();
@@ -722,6 +740,11 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		console.log("clearSelection()");
 		$(this.container).removeClass('highlight');
 		this.highlight = null;
+
+		d3.selectAll("circle").attr("opacity", null);
+	    d3.selectAll("path")
+	      .transition()
+		  .attr("opacity", null);
 	}
 
     parseTextValue(combinedText) {
