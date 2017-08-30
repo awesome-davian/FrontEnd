@@ -51,6 +51,8 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                         data-temporal = "${temporal}"
                         data-frequency ="${frequency}">
                  <circle cx="50" cy="40" r="${radius}"  fill="#4DB6AC" />
+                 <circle r="18" cx="50" cy="40" fill="none" stroke="#e0e0e0" stroke-width="2"/> 
+                 <circle r="23" cx="50" cy="40" fill="none" stroke="#bdbdbd" stroke-width="2"/>
               </svg>
             </div>
             `);
@@ -142,7 +144,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
              .style("fill", function(d,i) {
                return d.color;
               })
-             .transition().delay(function(d, i) { return i * 400; }).duration(400)
+             .transition().delay(function(d, i) { return i * 500; }).duration(500)
              .attrTween('d',function(d,i){
                 var interp = d3.interpolate(0, d.score*360*0.0175)
                 return function(t){
@@ -175,9 +177,9 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                  return colors[i];
               })
              .transition()
-             .duration(200)
+             .duration(400)
              .delay(function (d, i) {
-                 return i * 200;
+                 return i * 300;
              })
              .attr("y", function(d,i){ return 7+(i)*10; })
              .attr("width",8)

@@ -563,8 +563,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 					    <svg height='100' width='100'
 						    >
 							<circle cx='40' cy='40' r='${glyphRadius}' fill='#efcec5' />
-							<circle r="18.5" cx="40" cy="40" fill="none" stroke="#e0e0e0" stroke-width="4.5"/>	
-							<circle r="24" cx="40" cy="40" fill="none" stroke="#bdbdbd" stroke-width="4.5"/>	
+							<circle r="19.5" cx="40" cy="40" fill="none" stroke="#e0e0e0" stroke-width="2"/>	
+							<circle r="24" cx="40" cy="40" fill="none" stroke="#bdbdbd" stroke-width="2"/>	
 						</svg>
 					</div>	
 					`);
