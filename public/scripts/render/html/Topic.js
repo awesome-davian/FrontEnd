@@ -654,7 +654,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		    }); 
 		};
 
-        if(d3.select("path").empty()){
+        if(d3.select("#wordGlyphArc").empty()){
         	for(var i = 0; i < dictionary.length; i++){
 	        	
 	        	var data = [
@@ -671,7 +671,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		        var g = svg2.selectAll(".arc")
 		               .data((data))
 		               .enter().append("g")
-		               .attr("class", "arc");
+		               .attr("class", "arc")
+		               .attr("id", "wordGlyphArc");
 
 		        g.append("path")
 		         .style("fill", function(d,i) {
