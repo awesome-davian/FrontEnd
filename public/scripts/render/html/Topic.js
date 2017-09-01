@@ -15,6 +15,11 @@ let wordSelected = false;
 var tileIdx = 0;
 var dictionary = [];
 
+const topicColor = ['#ffffff', '#ff3c82', '#89c541', '#fee801'];
+const glyphColor = ['#19b296', '#ef562d'];
+const glyphBackgroundColor = ['#e0e0e0', '#bdbdbd'];
+
+
 const sigmoid = function(x){
     	return 1/(1+ Math.pow(Math.E, -(x)));
 };
@@ -563,8 +568,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 					    <svg height='100' width='100'
 						    >
 							<circle cx='40' cy='40' r='${glyphRadius}' fill='#efcec5' />
-							<circle r="19.5" cx="40" cy="40" fill="none" stroke="#e0e0e0" stroke-width="2"/>	
-							<circle r="24" cx="40" cy="40" fill="none" stroke="#bdbdbd" stroke-width="2"/>	
+							<circle r="19.5" cx="40" cy="40" fill="none" stroke="${glyphBackgroundColor[0]}" stroke-width="2"/>	
+							<circle r="24" cx="40" cy="40" fill="none" stroke="${glyphBackgroundColor[1]}" stroke-width="2"/>	
 						</svg>
 					</div>	
 					`);
@@ -593,6 +598,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     	temp.tileIdx = tileIdx;
     	temp.spatialScore = spatialScore;
     	temp.temportalScore = temportalScore;
+    	temp.topicScore  = ['0.2', '0.1', '0.5', '0.2'];
+    	temp.glyphRadius = glyphRadius;
 
     	dictionary.push(temp);
 
@@ -658,9 +665,17 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         	for(var i = 0; i < dictionary.length; i++){
 	        	
 	        	var data = [
-					          { score: dictionary[i].temportalScore , color: '#19b296'},
-					          { score: dictionary[i].spatialScore, color: '#ef562d'}
+					          { score: dictionary[i].temportalScore , color: glyphColor[0]},
+					          { score: dictionary[i].spatialScore, color: glyphColor[1]}
 					        ];
+
+			    var topicScoreData = 
+			    [
+                    {score: dictionary[i].topicScore[0], color: topicColor[0]},
+                    {score: dictionary[i].topicScore[1], color: topicColor[1]},
+                    {score: dictionary[i].topicScore[2], color: topicColor[2]},
+                    {score: dictionary[i].topicScore[3], color: topicColor[3]}
+			    ];
 
 	        	var svg2 = d3.select(".tile-glyph-"+i).select("svg")
 	                 .attr("width", width)
@@ -673,6 +688,12 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		               .enter().append("g")
 		               .attr("class", "arc")
 		               .attr("id", "wordGlyphArc");
+
+		        var g2 = svg2.selectAll(".piechar")
+		                 .data(pie(topicScoreData))
+		                 .enter().append("g")
+		                 .attr("class", "piechart")
+
 
 		        g.append("path")
 		         .style("fill", function(d,i) {
@@ -688,7 +709,21 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 	        });
 
+	            var pieChartPath = d3.arc()
+								    .innerRadius(0)
+								    .outerRadius(dictionary[i].glyphRadius);
+
+
+		        g2.append("path")
+		          .style("fill", function(d,i){
+		          	return topicScoreData[i].color
+		          })
+		         .attr("d", pieChartPath);
+
+
+
 		    g.moveToBack();
+		    g2.moveToBack();
 
 
 	        }
