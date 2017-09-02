@@ -613,7 +613,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
         tileIdx++; 
 
-        console.log(totWordCount);
+       // console.log(totWordCount);
 
 
 
@@ -763,7 +763,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		          .style("fill", function(d,i){
 		          	return topicScoreData[i].color
 		          })        
-                  .transition().delay(function(d,i){ return i*500;}).duration(500)
+                  .transition().delay(function(d,i){ return i*100;}).duration(300)
                   .attrTween('d', function(d){
                   	var i = d3.interpolate(d.startAngle + 0.1, d.endAngle);
                   	return function(t){
@@ -841,8 +841,16 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		      .attr("opacity", 0.5);
 		} else {
 			wordSelected = false;
-			this.clearSelection();
+			d3.selectAll("circle").attr("opacity", null);
+		    d3.selectAll("path")
+		      .transition()
+			  .attr("opacity", null);			
+			//this.clearSelection();
 		}
+
+
+
+
 
 
 		
@@ -853,10 +861,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		$(this.container).removeClass('highlight');
 		this.highlight = null;
 
-		d3.selectAll("circle").attr("opacity", null);
-	    d3.selectAll("path")
-	      .transition()
-		  .attr("opacity", null);
 	}
 
 

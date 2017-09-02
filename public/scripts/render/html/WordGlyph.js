@@ -29,7 +29,6 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
         const temporal = tile.data.temporal;
 
         const margin = 5;
-        //const radius = Math.floor(frequency/100);
         const radius = Math.atan(frequency/100)*12;
 
         const divs = [];
@@ -41,24 +40,32 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                    style = "
                         right: ${200}px;
                         top : ${margin}px;
-                        width: ${100}px;
-                        height: ${100}px;
+                        width: ${256}px;
+                        height: ${256}px;
                         float : right;
                         " >                 
-              <svg height="100" width="100"
+              <svg height="256" width="256"
                         data-radius = "${radius}"
                         data-tfidf =  "${tfidf}"
                         data-temporal = "${temporal}"
+                        data-tileidx = "${tileIdx}"
                         data-frequency ="${frequency}">
-                 <circle cx="50" cy="40" r="${radius}"  fill="#4DB6AC" />
-                 <circle r="22" cx="50" cy="40" fill="none" stroke="#bdbdbd" stroke-width="2"/> 
+                 <circle cx="205" cy="40" r="${radius}"  fill="#4DB6AC" />
+                 <circle r="23" cx="205" cy="40" fill="none" stroke="#e0e0e0" stroke-width="2"/> 
               </svg>
+            </div>
+            <div class = "Tile Tile-${tileIdx}"
+                 data-tileIdx = "${tileIdx}"
+                 style = "
+                        width : ${256}px;
+                        height : ${256}px; 
+                        ">
             </div>
             `);
 
       };
 
-        
+      
 
 
         element.innerHTML = divs.join('');
@@ -80,19 +87,17 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
         const tfif = $(event.target).attr('data-tfidf');
         const wordRadius = $(event.target).attr('data-radius');
         const temporal = $(event.target).attr('data-temporal');
+        const tileId = $(event.target).attr('data-tileidx');
 
-      /*  console.log(frequency);
-        console.log(tfif);
-        console.log(temporal);*/
+        console.log(tileId);
+        console.log(frequency);
+        //console.log(tfif);
+        //console.log(temporal);
 
-        //var svg = d3.select(".word-glyph-"+frequency).append("svg").attr("width",100).attr("height",100);
-        // svg.append("circle").attr("cx",50).attr("cy",40).attr("r",wordRadius)
-        //    .style("fill","#4DB6AC");
-    
+  
 
-
-        var width = 100,
-            height = 100,
+        var width = 256,
+            height = 256,
             radius = Math.min(width, height) / 2;
 
         var arcMin = 20, 
@@ -118,7 +123,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                         return d.score;
                     });
 
-        if(d3.select(svg2).empty()){
+        if(d3.select("#wordGlyphArc").empty()){
 
           for(var i = 0; i<dictionary.length; i++){
 
@@ -130,12 +135,13 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                          .attr("width", width)
                          .attr("height", height)
                          .append("g")
-                         .attr("transform", "translate(" + 50+ "," + 40 + ")");
+                         .attr("transform", "translate(" + 205+ "," + 40 + ")");
 
             var g = svg2.selectAll(".arc")
                         .data((data))
                         .enter().append("g")
-                        .attr("class", "arc");
+                        .attr("class", "arc")
+                        .attr("id", "wordGlyphArc");
 
             g.append("path")
              .style("fill", function(d,i) {
@@ -169,25 +175,33 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
         if (shape.select("rect").empty()){
 
           shape.append("rect")
-             .attr("x", 85)
+             .attr("x", 241)
              .style("fill", function(d,i) {
                  return colors[i];
               })
              .transition()
-             .duration(400)
+             .duration(500)
              .delay(function (d, i) {
                  return i * 300;
              })
              .attr("y", function(d,i){ return 7+(i)*10; })
              .attr("width",8)
              .attr("height",8);   
-        }
+            }
 
-      }
-    }
+         }
+       }
 
 
-       
+       var boarder = d3.selectAll(".word-glyph").select("svg")
+                       .attr("width", width)
+                       .attr("height", height)
+                       .append("rect")
+                       .attr("width", 256)
+                       .attr("height", 256)
+                       .style("fill", "none")
+                       .attr("stroke", "#DD2C00")
+                       .attr("stroke-width",2);
 
 
 
@@ -198,8 +212,6 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
         const wordGlyph = $(event.target).attr('data-frequency');
         console.log(wordGlyph);
-     
-
    
     }
 
