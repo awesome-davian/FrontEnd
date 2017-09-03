@@ -530,7 +530,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
                     data-spatialScore = ${spatialScore}
 					data-temporalScore = ${temportalScore}
 					data-totWordCount = ${totWordCount}
-					data-tileIdx = ${tileIdx}
+					data-tileidx = ${tileIdx}
 
 					data-word="${word.text}" 
 					data-group="${word.group}"
@@ -649,13 +649,13 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     	const temportalScore = $(event.target).attr('data-temporalScore');
         const spatialScore = $(event.target).attr('data-spatialScore');
         const totWordCount = $(event.target).attr('data-totWordCount');
-        const tileIdx = $(event.target).attr('data-tileIdx');
+        const tileIdx = $(event.target).attr('data-tileidx');
         
     	const word = $(event.target).attr('data-word');
         const value = $('[data-word=' + word + ']').text();
         const wordCount = $(event.target).attr('data-count');
 
-        //console.log(dictionary);
+        console.log(tileIdx);
 
 
         var width = 100,
@@ -712,7 +712,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         
 
 
-        if(d3.select("#wordGlypgArc").empty())
+        if(d3.select("#wordGlypgArc-"+tileIdx).empty())
         {
         	for(var i = 0; i < dictionary.length; i++){
 
@@ -740,7 +740,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		               .data((data))
 		               .enter().append("g")
 		               .attr("class", "arc")
-		               .attr("id", "wordGlypgArc");
+		               .attr("id", "wordGlypgArc-"+tileIdx);
 
 		        var g2 = svg2.selectAll(".piechar")
 		                 .data(pie(topicScoreData))
