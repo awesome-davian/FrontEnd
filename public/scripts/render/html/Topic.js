@@ -579,9 +579,10 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		//console.log(totWordCount);
 
 
-		const glyphRadius = Math.atan(totWordCount/100)*10
-    	//const spatialScore  = tile.data.glyph.spatial_score;
-    	//const temportalScore = tile.data.glyph.temporal_score;
+		//const glyphRadius = Math.atan(totWordCount/100)*10
+		const glyphRadius = (sigmoid(totWordCount/300)-0.5)*30; 
+
+
     	if(totWordCount > 0){
 
 	    	divs.push(`
@@ -597,7 +598,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 					        data-coordy = ${tile.coord.y}
 					        data-spatialScore = ${spatialScore}
 						    data-temporalScore = ${temportalScore}
-						    data-totWordCount = ${totWordCount}>
+						    data-totwordcount = ${totWordCount}>
 					    <svg height='100' width='100'
 						    >
 							<circle r="19.5" cx="40" cy="40" fill="none" stroke="${glyphBackgroundColor[0]}" stroke-width="2" />	
@@ -612,9 +613,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		element.innerHTML = divs.join('');
 
         tileIdx++; 
-
-       // console.log(totWordCount);
-
 
 
 		////////////////////////////////////////////////////////////////////////
@@ -648,15 +646,12 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
     	const temportalScore = $(event.target).attr('data-temporalScore');
         const spatialScore = $(event.target).attr('data-spatialScore');
-        const totWordCount = $(event.target).attr('data-totWordCount');
+        const totWordCount = $(event.target).attr('data-totwordcount');
         const tileIdx = $(event.target).attr('data-tileidx');
         
     	const word = $(event.target).attr('data-word');
         const value = $('[data-word=' + word + ']').text();
         const wordCount = $(event.target).attr('data-count');
-
-        console.log(tileIdx);
-
 
         var width = 100,
             height = 100,
@@ -666,9 +661,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
             arcPad =0.5,
             arcMin = 17; 
 
-
-
-
         var drawArc = d3.arc()
                         .innerRadius(function(d,i){
                          return arcMin + i*(arcWidth) +arcPad;
@@ -676,7 +668,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
                         .outerRadius(function(d,i){
                          return arcMin + (i+1)*(arcWidth);
                         })
-                        //.startAngle(0);
                        .startAngle(function(d,i){
                        	    if(i%2==0){return 0}
                        	    else{return 2*Math.PI}
@@ -695,9 +686,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
                  .value(function(d) {
                         return d.score;
                     });
-
-
-
 
         //movebackword
 
@@ -771,8 +759,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
                   		return pieChart(d)
                   	}
                   });
-                  //.attr("stroke", "#fff")
-                  //.attr("stroke-width",0.3)
+
 
 
 
