@@ -49,9 +49,7 @@ class Drilldown {
 	}
 	showAsynch(startData, dataPromise) {
 
-		console.log(dataPromise);
-
-
+		// console.log(dataPromise);
 		const display = (data, isLoading) => {
 			if (!this._isVisible) {
 				return;

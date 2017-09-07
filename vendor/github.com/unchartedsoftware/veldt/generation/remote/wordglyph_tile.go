@@ -103,14 +103,14 @@ func (t *WordGlyphTile) Create(uri string, coord *binning.TileCoord, query veldt
 		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'word_glyph' in %v", res)
 	}
 
-	frequency, ok := jsonUtil.GetNumber(glyphData, "frequency")
+	score, ok := jsonUtil.GetNumber(glyphData, "score")
 	if !ok {
-		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'frequency' in %v", res)
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'score' in %v", res)
 	}
 
-	tfidf, ok := jsonUtil.GetNumber(glyphData, "tfidf")
+	percent, ok := jsonUtil.GetNumber(glyphData, "percent")
 	if !ok {
-		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'tfidf' in %v", res)
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'percent' in %v", res)
 	}
 
 	temporal, ok := jsonUtil.GetArray(glyphData, "temporal")
@@ -119,8 +119,8 @@ func (t *WordGlyphTile) Create(uri string, coord *binning.TileCoord, query veldt
 	}
 
 	result := make(map[string]interface{})
-	result["frequency"] = frequency
-	result["tfidf"] = tfidf
+	result["score"] = score
+	result["percent"] = percent
 	result["temporal"] = temporal
 
 	return json.Marshal(result)

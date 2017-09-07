@@ -8,6 +8,8 @@ const $ = require('jquery');
 const Drilldown = require('./Drilldown');
 const DAY_MS = 86400000;
 
+var nmf_algo = 2;
+
 class TopicDriver extends Drilldown {
     constructor(name, plot, dataset) {
         super(name, false);
@@ -75,11 +77,11 @@ class TopicDriver extends Drilldown {
         });
         $('#slider-exclusiveness').append(exclusivenessSlider.getElement());
 
-		this._$toggleIcon = $('.heatmap-toggle i');
-		this._$toggle = $('.heatmap-toggle');
-		this._$toggle.click(() => {
-			this.heatmapToggleEnabled();
-		});
+		// this._$toggleIcon = $('.heatmap-toggle i');
+		// this._$toggle = $('.heatmap-toggle');
+		// this._$toggle.click(() => {
+		// 	this.heatmapToggleEnabled();
+		// });
 
         this._$selectionIconMapColorModeLight = $('.map-mode-select-light i');
         this._$selectionMapColorModeLight = $('.map-mode-select-light');
@@ -95,8 +97,8 @@ class TopicDriver extends Drilldown {
 
         this._$selectionIconMapColorModeLight.removeClass('fa-square-o');
         this._$selectionIconMapColorModeDark.removeClass('fa-check-square-o');
-        this._$selectionIconMapColorModeLight.addClass('fa-check-square-o');
-        this._$selectionIconMapColorModeDark.addClass('fa-square-o');
+        this._$selectionIconMapColorModeLight.addClass('fa-square-o');
+        this._$selectionIconMapColorModeDark.addClass('fa-check-square-o');
 
         this._$selectionIconStan = $('.algo-select-stan i');
         this._$selectionStan = $('.algo-select-stan');
@@ -150,6 +152,9 @@ class TopicDriver extends Drilldown {
 
     // Actions
     onShowTopics() {
+
+        console.log('[UB] onShowTopics(), Method: ' + nmf_algo);
+
         // const include = $('[name=terms-include]').val();
         // const exclude = $('[name=terms-exclude]').val();
         const clusterCount = this.getIntParameter('count-cluster') || this.model.clusterCount;
@@ -178,23 +183,24 @@ class TopicDriver extends Drilldown {
         //topicLayer.mute();
 
         // Update the exclusiveness heatmap tile.
-        const exLayer = this.plot.layers.find(l => {
-            return l.constructor === veldt.Layer.Exclusiveness;
-        });
-        exLayer.setTimeFrom(this.model.timeFrom);
-        exLayer.setTimeTo(this.model.timeTo);
+        // const exLayer = this.plot.layers.find(l => {
+        //     return l.constructor === veldt.Layer.Exclusiveness;
+        // });
+        // exLayer.setTimeFrom(this.model.timeFrom);
+        // exLayer.setTimeTo(this.model.timeTo);
 
-       // exLayer.unmute();
-        if (exLayer.hasUpdatedParameters()) {
-            exLayer.unmute();
-            // All previously loaded tiles are no longer relevant.
-            exLayer.refresh();
-            exLayer.resetParameters();
-        }
-        //exLayer.mute();
+        // if (exLayer.hasUpdatedParameters()) {
+        //     exLayer.unmute();
+        //     // All previously loaded tiles are no longer relevant.
+        //     exLayer.refresh();
+        //     exLayer.resetParameters();
+        // }
+        
     }
 
     onShowGeoPoint(model, word) {
+
+        // console.log(event);
 
         const geopointLayer = this.plot.layers.find(l => {
             return l.constructor === veldt.Layer.GeoPoint;
@@ -204,7 +210,7 @@ class TopicDriver extends Drilldown {
         geopointLayer.setQueryWord(word);
 
         if (geopointLayer.hasUpdatedParameters()) {
-            console.log("onShowGeoPoint(), hasUpdatedParameters == true")
+            // console.log("onShowGeoPoint(), hasUpdatedParameters == true")
             geopointLayer.unmute();
             geopointLayer.show();
             // All previously loaded tiles are no longer relevant.
@@ -216,21 +222,23 @@ class TopicDriver extends Drilldown {
     }
 
     onHideGeoPoint() {
-        console.log("onHideGeoPoint()")
+        // console.log("onHideGeoPoint()")
 
         const geopointLayer = this.plot.layers.find(l => {
             return l.constructor === veldt.Layer.GeoPoint;
         });
 
         if (!geopointLayer.isDisabled())
-            console.log("onHideGeoPoint(), layer is already in disable");
-            this.disable(geopointLayer);
+            // console.log("onHideGeoPoint(), layer is already in disable");
+            // this.disable(geopointLayer);
+            geopointLayer.disable();
+            geopointLayer.refresh();
 
         return this;
     }
 
     onShowWordGlyph(model, word) {
-        console.log("onShowWordGlyph()");
+        // console.log("onShowWordGlyph()");
         const glyphLayer = this.plot.layers.find(l => {
             return l.constructor === veldt.Layer.WordGlyph;
         });
@@ -238,10 +246,8 @@ class TopicDriver extends Drilldown {
         glyphLayer.setTimeTo(this.model.timeTo);
         glyphLayer.setQueryWord(word);
 
-
-
         if (glyphLayer.hasUpdatedParameters()) {
-            console.log("onShowWordGlyph(), hasUpdatedParameters == true")
+            // console.log("onShowWordGlyph(), hasUpdatedParameters == true")
 
             glyphLayer.unmute();
             glyphLayer.show();
@@ -251,7 +257,7 @@ class TopicDriver extends Drilldown {
             glyphLayer.refresh();
             // glyphLayer.resetParameters();
 
-            console.log(glyphLayer);
+            // console.log(glyphLayer);
         }   
 
         // glyphLayer.enable();
@@ -259,17 +265,19 @@ class TopicDriver extends Drilldown {
 
     onHideWordGlyph() {
 
-        console.log("onHideWordGlyph()");
+        // console.log("onHideWordGlyph()");
 
         const glyphLayer = this.plot.layers.find(l => {
             return l.constructor === veldt.Layer.WordGlyph;
         });
 
-        console.log(glyphLayer);
+        // console.log(glyphLayer);
 
         if (!glyphLayer.isDisabled()) {
-            console.log("onHideWordGlyph(), layer disabled");
-            this.disable(glyphLayer);
+            // console.log("onHideWordGlyph(), layer disabled");
+            // this.disable(glyphLayer);
+            glyphLayer.disable();
+            glyphLayer.refresh();
         }
 
         return this;
@@ -316,7 +324,11 @@ class TopicDriver extends Drilldown {
             this._$selectionIconStan.addClass('fa-check-square-o');
             this._$selectionIconStexLow.addClass('fa-square-o');
             this._$selectionIconStexHigh.addClass('fa-square-o');            
-        }   
+        }
+
+        nmf_algo = algo;
+
+        // console.log('[I][' + (new Date()).toLocaleTimeString() + '] NMF algorithm -> ' + algo);
     }
 
     selectionMapColorModeClicked(mode) {
@@ -351,21 +363,23 @@ class TopicDriver extends Drilldown {
             lightMap.hide();
             darkMap.show();
         }   
+
+        console.log('[UB] A map color changed ' + (mode === 1 ? 'Light' : 'Dark'));
     }
 
-	heatmapToggleEnabled() {
-        const exLayer = this.plot.layers.find(l => {
-            return l.constructor === veldt.Layer.Exclusiveness;
-        });
+	// heatmapToggleEnabled() {
+ //        const exLayer = this.plot.layers.find(l => {
+ //            return l.constructor === veldt.Layer.Exclusiveness;
+ //        });
 
-		if (exLayer.isDisabled()) {
-			this.enable(exLayer);
-		} else {
-			this.disable(exLayer);
-		}
+	// 	if (exLayer.isDisabled()) {
+	// 		this.enable(exLayer);
+	// 	} else {
+	// 		this.disable(exLayer);
+	// 	}
 
-		return this;
-	}
+	// 	return this;
+	// }
 
 	disable(layer) {
 		layer.disable();

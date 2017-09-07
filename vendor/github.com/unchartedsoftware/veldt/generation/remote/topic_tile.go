@@ -139,8 +139,13 @@ func (t *TopicTile) Create(uri string, coord *binning.TileCoord, query veldt.Que
 	if !ok {
 		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'temporal_score' in %v", res)
 	}
+	frequency, ok := jsonUtil.GetNumber(glyphData, "frequency")
+	if !ok {
+		return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'frequency' in %v", res)
+	}
 	glyph["spatial_score"] = spatialScore
 	glyph["temporal_score"] = temporalScore
+	glyph["frequency"] = frequency
 
 	topics, ok := jsonUtil.GetArray(topicsParsed, "topic")
 	if !ok {
@@ -155,6 +160,11 @@ func (t *TopicTile) Create(uri string, coord *binning.TileCoord, query veldt.Que
 		topicMap, ok := topic.(map[string]interface{})
 		if !ok {
 			return nil, fmt.Errorf("Unexpected response format from topic modelling service: incorrect topic structure in %v", res)
+		}
+
+		topicScore, ok := jsonUtil.GetNumber(topicMap, "score")
+		if !ok {
+			return nil, fmt.Errorf("Unexpected response format from topic modelling service: cannot find 'topic.score' in %v", res)
 		}
 
 		words, ok := jsonUtil.GetArray(topicMap, "words")
@@ -179,6 +189,8 @@ func (t *TopicTile) Create(uri string, coord *binning.TileCoord, query veldt.Que
 			// Set the weight & topic group of the word.
 			topicWords[word] = uint32(count)
 		}
+
+		counts[topicGroup]["score"] = topicScore
 		counts[topicGroup]["words"] = topicWords
 		topicGroup = topicGroup + 1
 	}

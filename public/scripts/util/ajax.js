@@ -64,7 +64,7 @@ function jsonPostPromise(ajaxOptions){
 
 function customAjaxPromise(ajaxOptions){
     return new Promise(function (resolve, reject) {
-        console.log(ajaxOptions.data);
+        // console.log(ajaxOptions.data);
     $.ajax(ajaxOptions).done(resolve).fail(reject);
   });
 }

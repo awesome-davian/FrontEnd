@@ -14,7 +14,6 @@ const NUM_ATTEMPTS = 1;
 let wordSelected = false;
 
 var tileIdx = 0; 
-
 var dictionary = [];
 
 const topicColor = ['#ffffff', '#ff3c82', '#89c541', '#fee801'];
@@ -165,12 +164,12 @@ const measureWords = function(renderer, wordCounts, extrema) {
 	// build measurement html
 	const $html = $('<div style="height:256px; width:256px;"></div>');
 	const minFontSize = renderer.minFontSize;
-	const maxFontSize = renderer.maxFontSize-1;
+	const maxFontSize = renderer.maxFontSize - 1;
 	const transform = renderer.transform;
 	wordCounts.forEach(word => {
 		word.percent = Transform.transform(word.count, transform, extrema);
 		word.fontSize = minFontSize + word.percent * (maxFontSize - minFontSize);
-		word.count = word.count
+		word.count = word.count;
 		$html.append(
 			`
 			<div class="word-cloud-label" style="
@@ -215,9 +214,9 @@ const spiralPosition2 = function(pos, groupIndex, groupCount) {
 	let start = (pi2 / (groupCount-1))*(groupIndex-1) + ((circ/360)*(120+10))/pos.radius;
 	let end = (pi2 / (groupCount-1))*(groupIndex) + ((circ/360)*(120-10))/pos.radius;
 	
-	if (groupIndex == 3) {
-		start -= ((circ/360)*(30))/pos.radius
-		end -= ((circ/360)*(30))/pos.radius
+	if (groupIndex === 3) {
+		start -= ((circ/360)*(30))/pos.radius;
+		end -= ((circ/360)*(30))/pos.radius;
 	}
 	let center = (start + end)/2;
 
@@ -227,16 +226,16 @@ const spiralPosition2 = function(pos, groupIndex, groupCount) {
 
 	// console.log(da);
 
-	if (pos.is_first == 1){
+	if (pos.is_first === 1){
 		nt = center;
 		pos.is_first = 0;
 		// console.log('a');
 	} else {
 
-		if (groupIndex == 0)
+		if (groupIndex === 0)
 			nt = pos.t + da;
 		else {
-			if (pos.index % 2 == 0) {
+			if (pos.index % 2 === 0) {
 				// just change the direction
 				nt = center + -1*(pos.t - center);
 				// console.log('['+pos.index+']b, nt: ' + nt + ', center: ' + center + ', pos.t: ' + pos.t);
@@ -286,34 +285,59 @@ const spiralPosition2 = function(pos, groupIndex, groupCount) {
 };
 
 const spiralPosition3 = function(pos, groupIndex, groupCount) {
+
 	const pi2 = 2 * Math.PI;
 	const circ = pi2 * pos.radius;
+
+	let angle = 360 / (groupCount - 1);
+	let margin = 30;
+	let movingAngle = 30;
 	
-	let start = (pi2 / (groupCount-1))*(groupIndex-1) + ((circ/360)*(120+10))/pos.radius;
-	let end = (pi2 / (groupCount-1))*(groupIndex) + ((circ/360)*(120-10))/pos.radius;
+	let start = (pi2 / (groupCount-1))*(groupIndex-1);
+	let end = (pi2 / (groupCount-1))*(groupIndex); 
 	
-	if (groupIndex == 3) {
-		start -= ((circ/360)*(30))/pos.radius
-		end -= ((circ/360)*(30))/pos.radius
+	// detail adjustment according to the group count
+	if (groupCount === 4) {
+		
+		// moving basis
+		start += ((circ/360)*(angle+10))/pos.radius;
+		end += ((circ/360)*(angle-10))/pos.radius;
+
+		if (groupIndex === 3) {
+			// set additional margin for last group
+			start -= ((circ/360)*margin)/pos.radius;
+			end -= ((circ/360)*margin)/pos.radius;
+		}	
+
+	} else if (groupCount === 3) {
+
+		// moving basis
+		start += ((circ/360)*(angle-90+20))/pos.radius;
+		end += ((circ/360)*(angle-90-20))/pos.radius;
+
+	} else if (groupCount == 2) {
+
+		margin = 50;
 	}
+	
 	let center = (start + end)/2;
 
-	const inc = (pos.arcLength > circ / 30) ? circ / 30 : pos.arcLength;
+	const inc = (pos.arcLength > circ / movingAngle) ? circ / movingAngle : pos.arcLength;
 	let da = inc / pos.radius;
 	let nt = 0;
 
 	// console.log(da);
 
-	if (pos.is_first == 1){
+	if (pos.is_first === 1){
 		nt = center;
 		pos.is_first = 0;
 		// console.log('a');
 	} else {
 
-		if (groupIndex == 0)
+		if (groupIndex === 0)
 			nt = pos.t + da;
 		else {
-			if (pos.index % 2 == 0) {
+			if (pos.index % 2 === 0) {
 				// just change the direction
 				nt = center + -1*(pos.t - center);
 				// console.log('['+pos.index+']b, nt: ' + nt + ', center: ' + center + ', pos.t: ' + pos.t);
@@ -339,7 +363,7 @@ const spiralPosition3 = function(pos, groupIndex, groupCount) {
 	// var log = 'start: ' + start + ', end: ' + end;
 	// console.log(log);
 
-	if (groupIndex == 0) {
+	if (groupIndex === 0) {
 		if (nt > pi2) {	
 			nt = nt % pi2;
 			pos.radius = pos.radius + pos.radiusInc;	
@@ -362,8 +386,7 @@ const spiralPosition3 = function(pos, groupIndex, groupCount) {
 	return pos;
 };
 
-
-const createWordCloud = function(renderer, wordCounts, extrema) {
+const createWordCloud = function(renderer, words, extrema) {
 	const tileSize = renderer.layer.plot.tileSize;
 	const boundingBox = {
 		width: tileSize - HORIZONTAL_OFFSET * 2,
@@ -372,14 +395,12 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
 		y: 0
 	};
 	const cloud = [];
-	wordCounts = sortWords(wordCounts);
-	// sort words by frequency
-	wordCounts = measureWords(renderer, wordCounts, extrema);
-
-	var idx = 1;
+	words = sortWords(words);
+	// measure the words size
+	words = measureWords(renderer, words, extrema);
 
 	// assemble word cloud
-	wordCounts.forEach(wordCount => {
+	words.forEach(wordCount => {
 		// starting spiral position
 		let pos = {
 			radius: 1,
@@ -394,25 +415,24 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
 			index :0,
 			is_first: 1
 		};
-		//console.log(wordCounts);
+		//console.log(words);
 
-		const length= wordCounts.length;
+		// const length= words.length;
 		
-		const groups = wordCounts.map(value => {
+		const groups = words.map(value => {
             return parseInt(value.group, 10);
         });
         const groupCount = Math.max(...groups) + 1;
-        const topicCount = length/groupCount
-
+        // const topicCount = length/groupCount;
 
 		// spiral outwards to find position
 		while (pos.collisions < NUM_ATTEMPTS) {
+			
 			// increment position in a spiral
-			//pos = tempPosition2(pos, groupCount, topicCount);
-			//pos = spiralPosition(pos);
 			pos = spiralPosition3(pos, wordCount.group, groupCount);
 			// test for intersection
 			if (!intersectWord(pos, wordCount, cloud, boundingBox)) {
+				
 				cloud.push({
 					text: wordCount.text,
 					fontSize: wordCount.fontSize,
@@ -428,6 +448,7 @@ const createWordCloud = function(renderer, wordCounts, extrema) {
 			}
 		}
 	});
+
 	return cloud;
 };
 
@@ -454,34 +475,33 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         // console.log('color group: ' + colorGroup);
 
         //return '#' + colors[2] + colors[1] + colors[0];
-        return '#' +color_map[colorGroup]
-    }
+        return '#' +color_map[colorGroup];
+    };
 
     
 
-    drawTile(element, tile, query) {
+    drawTile(element, tile) {
 
-
-        //const wordCounts = _.flatMap(tile.data, (value, key) => {
-        const wordCounts = _.flatMap(tile.data.topic, (value, key) => {
+    	// console.log(tile);
+		
+        const words = _.flatMap(tile.data.topic, (value, key) => {
+        	
             return _.map(value.words, (weight, word) => {
     			return {
-    				//text: key + ':' + word,
-    				text: word,
+    				// text: key + ':' + word,
+					text: word,
     				count: weight,
                     group: key
     			};
     		});
         });
+		// console.log(words);
 
-        //console.log(wordCounts);
-
-
-        const groupCount = this.getGroupCount(wordCounts);
+        const groupCount = this.getGroupCount(words);
 		const layer = this.layer;
 		const extrema = layer.getExtrema(tile.coord.z);
 		// genereate the cloud
-		const cloud = createWordCloud(this, wordCounts, extrema);
+		const cloud = createWordCloud(this, words, extrema);
 		// half tile size
 		const halfSize = layer.plot.tileSize / 2;
 		const tileSize = layer.plot.tileSize;
@@ -576,12 +596,11 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		};
 
 
-		//console.log(totWordCount);
+		// console.log(totWordCount);
 
 
-		//const glyphRadius = Math.atan(totWordCount/100)*10
+		// const glyphRadius = Math.atan(totWordCount/100)*10
 		const glyphRadius = (sigmoid(totWordCount/300)-0.5)*30; 
-
 
     	if(totWordCount > 0){
 
@@ -632,16 +651,16 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 //	<circle cx='40' cy='40' r='${glyphRadius}' fill='#efcec5' />
 		element.innerHTML = divs.join('');
 
-        tileIdx++; 
-
+        tileIdx++;
 
 		////////////////////////////////////////////////////////////////////////
     	if (wordSelected == false) {
 	
-    		//console.log(tile.data.glyph);
+    		// console.log(tile.data.glyph);
     		//const radius = 10;
     		//const radius = Math.floor(tile.data.glyph.spatial_score * 10);
     		const glyphCircleRadius = Math.atan(totWordCount/100)*12
+
     	} else {
     		//console.log("drawTile(wordSelected == true");
     	}
@@ -659,8 +678,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 
     }
-
-
 
     onMouseOver(event){
 
@@ -879,7 +896,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		      .transition()
 		      .attr("opacity", 0.5);
 
-
+			console.log('[UB] A word clicked: ' + word);
 		} else {
 			wordSelected = false;
 			d3.selectAll("circle").attr("opacity", null);
@@ -890,25 +907,14 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
              
 
 		}
-
-
-
-
-
-
-		
 	}
 
 	clearSelection() {
-		console.log("clearSelection()");
+		// console.log("clearSelection()");
 		$(this.container).removeClass('highlight');
 		this.highlight = null;
-
 	}
 
-
-
- 
     parseTextValue(combinedText) {
         return combinedText.split(':')[1];
     }
