@@ -65,7 +65,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
       };
 
-      
+        
 
 
         element.innerHTML = divs.join('');
@@ -89,8 +89,8 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
         const temporal = $(event.target).attr('data-temporal');
         const tileId = $(event.target).attr('data-tileidx');
 
-        console.log(tileId);
-        console.log(frequency);
+        //console.log(tileId);
+       // console.log(frequency);
         //console.log(tfif);
         //console.log(temporal);
 
@@ -190,10 +190,9 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
             }
 
          }
-       }
 
 
-       var boarder = d3.selectAll(".word-glyph").select("svg")
+        var boarder = d3.selectAll(".word-glyph").select("svg")
                        .attr("width", width)
                        .attr("height", height)
                        .append("rect")
@@ -201,7 +200,12 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                        .attr("height", 256)
                        .style("fill", "none")
                        .attr("stroke", "#DD2C00")
-                       .attr("stroke-width",2);
+                       .attr("stroke-width",2)
+                       .attr("stroke-dasharray", 10, 5);
+       }
+
+
+      
 
 
 

@@ -590,8 +590,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 					    style = '
 					        right: ${200}px;
 					        top : ${margin}px;
-					        width: ${100}px;
-					        height: ${100}px;
+					        width: ${256}px;
+					        height: ${256}px;
 					        float : left;
 					        '
 					        data-coordx = ${tile.coord.x}
@@ -599,14 +599,34 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 					        data-spatialScore = ${spatialScore}
 						    data-temporalScore = ${temportalScore}
 						    data-totwordcount = ${totWordCount}>
-					    <svg height='100' width='100'
+					    <svg height='256' width='256' id = 'tileBoarder'
 						    >
 							<circle r="19.5" cx="40" cy="40" fill="none" stroke="${glyphBackgroundColor[0]}" stroke-width="2" />	
 							<circle r="24" cx="40" cy="40" fill="none" stroke="${glyphBackgroundColor[1]}" stroke-width="2" />	
 						</svg>
 					</div>	
 					`);
-        }  
+        }/* else {
+
+        	divs.push(`
+					<div class='tile-glyph-${tileIdx} tile-glyph'
+					    style = '
+					        right: ${200}px;
+					        top : ${margin}px;
+					        width: ${256}px;
+					        height: ${256}px;
+					        float : left;
+					        '
+					        data-coordx = ${tile.coord.x}
+					        data-coordy = ${tile.coord.y}>
+					    <svg height='256' width='256'
+						    >
+						</svg>
+					</div>	
+					`);
+
+
+        }*/
 
 
 //	<circle cx='40' cy='40' r='${glyphRadius}' fill='#efcec5' />
@@ -653,8 +673,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         const value = $('[data-word=' + word + ']').text();
         const wordCount = $(event.target).attr('data-count');
 
-        var width = 100,
-            height = 100,
+        var width = 256,
+            height = 256,
             radius = Math.min(width, height) / 2;
 
         var arcWidth = 5,
@@ -669,8 +689,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
                          return arcMin + (i+1)*(arcWidth);
                         })
                        .startAngle(function(d,i){
-                       	    if(i%2==0){return 0}
-                       	    else{return 2*Math.PI}
+                       	    if(i%2==0){return 0.1}
+                       	    else{return 2*Math.PI  + 0.1}
                        })
 /*                        .endAngle(function(d,i){
                             if(i%2==1){return d.score*360*0.0175}
@@ -680,8 +700,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
         var pie = d3.pie()
                  .sort(null)
-                 .startAngle(1.1 * Math.PI)
-                 .endAngle(3.1 * Math.PI)
+                 .startAngle(0.1 * Math.PI)
+                 .endAngle(2.1 * Math.PI)
                  .padAngle(0.1)
                  .value(function(d) {
                         return d.score;
@@ -738,7 +758,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 		        var pieChart = d3.arc()
 	                .innerRadius(function(d){
-	                	if(d.data.radius <10){		
+	                	if(d.data.radius <7 ){		
 	                		return 0
 	                	}else{return 5}
 	                })
@@ -751,7 +771,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		          .style("fill", function(d,i){
 		          	return topicScoreData[i].color
 		          })        
-                  .transition().delay(function(d,i){ return i*100;}).duration(300)
+                  .transition().delay(function(d,i){ return i*100;}).duration(400)
                   .attrTween('d', function(d){
                   	var i = d3.interpolate(d.startAngle + 0.1, d.endAngle);
                   	return function(t){
@@ -767,10 +787,10 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		         .style("fill", function(d,i) {
 		             return d.color
 		          })
-		         .transition().delay(function(d, i) { return i * 500; }).duration(1000)
+		         .transition().delay(function(d, i) { return i * 500; }).duration(750)
 		         .attrTween('d',function(d,i){
-		         	 if(i%2==0){var interp = d3.interpolate(0 , d.score*360*0.0175)}
-		         	 else{var interp = d3.interpolate(2*Math.PI, 2*Math.PI - d.score*360*0.0175)}
+		         	 if(i%2==0){var interp = d3.interpolate(0.1 , d.score*360*0.0175 + 0.1)}
+		         	 else{var interp = d3.interpolate(2*Math.PI + 0.1, 2*Math.PI - d.score*360*0.0175 +0.1)}
 			         return function(t){
 			             d.endAngle = interp(t);
 			             return drawArc(d,i);
@@ -784,7 +804,39 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 	        }
 
+
+
+
+
         }
+
+        if(d3.selectAll('#boarder').empty()){
+
+        	var boarder = d3.selectAll('#tileBoarder')
+        	                .append("rect")
+        	                .attr("id", "boarder")
+        	                .attr("width", 256)
+        	                .attr("height", 256)
+        	                .style("fill", "none")
+        	                .attr("stroke", "#fff")
+        	                .attr("stroke-width", 1)
+        	                .attr("stroke-dasharray", 10, 5);
+            
+          /*  var boarder = d3.selectAll(".tile-glyph").select("svg")
+               .attr("width", width)
+               .attr("height", height)
+               .attr("id", 'tileBoarder')
+               .append("rect")
+               .attr("width", 256)
+               .attr("height", 256)
+               .style("fill", "none")
+               .attr("stroke", "#fff")
+               .attr("stroke-width",0.5);*/
+
+        }
+
+
+
            	
 
 	}
@@ -826,6 +878,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 	    	d3.selectAll("path")
 		      .transition()
 		      .attr("opacity", 0.5);
+
+
 		} else {
 			wordSelected = false;
 			d3.selectAll("circle").attr("opacity", null);
@@ -833,6 +887,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		      .transition()
 			  .attr("opacity", null);			
 			//this.clearSelection();
+             
+
 		}
 
 
