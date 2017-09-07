@@ -65,14 +65,12 @@ class Drilldown {
 			this.getElement().append(template(c));
 			this.getElement().css('display', '');
 			this.onElementInserted();
-			console.log('display');
 			this.makeGraph(data);
 		};
 		// display drilldown with spinner after a timeout occurs
 		const timeout = setTimeout(() => display(startData, true), TIMEOUT);
 		dataPromise.then(d => {
 			clearTimeout(timeout);
-			console.log(d);
 			display(d, false);
 		})
 		.catch( error => {
@@ -82,8 +80,6 @@ class Drilldown {
 	}
 
 	showAsynchTileDetail(startData, dataPromise) {
-
-		console.log(dataPromise);
 
 
 		const display = (data, isLoading) => {
@@ -115,8 +111,6 @@ class Drilldown {
 	}
 
 	showD3TileDetail(startData, dataPromise) {
-
-	    console.log(dataPromise);
 
 	    dataPromise.then(d =>{
 		    
@@ -154,7 +148,6 @@ class Drilldown {
 
 	recomputeContextTD(data) {
 
-		console.log(data);	
 		const c = {};
 		c.title = this.title;
 		c.canClose = this.canClose;

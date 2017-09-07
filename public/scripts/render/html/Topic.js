@@ -836,8 +836,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         	                .attr("height", 256)
         	                .style("fill", "none")
         	                .attr("stroke", "#fff")
-        	                .attr("stroke-width", 1)
-        	                .attr("stroke-dasharray", 10, 5);
+        	                .attr("stroke-width", 1);
             
           /*  var boarder = d3.selectAll(".tile-glyph").select("svg")
                .attr("width", width)
