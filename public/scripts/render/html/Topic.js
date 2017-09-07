@@ -546,12 +546,10 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 						width: ${word.width}px;
 						height: ${word.height}px;
                         color: ${groupColor};"
-
                     data-spatialScore = ${spatialScore}
 					data-temporalScore = ${temportalScore}
 					data-totWordCount = ${totWordCount}
 					data-tileidx = ${tileIdx}
-
 					data-word="${word.text}" 
 					data-group="${word.group}"
 					data-count="${word.count}">${word.text}
@@ -626,7 +624,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 					</div>	
 					`);
         }/* else {
-
         	divs.push(`
 					<div class='tile-glyph-${tileIdx} tile-glyph'
 					    style = '
@@ -643,8 +640,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 						</svg>
 					</div>	
 					`);
-
-
         }*/
 
 
