@@ -495,13 +495,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     			};
     		});
         });
-
-		const scores = _.flatMap(tile.data.topic, (value, key) => {
-        	
-            return value.score;
-    		
-        });
-
 		// console.log(words);
 
         const groupCount = this.getGroupCount(words);
@@ -553,12 +546,10 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 						width: ${word.width}px;
 						height: ${word.height}px;
                         color: ${groupColor};"
-
                     data-spatialScore = ${spatialScore}
 					data-temporalScore = ${temportalScore}
 					data-totWordCount = ${totWordCount}
 					data-tileidx = ${tileIdx}
-
 					data-word="${word.text}" 
 					data-group="${word.group}"
 					data-count="${word.count}">${word.text}
@@ -627,13 +618,10 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 						    data-totwordcount = ${totWordCount}>
 					    <svg height='256' width='256' id = 'tileBoarder'
 						    >
-							<circle r="19.5" cx="40" cy="40" fill="none" stroke="${glyphBackgroundColor[0]}" stroke-width="2" />	
-							<circle r="24" cx="40" cy="40" fill="none" stroke="${glyphBackgroundColor[1]}" stroke-width="2" />	
 						</svg>
 					</div>	
 					`);
         }/* else {
-
         	divs.push(`
 					<div class='tile-glyph-${tileIdx} tile-glyph'
 					    style = '
@@ -650,8 +638,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 						</svg>
 					</div>	
 					`);
-
-
         }*/
 
 
@@ -676,9 +662,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     	temp.tileIdx = tileIdx;
     	temp.spatialScore = spatialScore;
     	temp.temportalScore = temportalScore;
-    	// temp.topicScore  = ['0.2', '0.3', '0.3', '0.2'];
-    	// temp.topicScore = [scores[0], tile.data.topic[1].score, tile.data.topic[2].score, tile.data.topic[3].score]
-    	temp.topicScore = scores;
+    	temp.topicScore  = ['0.2', '0.3', '0.3', '0.2'];
     	temp.glyphRadius = glyphRadius;
 
     	dictionary.push(temp);
@@ -746,7 +730,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         
 
 
-        if(d3.select("#wordGlypgArc-"+tileIdx).empty())
+        if(d3.select("#wordGlypgArc-"+tileIdx).empty() && wordSelected == false)
         {
         	for(var i = 0; i < dictionary.length; i++){
 
@@ -768,7 +752,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 	                 .attr("width", width)
 	                 .attr("height", height)
 	                 .append("g")
-	                 .attr("transform", "translate(" + 40+ "," + 40 + ")");
+	                 .attr("id", "wordGlyph")
+	                 .attr("transform", "translate(" + 51+ "," + 40 + ")");
 
 		        var g = svg2.selectAll(".arc")
 		               .data((data))
@@ -830,9 +815,13 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 	        }
 
+
+
+
+
         }
 
-        if(d3.selectAll('#boarder').empty()){
+/*        if(d3.selectAll('#boarder').empty()){
 
         	var boarder = d3.selectAll('#tileBoarder')
         	                .append("rect")
@@ -843,19 +832,9 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         	                .attr("stroke", "#fff")
         	                .attr("stroke-width", 1);
             
-          /*  var boarder = d3.selectAll(".tile-glyph").select("svg")
-               .attr("width", width)
-               .attr("height", height)
-               .attr("id", 'tileBoarder')
-               .append("rect")
-               .attr("width", 256)
-               .attr("height", 256)
-               .style("fill", "none")
-               .attr("stroke", "#fff")
-               .attr("stroke-width",0.5);*/
 
         }
-
+*/
 
 
            	
@@ -899,6 +878,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 	    	d3.selectAll("path")
 		      .transition()
 		      .attr("opacity", 0.5);
+
+		    d3.selectAll("#wordGlyph").remove();
 
 			console.log('[UB] A word clicked: ' + word);
 		} else {
