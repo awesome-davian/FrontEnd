@@ -171,8 +171,6 @@ class TileDetailInfo extends AsynchDrilldown {
 
         var query = this.makeQuery(tileX, tileY, tileZoom,  dateFrom);
 
-        //console.log(query);
-
     /*    d3.select(this).on("click", function(d){
 
           console.log('cliked');
@@ -329,8 +327,8 @@ class TileDetailInfo extends AsynchDrilldown {
 
                 d3.selectAll(".topicText").remove();
 
-               // console.log(d.alltopic);
-               // console.log(d.alltopic[0].topic);
+                // console.log(d.alltopic);
+                // console.log(d.alltopic[0].topic);
 
                 var dayTopic = d.alltopic;
 

@@ -81,7 +81,6 @@ class Drilldown {
 
 	showAsynchTileDetail(startData, dataPromise) {
 
-
 		const display = (data, isLoading) => {
 			if (!this._isVisible) {
 				return;
@@ -113,9 +112,7 @@ class Drilldown {
 	showD3TileDetail(startData, dataPromise) {
 
 	    dataPromise.then(d =>{
-		    
 		    this.recomputeContextTD(d);
-
 	    });
 
 	    this.onElementInserted();

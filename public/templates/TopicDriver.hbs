@@ -19,13 +19,13 @@
         </div>
     </div>
 
-    <div class="layer-control">
+    <!-- <div class="layer-control">
         <span>Show Heatmap: </span>
         <div class="heatmap-toggle">
             <i class="fa fa-check-square-o"></i>
         </div>
     </div>
-    <!-- <div class="topic-parameter-group">
+    <div class="topic-parameter-group">
         <div class="topic-description">
             <span>Terms</span>
         </div>
@@ -37,7 +37,7 @@
             <span>Exclude: </span>
             <input class="topic-term" type="text" name="terms-exclude" value="{{exclude}}"/>
         </div>
-    </div> -->
+    </div> 
     <div class="topic-parameter-group">
         <div class="topic-description">
             <span>Topic Counts</span>
@@ -50,10 +50,10 @@
             <span>Word Count: </span>
             <input class="topic-count" type="text" name="count-word" value="{{wordCount}}"/>
         </div>
-    </div>
+    </div>-->
     <div class="topic-parameter-group">
         <div class="topic-description">
-            <span>Algorithm</span>
+            <span>Topic Modeling Method</span>
         </div>
         <div class="topic-parameter">
             <span>StanNMF </span>
@@ -63,14 +63,26 @@
         </div>
         <div class="topic-parameter">
             <!-- <div class="slider-container" id="slider-exclusiveness"></div> -->
-            <span>STExNMF(low) </span>
-            <div class="algo-select-stex-low">
+            <span>STExNMF(0.6) </span>
+            <div class="algo-select-stex-6">
                 <i class="fa fa-check-square-o"></i>
             </div>
         </div>
         <div class="topic-parameter">
-            <span>STExNMF(high) </span>
-            <div class="algo-select-stex-high">
+            <span>STExNMF(0.7) </span>
+            <div class="algo-select-stex-7">
+                <i class="fa fa-check-square-o"></i>
+            </div>
+        </div>
+        <div class="topic-parameter">
+            <span>STExNMF(0.8) </span>
+            <div class="algo-select-stex-8">
+                <i class="fa fa-check-square-o"></i>
+            </div>
+        </div>
+        <div class="topic-parameter">
+            <span>STExNMF(0.9) </span>
+            <div class="algo-select-stex-9">
                 <i class="fa fa-check-square-o"></i>
             </div>
         </div>

@@ -495,6 +495,13 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     			};
     		});
         });
+
+		const scores = _.flatMap(tile.data.topic, (value, key) => {
+        	
+            return value.score;
+    		
+        });
+
 		// console.log(words);
 
         const groupCount = this.getGroupCount(words);
@@ -546,10 +553,12 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 						width: ${word.width}px;
 						height: ${word.height}px;
                         color: ${groupColor};"
+
                     data-spatialScore = ${spatialScore}
 					data-temporalScore = ${temportalScore}
 					data-totWordCount = ${totWordCount}
 					data-tileidx = ${tileIdx}
+
 					data-word="${word.text}" 
 					data-group="${word.group}"
 					data-count="${word.count}">${word.text}
@@ -624,6 +633,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 					</div>	
 					`);
         }/* else {
+
         	divs.push(`
 					<div class='tile-glyph-${tileIdx} tile-glyph'
 					    style = '
@@ -640,6 +650,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 						</svg>
 					</div>	
 					`);
+
+
         }*/
 
 
@@ -664,7 +676,9 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     	temp.tileIdx = tileIdx;
     	temp.spatialScore = spatialScore;
     	temp.temportalScore = temportalScore;
-    	temp.topicScore  = ['0.2', '0.3', '0.3', '0.2'];
+    	// temp.topicScore  = ['0.2', '0.3', '0.3', '0.2'];
+    	// temp.topicScore = [scores[0], tile.data.topic[1].score, tile.data.topic[2].score, tile.data.topic[3].score]
+    	temp.topicScore = scores;
     	temp.glyphRadius = glyphRadius;
 
     	dictionary.push(temp);
@@ -815,10 +829,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		     g2.moveToBack();
 
 	        }
-
-
-
-
 
         }
 

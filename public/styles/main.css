@@ -85,7 +85,7 @@ body {
 	height: 430px;
 }
 
-.heatmap-toggle, .algo-select-stan, .algo-select-stex-low, .algo-select-stex-high, .map-mode-select-light, .map-mode-select-dark{
+.heatmap-toggle, .algo-select-stan, .algo-select-stex-low, .algo-select-stex-high, .map-mode-select-light, .map-mode-select-dark, .algo-select-stex-6, .algo-select-stex-7, .algo-select-stex-8, .algo-select-stex-9 {
 	cursor: pointer;
 	line-height: 20px;
 	width: 24px;
@@ -198,7 +198,7 @@ body {
 .drilldown-title{
 
 	font:18px;
-
+	
 }
 
 .topic-drilldown-item{

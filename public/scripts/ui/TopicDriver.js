@@ -8,7 +8,7 @@ const $ = require('jquery');
 const Drilldown = require('./Drilldown');
 const DAY_MS = 86400000;
 
-var nmf_algo = 2;
+
 
 class TopicDriver extends Drilldown {
     constructor(name, plot, dataset) {
@@ -20,7 +20,7 @@ class TopicDriver extends Drilldown {
         this.model = {
             exclusivenessFrom: 0,
             exclusivenessTo: 5,
-            exclusiveness: 0,
+            exclusiveness: 3,   // 0.7
 
        /*     //131101-131130
             timeFromLimit: 1383264000000, 
@@ -42,10 +42,16 @@ class TopicDriver extends Drilldown {
             // timeTo: 1384041600000,
             
             // 131103-131105
-            timeFromLimit: 1383436800000,
-            timeToLimit: 1383609600000,
-            timeFrom: 1383436800000,
-            timeTo: 1383609600000,
+            // timeFromLimit: 1383436800000,
+            // timeToLimit: 1383609600000,
+            // timeFrom: 1383436800000,
+            // timeTo: 1383609600000,
+
+            // 130920-131231
+            timeFromLimit: 1380585600000,
+            timeToLimit: 1388448000000,
+            timeFrom: 1380585600000,
+            timeTo: 1388448000000,            
             
             
             clusterCount: 4,
@@ -106,16 +112,40 @@ class TopicDriver extends Drilldown {
             this.selectionClicked(1);
         });
 
-        this._$selectionIconStexLow = $('.algo-select-stex-low i');
-        this._$selectionStexLow = $('.algo-select-stex-low');
-        this._$selectionStexLow.click(() => {
+        // this._$selectionIconStexLow = $('.algo-select-stex-low i');
+        // this._$selectionStexLow = $('.algo-select-stex-low');
+        // this._$selectionStexLow.click(() => {
+        //     this.selectionClicked(2);
+        // });
+
+        // this._$selectionIconStexHigh = $('.algo-select-stex-high i');
+        // this._$selectionStexHigh = $('.algo-select-stex-high');
+        // this._$selectionStexHigh.click(() => {
+        //     this.selectionClicked(3);
+        // });
+
+        this._$selectionIconStex6 = $('.algo-select-stex-6 i');
+        this._$selectionStex6 = $('.algo-select-stex-6');
+        this._$selectionStex6.click(() => {
             this.selectionClicked(2);
         });
 
-        this._$selectionIconStexHigh = $('.algo-select-stex-high i');
-        this._$selectionStexHigh = $('.algo-select-stex-high');
-        this._$selectionStexHigh.click(() => {
+        this._$selectionIconStex7 = $('.algo-select-stex-7 i');
+        this._$selectionStex7 = $('.algo-select-stex-7');
+        this._$selectionStex7.click(() => {
             this.selectionClicked(3);
+        });
+
+        this._$selectionIconStex8 = $('.algo-select-stex-8 i');
+        this._$selectionStex8 = $('.algo-select-stex-8');
+        this._$selectionStex8.click(() => {
+            this.selectionClicked(4);
+        });
+
+        this._$selectionIconStex9 = $('.algo-select-stex-9 i');
+        this._$selectionStex9 = $('.algo-select-stex-9');
+        this._$selectionStex9.click(() => {
+            this.selectionClicked(5);
         });
 
         this.selectionClicked(2);
@@ -153,7 +183,7 @@ class TopicDriver extends Drilldown {
     // Actions
     onShowTopics() {
 
-        console.log('[UB] onShowTopics(), Method: ' + nmf_algo);
+        console.log('[UB] onShowTopics(), Method: ' + this.model.exclusiveness);
 
         // const include = $('[name=terms-include]').val();
         // const exclude = $('[name=terms-exclude]').val();
@@ -285,48 +315,98 @@ class TopicDriver extends Drilldown {
 
     selectionClicked(algo) {
 
+        // if (algo == 1) {
+
+        //     this._$selectionIconStexLow.removeClass('fa-check-square-o');
+        //     this._$selectionIconStexHigh.removeClass('fa-check-square-o');
+        //     this._$selectionIconStan.removeClass('fa-square-o');
+
+        //     this._$selectionIconStan.addClass('fa-check-square-o');
+        //     this._$selectionIconStexLow.addClass('fa-square-o');
+        //     this._$selectionIconStexHigh.addClass('fa-square-o');
+
+        // } else if (algo == 2) {
+
+        //     this._$selectionIconStan.removeClass('fa-check-square-o');
+        //     this._$selectionIconStexLow.removeClass('fa-square-o');
+        //     this._$selectionIconStexHigh.removeClass('fa-check-square-o');
+
+        //     this._$selectionIconStan.addClass('fa-square-o');
+        //     this._$selectionIconStexLow.addClass('fa-check-square-o');
+        //     this._$selectionIconStexHigh.addClass('fa-square-o');
+
+        // } else if (algo == 3) {
+        
+        //     this._$selectionIconStan.removeClass('fa-check-square-o');
+        //     this._$selectionIconStexLow.removeClass('fa-check-square-o');
+        //     this._$selectionIconStexHigh.removeClass('fa-square-o');
+
+        //     this._$selectionIconStan.addClass('fa-square-o');
+        //     this._$selectionIconStexLow.addClass('fa-square-o');
+        //     this._$selectionIconStexHigh.addClass('fa-check-square-o');
+
+        this._$selectionIconStex6.removeClass('fa-square-o');
+        this._$selectionIconStex7.removeClass('fa-square-o');
+        this._$selectionIconStex8.removeClass('fa-square-o');
+        this._$selectionIconStex9.removeClass('fa-square-o');
+        this._$selectionIconStan.removeClass('fa-square-o');
+
+        this._$selectionIconStex6.removeClass('fa-check-square-o');
+        this._$selectionIconStex7.removeClass('fa-check-square-o');
+        this._$selectionIconStex8.removeClass('fa-check-square-o');
+        this._$selectionIconStex9.removeClass('fa-check-square-o');
+        this._$selectionIconStan.removeClass('fa-check-square-o');
+
         if (algo == 1) {
 
-            this._$selectionIconStexLow.removeClass('fa-check-square-o');
-            this._$selectionIconStexHigh.removeClass('fa-check-square-o');
-            this._$selectionIconStan.removeClass('fa-square-o');
-
             this._$selectionIconStan.addClass('fa-check-square-o');
-            this._$selectionIconStexLow.addClass('fa-square-o');
-            this._$selectionIconStexHigh.addClass('fa-square-o');
+            this._$selectionIconStex6.addClass('fa-square-o');
+            this._$selectionIconStex7.addClass('fa-square-o');
+            this._$selectionIconStex8.addClass('fa-square-o');
+            this._$selectionIconStex9.addClass('fa-square-o');
 
         } else if (algo == 2) {
 
-            this._$selectionIconStan.removeClass('fa-check-square-o');
-            this._$selectionIconStexLow.removeClass('fa-square-o');
-            this._$selectionIconStexHigh.removeClass('fa-check-square-o');
-
             this._$selectionIconStan.addClass('fa-square-o');
-            this._$selectionIconStexLow.addClass('fa-check-square-o');
-            this._$selectionIconStexHigh.addClass('fa-square-o');
+            this._$selectionIconStex6.addClass('fa-check-square-o');
+            this._$selectionIconStex7.addClass('fa-square-o');
+            this._$selectionIconStex8.addClass('fa-square-o');
+            this._$selectionIconStex9.addClass('fa-square-o');
 
         } else if (algo == 3) {
         
-            this._$selectionIconStan.removeClass('fa-check-square-o');
-            this._$selectionIconStexLow.removeClass('fa-check-square-o');
-            this._$selectionIconStexHigh.removeClass('fa-square-o');
+            this._$selectionIconStan.addClass('fa-square-o');
+            this._$selectionIconStex6.addClass('fa-square-o');
+            this._$selectionIconStex7.addClass('fa-check-square-o');
+            this._$selectionIconStex8.addClass('fa-square-o');
+            this._$selectionIconStex9.addClass('fa-square-o');
+
+        } else if (algo == 4) {
 
             this._$selectionIconStan.addClass('fa-square-o');
-            this._$selectionIconStexLow.addClass('fa-square-o');
-            this._$selectionIconStexHigh.addClass('fa-check-square-o');
+            this._$selectionIconStex6.addClass('fa-square-o');
+            this._$selectionIconStex7.addClass('fa-square-o');
+            this._$selectionIconStex8.addClass('fa-check-square-o');
+            this._$selectionIconStex9.addClass('fa-square-o');
+
+        } else if (algo == 5) {
+        
+            this._$selectionIconStan.addClass('fa-square-o');
+            this._$selectionIconStex6.addClass('fa-square-o');
+            this._$selectionIconStex7.addClass('fa-square-o');
+            this._$selectionIconStex8.addClass('fa-square-o');
+            this._$selectionIconStex9.addClass('fa-check-square-o');
         
         } else {
             
-            this._$selectionIconStexLow.removeClass('fa-check-square-o');
-            this._$selectionIconStexHigh.removeClass('fa-check-square-o');
-            this._$selectionIconStan.removeClass('fa-square-o');
-
-            this._$selectionIconStan.addClass('fa-check-square-o');
-            this._$selectionIconStexLow.addClass('fa-square-o');
-            this._$selectionIconStexHigh.addClass('fa-square-o');            
+            this._$selectionIconStan.addClass('fa-square-o');
+            this._$selectionIconStex6.addClass('fa-square-o');
+            this._$selectionIconStex7.addClass('fa-square-o');
+            this._$selectionIconStex8.addClass('fa-square-o');
+            this._$selectionIconStex9.addClass('fa-square-o');          
         }
-
-        nmf_algo = algo;
+        
+        this.model.exclusiveness = algo;
 
         // console.log('[I][' + (new Date()).toLocaleTimeString() + '] NMF algorithm -> ' + algo);
     }

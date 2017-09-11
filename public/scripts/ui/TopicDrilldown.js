@@ -127,7 +127,7 @@ class TopicDrilldown extends AsynchDrilldown {
 
     onShowTweetbyTime(){
 
-        //console.log('show');
+        // console.log('show');
 
     }
 
@@ -135,7 +135,6 @@ class TopicDrilldown extends AsynchDrilldown {
 
       var documents = data.documents; 
       var tweetTimes =[];
-
 
       var timeGraph =data.timeGraph;
       var tweetByTime = [];

@@ -22,6 +22,8 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
     drawTile(element, tile) {
 
+        //console.log(tile);
+
         const score = tile.data.score;
         const percent = tile.data.percent;
         const temporal = tile.data.temporal;
@@ -166,25 +168,25 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
                 if (shape.select("rect").empty()){
 
-              shape.append("rect")
-                 .attr("x", 241)
-                 .style("fill", function(d,i) {
-                     return colors[i];
-                  })
-                 .transition()
-                 .duration(500)
-                 .delay(function (d, i) {
-                     return i * 300;
-                 })
-                 .attr("y", function(d,i){ return 7+(i)*10; })
-                 .attr("width",8)
-                 .attr("height",8);   
+                shape.append("rect")
+                    .attr("x", 241)
+                    .style("fill", function(d,i) {
+                        return colors[i];
+                    })
+                    .transition()
+                    .duration(500)
+                    .delay(function (d, i) {
+                        return i * 300;
+                    })
+                    .attr("y", function(d,i){ return 7+(i)*10; })
+                    .attr("width",8)
+                    .attr("height",8);   
                 }
 
              }
 
 
-        var boarder = d3.selectAll(".word-glyph").select("svg")
+            var boarder = d3.selectAll(".word-glyph").select("svg")
                        .attr("width", width)
                        .attr("height", height)
                        .append("rect")
@@ -193,22 +195,11 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                        .style("fill", "none")
                        .attr("stroke", "#DD2C00")
                        .attr("stroke-width",2);
-       }
-
-
-      
-
-
-
+        }
     }
 
-
     onClick(event) {
-
         const wordGlyph = $(event.target).attr('data-score');
-        
-        // if (wordGlyph != null)
-        //     console.log('[I][' + (new Date()).toLocaleTimeString() + '] word clicked: ' + wordGlyph.word);
     }
 
 }
