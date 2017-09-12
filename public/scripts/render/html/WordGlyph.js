@@ -22,17 +22,22 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
     drawTile(element, tile) {
 
+       // console.log(tile);
+
         const score = tile.data.score;
         const percent = tile.data.percent;
         const temporal = tile.data.temporal;
+
+        //console.log(score);
 
         const margin = 5;
         //const radius = Math.floor(frequency/100);
         const radius = Math.atan(score/100)*12;
 
+
         const divs = [];
 
-        if(score > 10){
+        if(score > 5){
 
             divs.push(`
                 <div class="word-glyph word-glyph-${tileIdx}"
@@ -49,8 +54,8 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                         data-temporal = "${temporal}"
                         data-tileidx = "${tileIdx}"
                         data-score ="${score}">
-                        <circle cx="51" cy="40" r="${radius}"  fill="#4DB6AC" />
-                        <circle r="23" cx="51" cy="40" fill="none" stroke="#e0e0e0" stroke-width="2"/> 
+                        <circle cx="205" cy="40" r="${radius}"  fill="#4DB6AC" />
+                        <circle r="23" cx="205" cy="40" fill="none" stroke="#e0e0e0" stroke-width="2"/> 
                     </svg>
                 </div>
                 <div class = "Tile Tile-${tileIdx}"
@@ -72,6 +77,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
         temp.tileIdx = tileIdx;
         temp.temporal = temporal;
         temp.percent = percent;
+        temp.score = radius/15;
 
         dictionary.push(temp);
     }
@@ -121,14 +127,14 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
             for(var i = 0; i<dictionary.length; i++){
 
                 var data = [
-                              { score: dictionary[i].score , color: '#f8b70a'}
+                              { score: dictionary[i].percent , color: '#D81B60'}
                            ];
 
                 var svg2 = d3.select(".word-glyph-"+ i).select("svg")
                              .attr("width", width)
                              .attr("height", height)
                              .append("g")
-                             .attr("transform", "translate(" + 51 + "," + 40 + ")");
+                             .attr("transform", "translate(" + 205 + "," + 40 + ")");
 
                 var g = svg2.selectAll(".arc")
                             .data((data))
@@ -167,7 +173,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                 if (shape.select("rect").empty()){
 
               shape.append("rect")
-                 .attr("x", 12)
+                 .attr("x", 241)
                  .style("fill", function(d,i) {
                      return colors[i];
                   })
@@ -194,11 +200,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                        .attr("stroke", "#DD2C00")
                        .attr("stroke-width",2);
        }
-
-
-      
-
-
+    
 
     }
 
