@@ -15,6 +15,39 @@ const NUM_ATTEMPTS = 1;
 var tileIdx = 0;
 var dictionary = [];
 
+
+
+const scaleTFIDF = function(temporal) {
+
+    for(var i = 0; i < temporal.length; i++){
+
+        console.log(temporal[i])
+
+        if(temporal[i] < 3){
+            temporal[i] = 0
+        } else if(temporal[i] >= 3 && temporal[i] < 3.5){
+            temporal[i] = 1
+        } else if(temporal[i] >= 3.5 && temporal[i] < 4){
+            temporal[i] = 2
+        } else if(temporal[i] >= 4 && temporal[i] < 4.5){
+            temporal[i] = 3
+        } else if(temporal[i] >= 4.5 && temporal[i] <5.5){
+            temporal[i] = 4
+        } else if(temporal[i] >= 5.5 && temporal[i] <6.5){
+            temporal[i] = 5
+        } else if(temporal[i] >= 6.5){
+            temporal[i] = 6
+        } else{
+            temporal[i] = 6
+        }
+
+    }
+   
+    return temporal;
+};
+
+
+
 class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
     constructor(options = {}) {
         super(options);
@@ -54,7 +87,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                         data-temporal = "${temporal}"
                         data-tileidx = "${tileIdx}"
                         data-score ="${score}">
-                        <circle cx="205" cy="40" r="${radius}"  fill="#4DB6AC" />
+                        <circle cx="205" cy="40" r="${radius}"  fill="#4DD0E1" />
                         <circle r="23" cx="205" cy="40" fill="none" stroke="#e0e0e0" stroke-width="2"/> 
                     </svg>
                 </div>
@@ -73,9 +106,15 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
         tileIdx++;
 
+        console.log(temporal)
+
+        var scaledtemporal = scaleTFIDF(temporal)
+
+        console.log(scaledtemporal);
+
         var temp = new Object();
         temp.tileIdx = tileIdx;
-        temp.temporal = temporal;
+        temp.temporal = scaledtemporal;
         temp.percent = percent;
         temp.score = radius/15;
 
@@ -127,7 +166,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
             for(var i = 0; i<dictionary.length; i++){
 
                 var data = [
-                              { score: dictionary[i].percent , color: '#D81B60'}
+                              { score: dictionary[i].percent , color: '#D50000'}
                            ];
 
                 var svg2 = d3.select(".word-glyph-"+ i).select("svg")
@@ -156,8 +195,11 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                     });
 
 
-                var temportalData = [1 ,2, 3, 4, 5, 6, 7];
-                var colors = ['#E65100', '#Ef6C00', '#F57C00', '#FB8C00', '#FF9800', '#FFA726', '#FFB74D'];
+                console.log(dictionary[i].temporal)
+
+
+                //var temportalData = [1 ,2, 3, 4, 5, 6, 0];
+                var colors = ['#FBE9E7', '#FFAB91', '#FF7043', '#F4511E', '#E64A19', '#D84315', '#FFB74D'];
 
                 var sqareDim = 10; 
 
@@ -168,14 +210,14 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
 
                 var shape = svgTemporal.selectAll(".shapes")
-                                .data(temportalData).enter();
+                                .data(dictionary[i].temporal).enter();
 
                 if (shape.select("rect").empty()){
 
               shape.append("rect")
                  .attr("x", 241)
                  .style("fill", function(d,i) {
-                     return colors[i];
+                    return colors[d];
                   })
                  .transition()
                  .duration(500)
@@ -200,7 +242,11 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                        .attr("stroke", "#DD2C00")
                        .attr("stroke-width",2);
        }
-    
+
+
+      
+
+
 
     }
 

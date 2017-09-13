@@ -807,8 +807,12 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		        var pieChart = d3.arc()
 	                .innerRadius(function(d){
 	                	if(d.data.radius <7 ){		
-	                		return 0
-	                	}else{return 5}
+	                		return 0;
+	                	}else if(d.data.radius>=7 && d.data.radius <12){
+	                		return 2.5;
+	                	} else {
+	                		return 5 ;
+	                	}
 	                })
 	                .outerRadius(function(d){
 	                	return d.data.radius
