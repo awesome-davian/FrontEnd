@@ -63,7 +63,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
         const margin = 5;
         //const radius = Math.floor(frequency/100);
-        const radius = Math.atan(score/100)*12;
+        const radius = Math.atan(score/110)*11;
 
 
         const divs = [];
@@ -84,7 +84,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                         data-radius = "${radius}"
                         data-temporal = "${temporal}"
                         data-score ="${score}">
-                        <circle cx="205" cy="40" r="${radius}"  fill="#4DD0E1" />
+                        <circle cx="205" cy="40" r="${radius}"  fill="#FFC107" />
                     </svg>
                 </div>
                 <div class = "Tile Tile-${tileIdx}"
@@ -166,7 +166,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                         .innerRadius(21)
                         .outerRadius(26);
 
-        console.log(tileId)
+        //console.log(tileId)
 
        if(d3.select("#wordGlyphArc").empty()){
 
@@ -180,16 +180,25 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                      var temp = new Object();
 
                      temp.score = 1;
-                     if(arr[j] > 0){
-                          temp.color = '#D50000'
-                     } else { temp.color= '#e0e0e0' }
+                     if(arr[j] >= 20){
+                        temp.color = '#B71C1C'
+                     } else if(arr[j] <20 && arr[j] >= 15){
+                        temp.color = '#D32F2F'
+                     } else if(arr[j] <15 && arr[j] >= 10){
+                        temp.color = '#F44336'
+                     } else if(arr[j] <10 && arr[j] >= 5){
+                        temp.color = '#E57373'
+                     } else if(arr[j] <5){
+                        temp.color = '#FFCDD2'
+                     } 
+                     else { temp.color= '#e0e0e0' }
 
                      //console.log(temp)
 
                      data.push(temp)
                 }
 
-                console.log(data)
+                //console.log(data)
 
 /*                var data = [
                               { score: 1 , color: '#D50000'},

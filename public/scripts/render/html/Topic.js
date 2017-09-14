@@ -49,6 +49,21 @@ const spiralPosition = function(pos) {
 };
 
 
+const softmax = function (arr) {
+    return arr.map(function(value,index) { 
+      return Math.exp(value) / arr.map( function(y /*value*/){ return Math.exp(y) } ).reduce( function(a,b){ return a+b })
+    })
+}
+
+const Softmax = function (Xdata){
+  var Explist=Xdata.map(Math.exp);
+  var Sum=Explist.reduce(function(a, b) {
+  return a + b;});
+  var SoftmaxData= Explist.map(function(d){return d/Sum});
+  return SoftmaxData;
+}
+
+
 
 
 /**
@@ -664,12 +679,39 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     		//console.log("drawTile(wordSelected == true");
     	}
 
+
+
+    	console.log(spatialScore);
     	//console.log(temportalScore);
+
+    	var tempScore = 0;
+
+        if(temportalScore < 75){
+
+        	tempScore = temportalScore;
+
+        } else if(temportalScore >= 75 && temportalScore < 300){
+        	tempScore = temportalScore /2;
+        }else if(temportalScore >= 300 && temportalScore < 1000) { 
+        	 tempScore = temportalScore/ 3;
+        } else if(temportalScore >= 1000){
+        	tempScore = temportalScore / 4;
+        } else {
+        	tempScore =temportalScore;
+        }
+
+        tempScore = Math.atan(tempScore/100);
+
+        //console.log(tempScore);
+
+
+
+
 
     	var temp = new Object();
     	temp.tileIdx = tileIdx;
     	temp.spatialScore = spatialScore;
-    	temp.temportalScore = temportalScore *2.5;
+    	temp.temportalScore = tempScore;
     	//temp.topicScore  = ['0.2', '0.3', '0.3', '0.2'];
     	temp.topicScore = scores;
     	temp.glyphRadius = glyphRadius;
@@ -740,8 +782,47 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 
         if(d3.select("#wordGlyph-"+tileIdx).empty() && wordSelected == false && !isNaN(tileIdx))
-        {
+        {    
+/*        	var arr_values = new Array();
+        	var temp = new Array();*/
+        	var totcnt = 0;
+/*        	for (var i =0; i< dictionary.length; i++){
+        		arr_values.push(dictionary[i].spatialScore)
+        	}
+        	console.log(arr_values)
+        	temp = Softmax(arr_values)
+        	console.log(temp);*/
+
+        	for(var i = 0; i< dictionary.length; i++){
+        		if(dictionary[i].spatialScore < 10){
+        			totcnt += 0;
+        		} else {
+	        		totcnt += Math.log10(dictionary[i].spatialScore);
+	        		//console.log(Math.log10(Math.pow(dictionary[i].spatialScore, 1.5)));
+	        	}
+
+        	}
+
         	for(var i = 0; i < dictionary.length; i++){
+
+ /*       	    if(dictionary[i].temportalScore > 0.5 && dictionary[i].temportalScore < 0.6){
+
+		        	dictionary[i].temporal_score *= 2/3  
+
+		        } else if(dictionary[i].temportalScore >= 0.6 && dictionary[i].temportalScore <0.75){
+		        	tileBoarderWidth = 2
+		        }else if(dictionary[i].temportalScore >= 0.75 && dictionary[i].temportalScore < 0.9) { 
+		        	 = 4
+		        } else if(dictionary[i].temportalScore >= 0.9){
+		        }*/
+
+		        if(dictionary[i].spatialScore < 10 ){
+
+		        	dictionary[i].spatialScore = 0;
+		        } else {
+		           dictionary[i].spatialScore = Math.log10(Math.pow(dictionary[i].spatialScore, 1.5 ))/ totcnt;
+		         }		        
+		        //console.log(dictionary[i].spatialScore);
 
 	        	
 	        	var data = [
@@ -762,7 +843,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 	                 .append("g")
 	                 .attr("id", "wordGlyph-"+i)
 	                 .attr("class", "wordGlyph")
-	                 .attr("transform", "translate(" + 205+ "," + 40 + ")");
+	                 .attr("transform", "translate(" + 50+ "," + 40 + ")");
 
 		        var g = svg2.selectAll(".arc")
 		               .data((data))
@@ -774,7 +855,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		                            .append("circle")
 		                            .attr("id", "wordGlyph-" + i)
 		                            .attr("class", "wordGlyph")
-		                            .attr("cx", 205)
+		                            .attr("cx", 50)
 		                            .attr("cy", 40)
 		                            .attr("r", 20)
 		                            .style("fill", "none")
@@ -788,19 +869,25 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 		        var tileBoarderWidth = 0;
 		        var boardercolor = '#EF9A9A'
-		        if(dictionary[i].spatialScore > 0.15 && dictionary[i].spatialScore < 0.2){
+		        if(dictionary[i].spatialScore > 0.03 && dictionary[i].spatialScore < 0.07){
 
 		        	tileBoarderWidth = 0.5;
 		        	boardercolor = '#EF9A9A' 
 
-		        } else if(dictionary[i].spatialScore >= 0.2 && dictionary[i].spatialScore <0.25){
-		        	tileBoarderWidth = 1
+		        } else if(dictionary[i].spatialScore >= 0.08 && dictionary[i].spatialScore <0.1){
+		        	tileBoarderWidth = 1;
 		        	boardercolor = '#EF5350'
-		        }else if(dictionary[i].spatialScore >= 0.25 && dictionary[i].spatialScore < 0.3) { 
-		        	tileBoarderWidth = 2
+		        }else if(dictionary[i].spatialScore >= 0.1 && dictionary[i].spatialScore < 0.15) { 
+		        	tileBoarderWidth = 1.5
 		        	boardercolor = '#E53935'
-		        } else if(dictionary[i].spatialScore >= 0.3){
-		        	tileBoarderWidth = 8
+		        } else if(dictionary[i].spatialScore >= 0.15 && dictionary[i].spatialScore < 0.17){
+		        	tileBoarderWidth = 2
+		        	boardercolor = '#B71C1C'
+		        }else if(dictionary[i].spatialScore >= 0.17 && dictionary[i].spatialScore < 0.19){
+		        	tileBoarderWidth = 2.5
+		        	boardercolor = '#B71C1C'
+		        }   else if(dictionary[i].spatialScore >= 0.19){
+		        	tileBoarderWidth = 4
 		        	boardercolor = '#B71C1C'
 		        }
 
@@ -811,8 +898,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 	                .append("rect")
 	                .attr("id", "boarder-"+ i)
 	                .attr("class", "boarder")
-	                .attr("width", 256)
-	                .attr("height", 256)
+	                .attr("width", 254)
+	                .attr("height", 254)
 	                .style("fill", "none")
 	                .attr("stroke", boardercolor)
 	                .attr("stroke-width", tileBoarderWidth);
@@ -926,7 +1013,9 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		      .attr("opacity", 0.5);
 
 
-		    d3.selectAll(".wordGlyph").remove();
+		    d3.selectAll(".wordGlyph").transition()
+		       .attr("opacity", 0.5);
+
 		    d3.selectAll(".boarder").remove();
 
 			console.log('[UB] A word clicked: ' + word);
@@ -935,7 +1024,11 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 			d3.selectAll("circle").attr("opacity", null);
 		    d3.selectAll("path")
 		      .transition()
-			  .attr("opacity", null);			
+			  .attr("opacity", null);	
+
+
+			 d3.selectAll(".wordGlyph").transition()
+		       .attr("opacity", null);		
 			//this.clearSelection();
 
              
