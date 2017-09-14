@@ -19,7 +19,7 @@ function init(plot, callback) {
 		});
 	};
 
-	const driver = new TopicDriver('Topics', plot);
+	const driver = new TopicDriver('ExTopicTile', plot);
 	$('.tile-controls').append(driver.getElement());
 	driver.show();
 
@@ -80,11 +80,10 @@ window.startApp = function() {
 		 */
 		const carto_light = Layers.cartodb_light('light_all', requestor); 
 		map.addLayer(carto_light);
-		carto_light.hide();
 
 		const carto_black = Layers.cartodb_dark('dark_all', requestor);
 		map.addLayer(carto_black);
-		// carto_black.hide();
+		carto_black.hide();
 
 		/**
 		 * Topic layer
@@ -97,16 +96,16 @@ window.startApp = function() {
 		topic.mute();
 		map.addLayer(topic);
 
-		// /**
-		//  * Hitmap layer
-		//  */
-		// const hitmap = Layers.exclusiveness(
-		// 	{},
-		// 	'',
-		// 	'hot',
-		// 	requestor);
-		// hitmap.mute();
-		// map.addLayer(hitmap);
+		/**
+		 * Hitmap layer
+		 */
+		const hitmap = Layers.exclusiveness(
+			{},
+			'',
+			'hot',
+			requestor);
+		hitmap.mute();
+		map.addLayer(hitmap);
 
 		/**
 		 * Macro layer
@@ -127,10 +126,9 @@ window.startApp = function() {
 			requestor);
 		wordglyph.mute();
 		map.addLayer(wordglyph);
-		
-		// show topic drilldown if click word  
-		topic.renderer.on('click', event => res.drilldown.get_coord(event.plotPx.x, event.plotPx.y, event.data));
-		
+
+        // show topic drilldown if click word         
+
 		topic.renderer.on('click', event => res.driver.onShowWordGlyph(event.target, event.data));
 		topic.renderer.on('click', event => res.driver.onShowGeoPoint(event.target, event.data));
 		// topic.renderer.on('click', event => res.driver.onHideTileGlyph());
@@ -139,9 +137,12 @@ window.startApp = function() {
 		map.on('click', event => res.driver.onHideGeoPoint());
 		// map.on('click', event => res.driver.onShowTileGlyph(event.target));
 
-		map.on('dblclick', event => res.topicPopup.show(event.data));
-        map.on('dblclick', event => res.topicPopup.get_coord(event.plotPx.x, event.plotPx.y, event.data));
+		//map.on('dblclick', event => res.topicPopup.show(event.data));
+        //map.on('dblclick', event => res.topicPopup.get_coord(event.plotPx.x, event.plotPx.y, event.data));
 
         res.driver.onShowTopics();
+
+        topic.renderer.on('click', event => res.drilldown.get_coord(event.plotPx.x, event.plotPx.y, event.data));
+
 	});
 };

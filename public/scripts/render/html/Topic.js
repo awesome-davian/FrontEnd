@@ -664,10 +664,12 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     		//console.log("drawTile(wordSelected == true");
     	}
 
+    	//console.log(temportalScore);
+
     	var temp = new Object();
     	temp.tileIdx = tileIdx;
     	temp.spatialScore = spatialScore;
-    	temp.temportalScore = temportalScore;
+    	temp.temportalScore = temportalScore *2.5;
     	//temp.topicScore  = ['0.2', '0.3', '0.3', '0.2'];
     	temp.topicScore = scores;
     	temp.glyphRadius = glyphRadius;
@@ -743,8 +745,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 	        	
 	        	var data = [
-					          { score: dictionary[i].temportalScore , color: glyphColor[0]},
-					          { score: dictionary[i].spatialScore, color: glyphColor[1]}
+					          { score: dictionary[i].temportalScore , color: glyphColor[0]}
 					        ];
 
 			    var topicScoreData = 
@@ -769,22 +770,38 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		               .attr("class", "arc")
 		               .attr("id", "wordGlypgArc-"+tileIdx);
 
+		        var boundCirclre = d3.select(".tile-glyph-"+i).select("svg")
+		                            .append("circle")
+		                            .attr("id", "wordGlyph-" + i)
+		                            .attr("class", "wordGlyph")
+		                            .attr("cx", 205)
+		                            .attr("cy", 40)
+		                            .attr("r", 20)
+		                            .style("fill", "none")
+		                            .attr("stroke-width", 0.5)
+		                            .attr("stroke", "#BDBDBD");
+
 		        var g2 = svg2.selectAll(".piechar")
 		                 .data(pie(topicScoreData))
 		                 .enter().append("g")
 		                 .attr("class", "piechart")
 
 		        var tileBoarderWidth = 0;
-		        if(dictionary[i].spatialScore > 0.1 && dictionary[i].spatialScore < 0.15){
+		        var boardercolor = '#EF9A9A'
+		        if(dictionary[i].spatialScore > 0.15 && dictionary[i].spatialScore < 0.2){
 
-		        	tileBoarderWidth = 0.5 
+		        	tileBoarderWidth = 0.5;
+		        	boardercolor = '#EF9A9A' 
 
-		        } else if(dictionary[i].spatialScore >= 0.15 && dictionary[i].spatialScore <0.2){
-		        	tileBoarderWidth = 1.5
-		        }else if(dictionary[i].spatialScore >= 0.2 && dictionary[i].spatialScore < 0.3) { 
-		        	tileBoarderWidth = 3
+		        } else if(dictionary[i].spatialScore >= 0.2 && dictionary[i].spatialScore <0.25){
+		        	tileBoarderWidth = 1
+		        	boardercolor = '#EF5350'
+		        }else if(dictionary[i].spatialScore >= 0.25 && dictionary[i].spatialScore < 0.3) { 
+		        	tileBoarderWidth = 2
+		        	boardercolor = '#E53935'
 		        } else if(dictionary[i].spatialScore >= 0.3){
-		        	tileBoarderWidth = 4 
+		        	tileBoarderWidth = 8
+		        	boardercolor = '#B71C1C'
 		        }
 
                //if(d3.select("#boarder-"+tileIdx).empty())
@@ -797,7 +814,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 	                .attr("width", 256)
 	                .attr("height", 256)
 	                .style("fill", "none")
-	                .attr("stroke", "#D32F2F")
+	                .attr("stroke", boardercolor)
 	                .attr("stroke-width", tileBoarderWidth);
 
                }
@@ -835,7 +852,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 
 
-/*		        g.append("path")
+		        g.append("path")
 		         .style("fill", function(d,i) {
 		             return d.color
 		          })
@@ -849,7 +866,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 			            };
 
 	              });
-  */
+  
 
 		     g.moveToBack();
 		     g2.moveToBack();

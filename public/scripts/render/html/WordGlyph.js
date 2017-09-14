@@ -21,21 +21,19 @@ const scaleTFIDF = function(temporal) {
 
     for(var i = 0; i < temporal.length; i++){
 
-        console.log(temporal[i])
-
-        if(temporal[i] < 3){
+        if(temporal[i] < 0.05){
             temporal[i] = 0
-        } else if(temporal[i] >= 3 && temporal[i] < 3.5){
+        } else if(temporal[i] >= 0.05 && temporal[i] < 0.1){
             temporal[i] = 1
-        } else if(temporal[i] >= 3.5 && temporal[i] < 4){
+        } else if(temporal[i] >= 0.1 && temporal[i] < 0.2){
             temporal[i] = 2
-        } else if(temporal[i] >= 4 && temporal[i] < 4.5){
+        } else if(temporal[i] >= 0.2 && temporal[i] < 0.3){
             temporal[i] = 3
-        } else if(temporal[i] >= 4.5 && temporal[i] <5.5){
+        } else if(temporal[i] >= 0.3 && temporal[i] < 0.4){
             temporal[i] = 4
-        } else if(temporal[i] >= 5.5 && temporal[i] <6.5){
+        } else if(temporal[i] >= 0.5 && temporal[i] < 0.65){
             temporal[i] = 5
-        } else if(temporal[i] >= 6.5){
+        } else if(temporal[i] >= 0.65){
             temporal[i] = 6
         } else{
             temporal[i] = 6
@@ -74,6 +72,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
             divs.push(`
                 <div class="word-glyph word-glyph-${tileIdx}"
+                    data-tileidx = "${tileIdx}"
                     style="
                         right: ${200}px;
                         top : ${margin}px;
@@ -83,16 +82,13 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                         ">
                     <svg height="256" width="256"
                         data-radius = "${radius}"
-                        data-percent =  "${percent}"
                         data-temporal = "${temporal}"
-                        data-tileidx = "${tileIdx}"
                         data-score ="${score}">
                         <circle cx="205" cy="40" r="${radius}"  fill="#4DD0E1" />
-                        <circle r="23" cx="205" cy="40" fill="none" stroke="#e0e0e0" stroke-width="2"/> 
                     </svg>
                 </div>
                 <div class = "Tile Tile-${tileIdx}"
-                    data-tileIdx = "${tileIdx}"
+                    data-tileidx = "${tileIdx}"
                     style = "
                         width : ${256}px;
                         height : ${256}px; 
@@ -106,17 +102,21 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
 
         tileIdx++;
 
-        console.log(temporal)
+        //console.log(percent);
+
+        //console.log(temporal)
 
         var scaledtemporal = scaleTFIDF(temporal)
 
-        console.log(scaledtemporal);
+        //console.log(scaledtemporal);
+
+       //var arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         var temp = new Object();
         temp.tileIdx = tileIdx;
         temp.temporal = scaledtemporal;
         temp.percent = percent;
-        temp.score = radius/15;
+        temp.score = score;
 
         dictionary.push(temp);
     }
@@ -124,7 +124,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
     onMouseOver(event){
 
         const score = $(event.target).attr('data-score');
-        const percent = $(event.target).attr('data-percent');
+        //const percent = $(event.target).attr('data-percent');
         const wordRadius = $(event.target).attr('data-radius');
         const temporal = $(event.target).attr('data-temporal');
         const tileId = $(event.target).attr('data-tileidx');
@@ -142,7 +142,7 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
             arcPad =0.5;     
 
 
-        var drawArc = d3.arc()
+/*        var drawArc = d3.arc()
                         .innerRadius(function(d,i){
                          return arcMin + i*(arcWidth) +arcPad;
                         })
@@ -152,22 +152,52 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                         .startAngle(0)
                         // .endAngle(function(d,i){
                         //   return d.score*360*0.0175
-                        // });
+                        // });*/
 
         var pie = d3.pie()
-                 .sort(null)
-                 .value(function(d) {
-                        return d.score;
-                    });
+           .sort(null)
+           .startAngle(0.1 * Math.PI)
+           .endAngle(2.1 * Math.PI)
+           .value(function(d) {
+                  return d.score;
+              });
 
+        var pieChart = d3.arc()
+                        .innerRadius(21)
+                        .outerRadius(26);
+
+        console.log(tileId)
 
        if(d3.select("#wordGlyphArc").empty()){
 
             for(var i = 0; i<dictionary.length; i++){
 
-                var data = [
-                              { score: dictionary[i].percent , color: '#D50000'}
+                var data = []; 
+                var arr = dictionary[i].percent;
+
+                for(var j = 0; j<arr.length; j++){
+
+                     var temp = new Object();
+
+                     temp.score = 1;
+                     if(arr[j] > 0){
+                          temp.color = '#D50000'
+                     } else { temp.color= '#e0e0e0' }
+
+                     //console.log(temp)
+
+                     data.push(temp)
+                }
+
+                console.log(data)
+
+/*                var data = [
+                              { score: 1 , color: '#D50000'},
+                              { score: 1 , color: '#D50000'}
                            ];
+
+                */
+
 
                 var svg2 = d3.select(".word-glyph-"+ i).select("svg")
                              .attr("width", width)
@@ -175,32 +205,34 @@ class WordGlyph extends veldt.Renderer.HTML.CommunityLabel {
                              .append("g")
                              .attr("transform", "translate(" + 205 + "," + 40 + ")");
 
-                var g = svg2.selectAll(".arc")
-                            .data((data))
-                            .enter().append("g")
-                            .attr("class", "arc")
-                            .attr("id", "wordGlyphArc");
+
+                  var g = svg2.selectAll(".arc")
+                              .data(pie(data))
+                              .enter().append("g")
+                              .attr("class", "arc")
+                              .attr("id", "wordGlyphArc");
 
                 g.append("path")
                     .style("fill", function(d,i) {
-                        return d.color;
+                        return data[i].color;
                     })
-                    .transition().delay(function(d, i) { return i * 500; }).duration(1000)
+                    .transition().delay(function(d, i) { return 1*i; }).duration(0)
                     .attrTween('d',function(d,i){
-                        var interp = d3.interpolate(0, d.score*360*0.0175)
+                        var interp = d3.interpolate(d.startAngle + 0.1  , d.endAngle);
                         return function(t){
                             d.endAngle = interp(t);
-                            return drawArc(d,i);
+                            //return drawArc(d,i);
+                            return pieChart(d);
                         };
                     });
 
 
-                console.log(dictionary[i].temporal)
+                //console.log(dictionary[i].temporal)
 
 
                 //var temportalData = [1 ,2, 3, 4, 5, 6, 0];
-                var colors = ['#FBE9E7', '#FFAB91', '#FF7043', '#F4511E', '#E64A19', '#D84315', '#FFB74D'];
-
+                var colors = ['#FBE9E7', '#FFAB91', '#FF7043', '#F4511E', '#E64A19', '#D84315', '#BF360C'];
+                //var colors = ['#FFB74D', '#D84315', '#E64A19', '#F4511E', '#FF7043', '#FFAB91', '#FBE9E7'];
                 var sqareDim = 10; 
 
                 var svgTemporal = d3.select(".word-glyph-"+ i)
