@@ -31,10 +31,9 @@ class AsynchDrilldown extends Drilldown {
                 dataType: 'json',
                 data: { 
                         "word": word, 
-                        "tile" : {
-                                 "x": x,
-                                 "y": y, 
-                                 "level" : level},
+                         "x": x,
+                         "y": y, 
+                         "level" : level,
                         "date" : date 
                         }
         });

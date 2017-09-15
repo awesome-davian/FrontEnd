@@ -165,11 +165,14 @@ class TopicDrilldown extends AsynchDrilldown {
       console.log(tweetByTime);
   */
    
-
+      var tickarr = [];
       for (var i =0; i<documents.length; i++){
                   
         var readable_time = getFriendlyDate(documents[i].created_at * 1000);
         tweetTimes[i] = readable_time;
+         if( i%5 === 0){
+           tickarr.push(tweetTimes[i]);
+        }
       };
 
       //console.log(tweetTimes);
@@ -213,7 +216,7 @@ class TopicDrilldown extends AsynchDrilldown {
       g.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height + ")")
-       .call(d3.axisBottom(x).ticks(6).tickValues([20,25,30,5,9]));
+       .call(d3.axisBottom(x).ticks(6));
        //.call(d3.axisBottom(x).ticks(7).tickValues([1,5,10,15,20,25,30]));
       // .call(d3.axisBottom(x));
 

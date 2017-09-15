@@ -54,9 +54,10 @@ class Drilldown {
 			if (!this._isVisible) {
 				return;
 			}
-			/*if(typeof data ==='string'){
-	    	   const c = this.recomputeContext(data);
-	        }else {
+			if(typeof data ==='string'){
+	    	   return ;
+	        }
+	        /*else {
 	    	   const c =this.recomputeContextPromise(data);
 	        }*/
 			const c = this.recomputeContext(data);
