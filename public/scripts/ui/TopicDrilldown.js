@@ -10,6 +10,13 @@ function getFriendlyDate(unix_time) {
   return moment.utc(unix_time).format('MMM Do YYYY');
 }
 
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + parseInt(days) -1);
+  var newday = (result.getMonth() + 1) + "/" + result.getDate();
+  return newday;
+}
+
 class TopicDrilldown extends AsynchDrilldown {
     constructor(name, plot, dataset, esEndpoint, esIndex) {
         super(name, dataset, esEndpoint, esIndex);
@@ -29,7 +36,7 @@ class TopicDrilldown extends AsynchDrilldown {
     recomputeBodyContext(data) {
 
         if(typeof data ==='string'){
-                // console.log('string');
+                console.log('string');
             }
         else{
                var documents = data.documents; 
@@ -74,12 +81,12 @@ class TopicDrilldown extends AsynchDrilldown {
 
 
 
-        // console.log(data);
+        //console.log(data);
         const c = {};
         // local model
         Object.assign(c, this.model);
 
-        // console.log(c);
+        //console.log(c);
 
         return c;
     }
@@ -127,7 +134,7 @@ class TopicDrilldown extends AsynchDrilldown {
 
     onShowTweetbyTime(){
 
-        // console.log('show');
+        console.log('show');
 
     }
 
@@ -135,45 +142,48 @@ class TopicDrilldown extends AsynchDrilldown {
 
       var documents = data.documents; 
       var tweetTimes =[];
-
+      //console.log(data);
       var timeGraph =data.timeGraph;
       var tweetByTime = [];
 
-      for(var i=0; i<21; i++){
+      //console.log(timeGraph);
+     // console.log(Object.keys(timeGraph).length);
+     // console.log(Object.values(timeGraph));
+      //console.log(Object.values(timeGraph)[0]);
 
-        var element = {};
-        element.day = 20+i;
-        element.nmb = timeGraph[20+i];
-        if(20+i>31){
-          element.day =i-11;
-          element.nmb = timeGraph[i-11];
-        };
-        tweetByTime[i] = element;
-      };
+      var startday = "1/1/2013";
+      var date1 = new Date(startday);
 
-      /* for(var i=0; i<30; i++){
-
-        var element = {};
-        element.day = i+1;
-        //element.nmb = 0;
-       
-        element.nmb =timeGraph[i+1];
-        
-        tweetByTime[i] = element;
-      };
- 
-      console.log(tweetByTime);
-  */
-   
       var tickarr = [];
       for (var i =0; i<documents.length; i++){
                   
         var readable_time = getFriendlyDate(documents[i].created_at * 1000);
         tweetTimes[i] = readable_time;
-         if( i%5 === 0){
+
+        if( i%5 === 0){
            tickarr.push(tweetTimes[i]);
         }
       };
+
+      var ticklength  = tickarr.length
+
+      for (var i = 0; i<Object.keys(timeGraph).length; i++){
+
+
+        var nowday= addDays(startday,Object.keys(timeGraph)[i]);
+      
+        var element = {};
+        element.day = nowday
+        element.nmb = Object.values(timeGraph)[i];
+
+
+        tweetByTime[i] = element;
+
+      };
+
+       //console.log(tweetByTime);
+
+
 
       //console.log(tweetTimes);
 
@@ -197,6 +207,8 @@ class TopicDrilldown extends AsynchDrilldown {
       }
 
       console.log(sortedData);*/
+     
+
 
       var startwidth =290, startheight = 180;
       var svg = d3.select(".drilldown-graph").append("svg").style("width", 290).style("height",180),
@@ -211,14 +223,22 @@ class TopicDrilldown extends AsynchDrilldown {
       x.domain(tweetByTime.map(function(d){ return d.day;}));
       y.domain([0, d3.max(tweetByTime, function(d) { return d.nmb; })]);
 
-      var axis = 
+
+/*
+      var xValues = data.map(function(d){return d});
+
+      xValues = d3.set(xValues).*/
 
       g.append("g")
         .attr("class", "axis axis--x")
         .attr("transform", "translate(0," + height + ")")
-       .call(d3.axisBottom(x).ticks(6));
-       //.call(d3.axisBottom(x).ticks(7).tickValues([1,5,10,15,20,25,30]));
+        .data(tickarr)
+        .call(d3.axisBottom(x).tickValues(x.domain().filter(function(d,i){return  !(i%5)})));
+      // .call(d3.axisBottom(x).tickValues(function(d){return d}));
       // .call(d3.axisBottom(x));
+
+
+
 
 
 
