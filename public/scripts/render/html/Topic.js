@@ -15,6 +15,7 @@ let wordSelected = false;
 
 var tileIdx = 0; 
 var dictionary = [];
+var tileLevel = 10;
 
 const topicColor = ['#ffffff', '#ff3c82', '#89c541', '#fee801'];
 //const topicColor = ['#e0e0e0', '#E53B51', '#76ff03', '#ffEb3b'];
@@ -496,8 +497,6 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     
 
     drawTile(element, tile) {
-
-    	// console.log(tile);
 		
         const words = _.flatMap(tile.data.topic, (value, key) => {
         	
@@ -681,7 +680,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 
 
-    	console.log(spatialScore);
+    	//console.log(spatialScore);
     	//console.log(temportalScore);
 
     	var tempScore = 0;
@@ -700,9 +699,11 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         	tempScore =temportalScore;
         }
 
-        tempScore = Math.atan(tempScore/100);
+        tempScore = Math.atan(tempScore/100)*0.5;
 
         //console.log(tempScore);
+
+       var date = $('[name=timeSlider]').val();
 
 
 
@@ -715,8 +716,12 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     	//temp.topicScore  = ['0.2', '0.3', '0.3', '0.2'];
     	temp.topicScore = scores;
     	temp.glyphRadius = glyphRadius;
+    	temp.coord = tile.coord.z
+    	temp.date = date;
 
     	dictionary.push(temp);
+
+    	tileLevel = tile.coord.z
 
     	//console.log(dictionary);
 
@@ -724,6 +729,9 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
     }
 
     onMouseOver(event){
+
+    	var date = $('[name=timeSlider]').val();
+
 
     	const temportalScore = $(event.target).attr('data-temporalScore');
         const spatialScore = $(event.target).attr('data-spatialscore');
@@ -793,15 +801,63 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
         	temp = Softmax(arr_values)
         	console.log(temp);*/
 
+        	var tile = {};
+        	var tiledict = [];
+
         	for(var i = 0; i< dictionary.length; i++){
-        		if(dictionary[i].spatialScore < 10){
+/*        		if(dictionary[i].spatialScore < 10){
         			totcnt += 0;
         		} else {
-	        		totcnt += Math.log10(dictionary[i].spatialScore);
-	        		//console.log(Math.log10(Math.pow(dictionary[i].spatialScore, 1.5)));
+	        		//totcnt += Math.log10(Math.pow(dictionary[i].spatialScore,3));
+	        		//console.log(Math.log10(Math.pow(dictionary[i].spatialScore, 3)));
+	        		totcnt += Math.atan(dictionary[i].spatialScore / 500);
+	        		//console.log(Math.atan(dictionary[i].spatialScore / 500));
+	        	}
+*/
+/*	        	var temp = new Object();
+	        	temp.idx = dictionary[i].tileIdx;
+	        	temp.spatialScore = dictionary[i].spatialScore;
+	        	tiledict.push(temp);*/
+
+	        	if(dictionary[i].coord == tileLevel && dictionary[i].date === date){
+	        		tile[dictionary[i].tileIdx] = dictionary[i].spatialScore;
 	        	}
 
         	}
+
+        	console.log(tile)
+        	var values = Object.values(tile);
+        	//console.log(values)
+        	var sortedValues = values.sort(function(a,b) {return b - a });
+        	var unique = sortedValues.filter(function(elem, index, self) {
+			    return index == self.indexOf(elem);
+			})
+        	console.log(unique);
+
+
+/*        	var sortedArr = [];
+        	for (var i = 0; i < sortedValues.length; i ++){
+        		for (var key in values){
+        			if(tile[key] === sortedValues[i]){
+        				sortedArr.push(key);
+        				if(tile[key] === 0){
+        					break;
+        				}
+        			}
+        		}
+
+        	}
+
+        	console.log(sortedArr);
+
+
+*/
+
+
+
+
+            console.log(dictionary);
+
 
         	for(var i = 0; i < dictionary.length; i++){
 
@@ -816,13 +872,14 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		        } else if(dictionary[i].temportalScore >= 0.9){
 		        }*/
 
-		        if(dictionary[i].spatialScore < 10 ){
+/*		        if(dictionary[i].spatialScore < 10 ){
 
 		        	dictionary[i].spatialScore = 0;
 		        } else {
-		           dictionary[i].spatialScore = Math.log10(Math.pow(dictionary[i].spatialScore, 1.5 ))/ totcnt;
+		           // dictionary[i].spatialScore = Math.log10(Math.pow(dictionary[i].spatialScore, 3 ))/ totcnt;
+		            dictionary[i].spatialScore =  Math.atan(dictionary[i].spatialScore / 500)/ totcnt;
 		         }		        
-		        //console.log(dictionary[i].spatialScore);
+		        console.log(dictionary[i].spatialScore);*/
 
 	        	
 	        	var data = [
@@ -869,7 +926,57 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 
 		        var tileBoarderWidth = 0;
 		        var boardercolor = '#EF9A9A'
-		        if(dictionary[i].spatialScore > 0.03 && dictionary[i].spatialScore < 0.07){
+
+		        if(dictionary[i].coord === 10){
+
+		        	if(dictionary[i].spatialScore === parseInt(unique[0])){
+		        		tileBoarderWidth = 2;
+		        		boardercolor = '#D84315';
+
+		        	} else if(dictionary[i].spatialScore === parseInt(unique[1])){
+		        		tileBoarderWidth = 1;
+		        		boardercolor = '#F4511E';
+		        	}
+		        } else if(dictionary[i].coord === 11){
+
+		        	if(dictionary[i].spatialScore === parseInt(unique[0])){
+		        		tileBoarderWidth = 2;
+		        		boardercolor = '#D84315';
+		        	} else if(dictionary[i].spatialScore === parseInt(unique[1]) || dictionary[i].spatialScore === parseInt(unique[2])){
+		        		tileBoarderWidth = 1;
+		        		boardercolor = '#F4511E';
+		        	}
+		        } else if(dictionary[i].coord === 12){
+
+		        	if(dictionary[i].spatialScore === parseInt(unique[0])){
+		        		tileBoarderWidth = 3;
+		        		boardercolor = '#D84315';
+		        	} else if(dictionary[i].spatialScore === parseInt(unique[1]) || dictionary[i].spatialScore === parseInt(unique[2])){
+		        		tileBoarderWidth = 2;
+		        		boardercolor = '#F4511E';
+		        	} else if(dictionary[i].spatialScore === parseInt(unique[3]) || dictionary[i].spatialScore === parseInt(unique[4])){
+		        		tileBoarderWidth = 1;
+		        		boardercolor = '#FF7043';
+		        	}
+		        } else if(dictionary[i].coord === 13){
+
+		        	if(dictionary[i].spatialScore === parseInt(unique[0])){
+		        		tileBoarderWidth = 3;
+		        		boardercolor = '#D84315';
+
+		        	} else if(dictionary[i].spatialScore === parseInt(unique[1]) || dictionary[i].spatialScore === parseInt(unique[2])){
+		        		tileBoarderWidth = 2;
+		        		boardercolor = '#F4511E';
+		        	} else if(dictionary[i].spatialScore === parseInt(unique[3]) || dictionary[i].spatialScore === parseInt(unique[4]) || dictionary[i].spatialScore === parseInt(unique[6])){
+		        		tileBoarderWidth = 1;
+		        		boardercolor = '#FF7043';
+		        	}else if(dictionary[i].spatialScore === parseInt(unique[6]) || dictionary[i].spatialScore === parseInt(unique[7]) || dictionary[i].spatialScore === parseInt(unique[8])){
+		        		tileBoarderWidth = 0.5;
+		        		boardercolor = '#FF8A65';
+		        	}
+		        }
+
+/*		        if(dictionary[i].spatialScore > 0.03 && dictionary[i].spatialScore < 0.07){
 
 		        	tileBoarderWidth = 0.5;
 		        	boardercolor = '#EF9A9A' 
@@ -889,7 +996,7 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		        }   else if(dictionary[i].spatialScore >= 0.19){
 		        	tileBoarderWidth = 4
 		        	boardercolor = '#B71C1C'
-		        }
+		        }*/
 
                //if(d3.select("#boarder-"+tileIdx).empty())
                {
@@ -1016,7 +1123,8 @@ class Topic extends veldt.Renderer.HTML.WordCloud {
 		    d3.selectAll(".wordGlyph").transition()
 		       .attr("opacity", 0.5);
 
-		    d3.selectAll(".boarder").remove();
+		    d3.selectAll(".boarder").transition()
+		       .attr("opacity", 0.5);
 
 			console.log('[UB] A word clicked: ' + word);
 		} else {
